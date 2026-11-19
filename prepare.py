@@ -12,7 +12,7 @@ from tarfile import TarError
 from tempfile import TemporaryDirectory
 from zipfile import BadZipFile
 
-from corpora.adapters import adapt
+from corpora.adapters import Candidate, adapt
 from corpora.policy import POLICY_VERSION
 from corpora.schema import (
     CLASSES, NEEDS_REVIEW, NOT_APPLICABLE, PRECISION_CLASSES, REPORTED_TIERS,
@@ -252,6 +252,31 @@ def intent_distribution(conn):
     return by_split
 
 
+def write_device_find_contrasts(data_dir, with_reference):
+    relative = Path("augmentation/device-find-contrast.jsonl")
+    output = data_dir / relative
+    output.parent.mkdir()
+    counts = Counter()
+    with output.open("w", encoding="utf-8") as stream:
+        for kind, name in (("phone", "手机"), ("watch", "手表"), ("tablet", "平板")):
+            for sequence, (operation, text) in enumerate((
+                ("query_target_location", f"帮我查一下我的{name}在哪里"),
+                ("ring", f"让我的{name}响铃"),
+            )):
+                intent = {
+                    "intent_id": "device.find", "label": "查找设备",
+                    "parameters": {"target_device_type": kind, "operation": operation},
+                }
+                candidate = Candidate(intent, text, (("user", text),), 0, "device.find")
+                row, tier = make_row(candidate, "synthetic", "train", kind, sequence, with_reference)
+                row["annotation"]["source"] = "synthetic_contrast"
+                if with_reference:
+                    row["reference"]["synthetic"] = True
+                stream.write(canonical_json(row) + "\n")
+                counts[tier] += 1
+    return {"path": relative.as_posix(), "total": sum(counts.values()), "classes": dict(counts)}
+
+
 def write_output(conn, data_dir, args, inputs, groups, no_intents):
     conn.execute("""
         CREATE TEMP VIEW output_rows AS
@@ -310,6 +335,7 @@ def write_output(conn, data_dir, args, inputs, groups, no_intents):
         },
         "stages": stages,
         "sidecars": sidecars,
+        "augmentation": write_device_find_contrasts(data_dir, args.with_reference),
         "exported_intent_distribution": intent_distribution(conn),
         "intent_labels_with_multiple_precision_classes": conflict,
         "warnings": warnings,

@@ -71,7 +71,7 @@ python3 prepare.py \
     }
   },
   "label": {
-    "precision": null,
+    "precision": "精确",
     "coarse_level": null
   }
 }
@@ -84,13 +84,15 @@ python3 prepare.py \
 
 ## 精度弱标注
 
-精度标签由 [现网动作映射](POLICY.md) 生成。策略只接收统一意图和参数，要求位置来源与任务的实际角色一致。上方样例已给出目的地，上车点来源未知，因此两个标签字段为 `null`，进入待复核。天气地点未指定同样进入待复核。按城市查询天气时，已指定的城市可直接用于服务查询。若明确以设备当前位置为参照，则判为城市级。
+精度标签由 [现网动作映射](POLICY.md) 生成。规则假定智能体已尝试调用定位服务，按结构化意图判断所需精度。比如叫车在此条件下标为精确，天气与查订火车票标为模糊城市级。是否调用仍由智能体判断。
 
-「国家级」用于确实需要设备所在国家的任务。「不涉及」写作 `{"precision":"不涉及","coarse_level":null}`。上车点、配送地址等位置角色已由用户给出时可使用该参数完成业务。
+「不涉及」写作 `{"precision":"不涉及","coarse_level":null}`，用于设置普通闹钟、调音量、仅让设备响铃等操作。查找设备的操作类型缺失，以及语义不明确的「其他意图」，进入待复核。
 
 默认主划分只包含位置精度样本。去重后的「不涉及」样本按划分放在 `not_applicable/`，待复核样本放在 `needs_review/`。需要把「不涉及」作为第五类时，加 `--include-not-applicable`。此时主划分和 `not_applicable/` 中可能同时存在该类记录，训练直接读取主划分即可。
 
 终端为每个划分分别打印主文件条数 `total`、去重总数 `deduplicated_total`，以及 `not_applicable_saved` 和 `needs_review_saved`。主文件的标签分布见 `classes`。
+
+合成对照样本单独输出到 `augmentation/device-find-contrast.jsonl`。三对样本分别使用手机、手表和平板。每一对具有相同的意图及设备类型，并对照 `query_target_location` 和 `ring`。这六条标记为合成和训练划分，主划分和真实语料计数单独计算。
 
 这些标签用于训练原型和检查覆盖范围。精确放行效果应在有人工真值的测试集上测量。弱标签和真实用户位置授权属于不同环节。
 
@@ -111,20 +113,21 @@ python3 prepare.py \
 
 `summary.json` 的 `stages` 包含提取后、去重后和主划分的分布。每阶段都有按来源、按划分和按标签的计数。`sidecars` 记录另存的两组样本。`exported_intent_distribution` 给出主划分每个意图的总数及各标签数。`intent_labels_with_multiple_precision_classes` 列出同一个无参数意图对应多个标签的情况，例如「叫车」会因上车点来源不同而改变标签。
 
-在 MASSIVE zh-CN 和 CMPA-SLU 上完整重跑新版策略，去重后保留 23,580 条。主划分条数反映公开数据中位置来源足以支持精度判断的意图覆盖率。其余三套使用样本验证适配。
+在 MASSIVE zh-CN 和 CMPA-SLU 上按新策略复核主划分、不涉及和待复核三组，共保留 23,580 条。原始记录 ID、划分和参考原句逐条核对一致。旧版「不涉及」中有 2,005 条改为精度标签。其余三套使用样本验证适配。
 
 | 划分 | 主划分 | 精确 | 区域级 | 城市级 | 国家级 | 不涉及 | 待复核 |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| 训练 | 84 | 38 | 34 | 12 | 0 | 9,643 | 5,811 |
-| 验证 | 19 | 12 | 5 | 2 | 0 | 2,084 | 1,426 |
-| 测试 | 23 | 18 | 3 | 2 | 0 | 2,785 | 1,705 |
+| 训练 | 3,934 | 478 | 752 | 2,704 | 0 | 9,871 | 1,733 |
+| 验证 | 802 | 102 | 150 | 550 | 0 | 2,297 | 430 |
+| 测试 | 1,033 | 113 | 182 | 738 | 0 | 2,960 | 520 |
 
-已有原始数据的仓库可以用 `git pull --ff-only origin main` 后离线生成新版本。
+已有原始数据时，在仓库目录拉取新版后离线生成。
 
 ```bash
-python3 prepare.py --raw-dir ./raw --out-dir ./data-location-v3 --datasets massive cmpa --offline
+git pull --ff-only origin main
+python3 prepare.py --raw-dir ./raw --out-dir ./data-location-v4 --datasets massive cmpa --offline
 ```
 
-旧复核结果使用旧策略口径。本版从原始数据重建标签，`summary.json` 记录策略版本。
+`summary.json` 的 `label_policy` 记录当前标注版本，`augmentation` 记录合成对照集位置。旧版数据可用同一批原始缓存按新版策略整体重建。
 
-可运行 `python3 -m unittest discover -s tests -v` 核查多轮引用、现网策略、去重和训练集配额。
+可运行 `python3 -m unittest discover -s tests -v` 核查多轮引用、条件精度、对照数据和划分。

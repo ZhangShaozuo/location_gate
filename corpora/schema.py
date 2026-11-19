@@ -35,6 +35,8 @@ INTENTS = {
     "restaurant.details": "查询餐馆详情",
     "restaurant.reserve": "预订餐馆",
     "event.search": "查找或推荐活动",
+    "news.query": "查询新闻",
+    "news.play": "播报新闻",
     "transit.query": "查询公共交通",
     "transit.ticket": "查询或办理交通票务",
     "transit.flight_ticket": "查询或预订机票",
@@ -75,14 +77,14 @@ SLOT_ALIASES = {
     "区域": "area", "地区": "area", "行政区": "area", "所在区域": "area",
     "出发地": "origin", "起点": "origin", "出发城市": "origin",
     "origin": "origin", "from": "origin", "from_city": "origin", "departure_city": "origin",
-    "origin_airport": "origin",
+    "origin_airport": "origin", "始发站": "origin",
     "起始地址": "origin", "上车点": "pickup", "上车地点": "pickup",
     "pickup_location": "pickup", "pickup_address": "pickup",
     "目的地": "destination", "终点": "destination", "到达城市": "destination",
-    "destination_city": "destination", "to_city": "destination",
+    "destination_city": "destination", "to_city": "destination", "终点站": "destination",
     "配送地址": "delivery_address", "收货地址": "delivery_address",
     "上门地址": "address", "寄件地址": "address", "收件地址": "address",
-    "时间": "time", "出发时间": "time", "日期": "date", "时段": "time_of_day",
+    "时间": "time", "出发时间": "time", "始发时间": "time", "日期": "date", "时段": "time_of_day",
     "timeofday": "time_of_day", "天气现象": "weather_descriptor",
     "店名": "name", "名称": "name", "business_name": "name", "restaurant_name": "name",
     "hotel_name": "name", "景点名称": "name", "酒店名称": "name", "餐厅名称": "name",
@@ -96,6 +98,12 @@ SLOT_ALIASES = {
     "商品名称": "item_name", "食物": "food_type",
     "源领域": "source_domain", "周边景点": "nearby_attractions",
     "周边餐馆": "nearby_restaurants", "周边酒店": "nearby_hotels",
+    "查找方式": "operation", "操作": "operation",
+}
+DEVICE_FIND_OPERATIONS = {
+    "响铃": "ring", "播放铃声": "ring", "让设备响铃": "ring",
+    "定位设备": "query_target_location", "查询设备位置": "query_target_location",
+    "查询目标设备位置": "query_target_location",
 }
 REFERENCE_ONLY_SLOTS = {
     "utterance", "raw_text", "user_request", "query", "text", "content", "message",
@@ -159,15 +167,12 @@ SELF_LEVELS = (
     ("district", re.compile(r"哪个区|什么区|哪个行政区|哪(?:个|片)区域|哪个片区")),
     ("precise", PRECISE_SELF),
 )
-UNCERTAIN_ACTION = re.compile(
-    r"不(?:用|要|想|能)(?:给我|帮我|再)?(?:导航|叫车|打车|定位|送|配送)|"
-    r"假如|如果|取消(?:导航|打车|叫车)|如何查看我的当前位置|怎么查看我的当前位置"
-)
 LOCATION_TRIGGER = re.compile(
-    r"(?:到达|离开|进入|到|回)\s*[^，。！？,!?]{1,14}(?:时|后|以后|了就|了以后)"
+    r"(?:到达|离开|进入)\s*[^，。！？,!?]{1,14}(?:时|后|以后|了就|了以后)"
     r"[^，。！？,!?]{0,8}(?:提醒|闹钟|通知)|(?:提醒|闹钟|通知)[^，。！？,!?]{0,8}"
     r"(?:到达|离开|进入)[^，。！？,!?]{1,16}|"
-    r"(?:到|回)(?:家|公司|学校)(?:就)?(?:提醒|通知)|\b(?:when i (?:arrive|leave|get home))\b",
+    r"(?:到|回)(?:家|公司|学校)(?:就|时|后|以后|了就|了以后)?(?:提醒|闹钟|通知)"
+    r"|\b(?:when i (?:arrive|leave|get home))\b",
     re.I,
 )
 def ref_kind(value, *, anchor=None):
@@ -249,10 +254,12 @@ def make_intent(code, pairs, *, text="", single_turn=False, anchor=None, label=N
                 (level for level, cue in SELF_LEVELS if cue.search(text)),
                 "coarse_unspecified" if COARSE_SELF.search(text) else UNKNOWN,
             )
+    if code == "device.find":
+        operation = params.get("operation")
+        if isinstance(operation, str):
+            params["operation"] = DEVICE_FIND_OPERATIONS.get(operation, operation)
     if code in {"alarm.set", "calendar.set", "calendar.update", "reminder.create"} and LOCATION_TRIGGER.search(text):
         params.setdefault("trigger_type", "geofence")
-    if single_turn and (rule or code == "location.self") and UNCERTAIN_ACTION.search(text):
-        params["intent_state"] = "unresolved"
 
     return {"intent_id": code, "label": INTENTS.get(code, label or code), "parameters": params}
 
