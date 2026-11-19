@@ -5,7 +5,7 @@ from dataclasses import dataclass
 import re
 
 from .massive_labels import INTENT_LABELS
-from .schema import INTENTS, ORDER_STATUS, canonical_json, canonical_slot, compact, make_intent
+from .schema import INTENTS, NAMED, ORDER_STATUS, canonical_json, canonical_slot, compact, make_intent
 
 
 @dataclass(frozen=True)
@@ -91,6 +91,7 @@ DETAIL_SLOTS = {
     "recommended_dish", "nearby_attractions", "nearby_restaurants", "nearby_hotels",
     "特点", "是否地铁直达", "房费", "房价", "价格", "price", "简介", "是否有停车场",
 }
+CROSSWOZ_DETAIL_SLOTS = DETAIL_SLOTS | {"hotel_type", "price_per_person", "游玩时间"}
 SUBJECT_SLOTS = {"location", "area", "origin", "pickup", "destination", "name", "reference_place"}
 GENERAL_DOMAINS = {"", "none", "general", "通用", "通用领域"}
 ACTIVE_ACTS = {"inform", "request", "select", "affirm", "negate", "confirm", "recommend"}
@@ -206,7 +207,9 @@ def last_named(acts, subjects):
                 subjects[domain_kind(domain)] = compact(value)
 
 
-def resolve_dialogue_intent(domain, actions, state, subjects, utterance):
+def resolve_dialogue_intent(
+    domain, actions, state, subjects, utterance, *, detail_slots=DETAIL_SLOTS, turn_references=None,
+):
     code = domain_kind(domain)
     requests = list(dict.fromkeys(key for action, key, _ in actions if action == "request"))
     filled = {key: value for action, key, value in actions if action in {"inform", "select"} and value}
@@ -217,20 +220,26 @@ def resolve_dialogue_intent(domain, actions, state, subjects, utterance):
          if action == "select" and key == "source_domain" and value), None
     )
     anchor = None
+    named_reference = None
     if isinstance(source_domain, str):
-        anchor = subjects.get(domain_kind(source_domain))
+        source_code = domain_kind(source_domain)
+        if turn_references:
+            named_reference = turn_references.get(source_code)
+        anchor = named_reference or subjects.get(source_code)
     if not anchor and named and (
         POINTING_CONTEXT.search(utterance) or NEARBY_SLOTS.intersection(requests)
     ):
         anchor = named
     if (
-        code in DETAILS and named and requests and set(requests) <= DETAIL_SLOTS
+        code in DETAILS and named and requests and set(requests) <= detail_slots
         and all(key in SUBJECT_SLOTS for key in filled)
     ):
         code = DETAILS[code]
         anchor = named
     if requests:
         parameters["requested_slots"] = requests
+    if named_reference and code in DETAILS:
+        parameters["location_source"] = NAMED
     label = domain + "查询" if code not in INTENTS else None
     return make_intent(code, parameters.items(), text=utterance, anchor=anchor, label=label)
 
@@ -256,13 +265,26 @@ def adapt_crosswoz(doc, window):
         if role not in {"usr", "user"}:
             raise ValueError(f"未知 CrossWOZ 角色：{role}")
         history.append(("user", raw))
-        for domain, acts in action_groups(actions).items():
+        groups = action_groups(actions)
+        reference_domains = {
+            value for domain, acts in groups.items() for action, key, value in acts
+            if action == "select" and key == "source_domain" and isinstance(value, str)
+            and value in groups and value != domain
+        }
+        turn_references = {}
+        last_named((act for act in actions if act[1] in reference_domains), turn_references)
+        for domain, acts in groups.items():
+            if domain in reference_domains and all(action == "inform" and key == "name" for action, key, _ in acts):
+                continue
             code = domain_kind(domain)
             state = states[code]
             for action, key, value in acts:
                 if action == "inform" and value not in (None, ""):
                     state[key] = value
-            intent = resolve_dialogue_intent(domain, acts, state, subjects, raw)
+            detail_slots = CROSSWOZ_DETAIL_SLOTS | {key for _, key, _ in acts if key.startswith("酒店设施-")}
+            intent = resolve_dialogue_intent(
+                domain, acts, state, subjects, raw, detail_slots=detail_slots, turn_references=turn_references,
+            )
             fingerprint = canonical_json(intent)
             if fingerprint != prior.get(code):
                 prior[code] = fingerprint

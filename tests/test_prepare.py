@@ -36,6 +36,37 @@ class DialogueTests(unittest.TestCase):
         self.assertEqual(precision_for(second.intent).tier, NOT_APPLICABLE)
         self.assertNotIn(("assistant", "有春风公园"), second.context)
 
+    def test_crosswoz_uses_same_turn_place_as_reference(self):
+        actions = [
+            ["Inform", "景点", "名称", "念坛公园"],
+            ["Select", "餐馆", "源领域", "景点"],
+            ["Request", "餐馆", "名称", ""],
+        ]
+        turn = {"role": "usr", "content": "念坛公园附近有什么餐馆？", "dialog_act": actions}
+        older = {"role": "sys", "content": "可以去人民大会堂",
+                 "dialog_act": [["Inform", "景点", "名称", "人民大会堂"]]}
+        restaurant, = adapt_crosswoz({"messages": [older, turn]}, 6)
+        self.assertEqual(restaurant.intent["intent_id"], "restaurant.search")
+        self.assertEqual(restaurant.intent["parameters"]["reference_place"], "念坛公园")
+        self.assertEqual(restaurant.intent["parameters"]["location_source"], "named_place")
+
+        turn["dialog_act"] = [*actions, ["Request", "景点", "电话", ""]]
+        attraction, restaurant = adapt_crosswoz({"messages": [older, turn]}, 6)
+        self.assertEqual(attraction.intent["intent_id"], "place.details")
+        self.assertEqual(restaurant.intent["intent_id"], "restaurant.search")
+
+    def test_crosswoz_named_hotel_attributes_are_details(self):
+        turns = [
+            {"role": "sys", "content": "推荐同行酒店",
+             "dialog_act": [["Inform", "酒店", "名称", "同行酒店"]]},
+            {"role": "usr", "content": "这家酒店是什么类型，提供吹风机吗？",
+             "dialog_act": [["Request", "酒店", "酒店类型", ""],
+                            ["Request", "酒店", "酒店设施-吹风机", ""]]},
+        ]
+        hotel, = adapt_crosswoz({"messages": turns}, 6)
+        self.assertEqual(hotel.intent["intent_id"], "hotel.details")
+        self.assertEqual(precision_for(hotel.intent).tier, NOT_APPLICABLE)
+
     def test_risawoz_keeps_current_domains_separate(self):
         dialogue = {"dialogue": [{
             "user_utterance": "这里的营业时间？另外看看苏州明天的天气",
