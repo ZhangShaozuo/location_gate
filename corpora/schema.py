@@ -105,6 +105,9 @@ DEVICE_FIND_OPERATIONS = {
     "响铃": "ring", "播放铃声": "ring", "让设备响铃": "ring",
     "定位设备": "query_target_location", "查询设备位置": "query_target_location",
     "查询目标设备位置": "query_target_location",
+    "查看目标设备的地图位置": "query_target_location",
+    "导航去找设备": "navigate_to_target", "导航到目标设备": "navigate_to_target",
+    "从当前位置导航到目标设备": "navigate_to_target",
 }
 SOCIAL_POST_OPERATIONS = {
     "附带当前位置": "share_current_location",

@@ -86,13 +86,13 @@ python3 prepare.py \
 
 精度标签由 [现网动作映射](POLICY.md) 生成。规则假定智能体已尝试调用定位服务，按结构化意图判断所需精度。比如叫车在此条件下标为精确，天气与查订火车票标为模糊城市级。是否调用仍由智能体判断。
 
-「不涉及」写作 `{"precision":"不涉及","coarse_level":null}`，用于设置普通闹钟、调音量、查询事实、搜索互联网、普通社交发布、消息及已复核的应用内操作等。发布时明确附带当前位置按模糊城市级标注。智能情景只有在结构化触发参数表明使用围栏时标为精确。查找设备缺少操作类型、智能情景缺少触发方式时进入待复核。
+「不涉及」写作 `{"precision":"不涉及","coarse_level":null}`，用于设置普通闹钟、调音量、查询事实、搜索互联网、普通社交发布、消息及已复核的应用内操作等。发布时明确附带当前位置按模糊城市级标注。智能情景只有在结构化触发参数表明使用围栏时标为精确。查找设备时，查看目标设备位置或仅响铃均标为不涉及，从发起手机的当前位置导航到目标设备标为精确。查找设备缺少操作类型、智能情景缺少触发方式时进入待复核。
 
 默认主划分只包含位置精度样本。去重后的「不涉及」样本按划分放在 `not_applicable/`，待复核样本放在 `needs_review/`。需要把「不涉及」作为第五类时，加 `--include-not-applicable`。此时主划分和 `not_applicable/` 中可能同时存在该类记录，训练直接读取主划分即可。
 
 终端为每个划分分别打印主文件条数 `total`、去重总数 `deduplicated_total`，以及 `not_applicable_saved` 和 `needs_review_saved`。主文件的标签分布见 `classes`。
 
-合成对照样本单独输出到 `augmentation/device-find-contrast.jsonl`。三对样本分别使用手机、手表和平板。每一对具有相同的意图及设备类型，并对照 `query_target_location` 和 `ring`。这六条标记为合成和训练划分，主划分和真实语料计数单独计算。
+合成对照样本单独输出到 `augmentation/device-find-contrast.jsonl`。手机、手表和平板各有一组，每组对照 `query_target_location`、`ring` 和 `navigate_to_target`，共 9 条。合成样本标为训练划分，单独计数。
 
 这些标签用于训练原型和检查覆盖范围。精确放行效果应在有人工真值的测试集上测量。弱标签和真实用户位置授权属于不同环节。
 
@@ -113,7 +113,7 @@ python3 prepare.py \
 
 `summary.json` 的 `stages` 包含提取后、去重后和主划分的分布。每阶段都有按来源、按划分和按标签的计数。`sidecars` 记录另存的两组样本。`exported_intent_distribution` 给出主划分每个意图的总数及各标签数。`intent_labels_with_multiple_precision_classes` 列出主划分中同一个无参数意图对应多个精度标签的情况，例如明确要求不同粒度的「查询当前位置」。
 
-在 MASSIVE zh-CN 和 CMPA-SLU 上重新标注全部 23,580 条去重记录。与 v4 逐条比对，记录 ID、划分和参考文本一致。v4 有 2,654 条待复核样本转为「不涉及」，1 条发布当前位置的样本转为「模糊·城市级」。剩余 28 条待复核样本包括 19 条触发方式不明的智能情景和 9 条操作不明的查找设备。其余三套使用样本验证适配。
+在 MASSIVE zh-CN 和 CMPA-SLU 上重新标注全部 23,580 条去重记录。v6 的公开语料记录与 v5 逐条比对一致。28 条待复核样本包括 19 条触发方式不明的智能情景和 9 条操作不明的查找设备。其余三套使用样本验证适配。
 
 | 划分 | 主划分 | 精确 | 区域级 | 城市级 | 国家级 | 不涉及 | 待复核 |
 |---|---:|---:|---:|---:|---:|---:|---:|
@@ -125,7 +125,7 @@ python3 prepare.py \
 
 ```bash
 git pull --ff-only origin main
-python3 prepare.py --raw-dir ./raw --out-dir ./data-location-v5 --datasets massive cmpa --offline
+python3 prepare.py --raw-dir ./raw --out-dir ./data-location-v6 --datasets massive cmpa --offline
 ```
 
 `summary.json` 的 `label_policy` 记录当前标注版本，`augmentation` 记录合成对照集位置。旧版数据可用同一批原始缓存按新版策略整体重建。

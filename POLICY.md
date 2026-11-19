@@ -15,7 +15,7 @@
 | 查订机票及航班流量 | `transit.flight_ticket`、`transit.flight_traffic` | 模糊·城市级 |
 | 查订火车票 | `transit.rail_ticket` | 模糊·城市级 |
 | 搜公交地铁、查看乘车码 | `transit.bus_query`、`transit.ride_code` | 搜站点精确，乘车码模糊·城市级 |
-| 查找设备 | `device.find` | 查询目标设备位置时精确，仅响铃时不涉及 |
+| 查找设备 | `device.find` | 查看目标设备位置及响铃时不涉及，从当前位置导航到目标设备时精确 |
 | 开始运动 | `fitness.start` | 精确并告知，标记持续使用；明确不记录轨迹时不涉及 |
 | 查询运动轨迹、查看运动类型 | `fitness.history`、`fitness.activity_types` | 轨迹概览标为模糊·区域级，运动类型不涉及 |
 | 寄快递、收快递 | `package.ship`、`package.receive` | 精确，单独查询快递状态标为不涉及 |
@@ -36,8 +36,9 @@
 
 | 意图 | 结构化参数 | 标签 |
 |---|---|---|
-| 查找设备 | `operation=query_target_location` | 精确 |
+| 查找设备 | `operation=query_target_location` | 不涉及 |
 | 查找设备 | `operation=ring` | 不涉及 |
+| 查找设备 | `operation=navigate_to_target` | 精确，按 `navigation.start` 标记持续使用 |
 | 查找设备 | `operation` 缺失或未识别 | 待复核 |
 | 发布社交内容 | `operation=share_current_location` | 模糊·城市级（当前默认） |
 | 发布社交内容 | 普通发布，未选择附带当前设备位置 | 不涉及 |
@@ -47,4 +48,4 @@
 
 发布内容里的地点名可以单独作为参数保留。涉及当前位置的社交发布由智能体提供 `operation=share_current_location`。MASSIVE zh-CN 的 15387 号样本经人工检查，在数据适配阶段补录了原数据遗漏的该参数。智能情景的触发类型也来自结构化参数，例如场景配置中的「到达地点」。
 
-设备查找样本保留目标设备类型。对照样本中的同一对使用相同的类型及意图，各对仅改变 `operation`。是否需要告知、可否持续使用、返回轨迹概览等要求存放在 `annotation.location_requirements` 中，由调用系统执行。
+设备查找的精度标签针对发起手机的当前位置。查找服务返回的目标设备坐标由该服务单独管理。对照样本每组使用同一目标设备类型和意图，只改变 `operation`。是否需要告知、可否持续使用、返回轨迹概览等要求存放在 `annotation.location_requirements` 中，由调用系统执行。

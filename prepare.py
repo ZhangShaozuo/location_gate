@@ -262,6 +262,7 @@ def write_device_find_contrasts(data_dir, with_reference):
             for sequence, (operation, text) in enumerate((
                 ("query_target_location", f"帮我查一下我的{name}在哪里"),
                 ("ring", f"让我的{name}响铃"),
+                ("navigate_to_target", f"从我的当前位置导航到我的{name}所在的位置"),
             )):
                 intent = {
                     "intent_id": "device.find", "label": "查找设备",

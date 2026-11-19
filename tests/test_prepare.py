@@ -203,7 +203,8 @@ class LivePolicyTests(unittest.TestCase):
             ("transit.flight_traffic", current, "城市级"),
             ("transit.bus_query", current, "精确"),
             ("transit.ride_code", current, "城市级"),
-            ("device.find", {"operation": "query_target_location"}, "精确"),
+            ("device.find", {"operation": "query_target_location"}, NOT_APPLICABLE),
+            ("device.find", {"operation": "navigate_to_target"}, "精确", {"mode": "continuous"}),
             ("fitness.start", current, "精确", {"notice": "notify", "mode": "continuous"}),
             ("fitness.history", {"location_source": "stored_history"}, "区域级", {"mode": "route_overview"}),
             ("package.ship", {"address_source": "device_current"}, "精确"),
@@ -235,6 +236,7 @@ class LivePolicyTests(unittest.TestCase):
         self.check("weather.query", {}, "城市级")
         self.check("location.self", {"requested_granularity": "coarse_unspecified"}, "城市级", {"notice": "prompt"})
         self.check("device.find", {"location_source": "device_current"}, NEEDS_REVIEW)
+        self.check("device.find", {"operation": "unknown"}, NEEDS_REVIEW)
         self.check("device.find", {"operation": "ring", "location_source": "target_device"}, NOT_APPLICABLE)
         self.check("device.find_menu", {}, NOT_APPLICABLE)
         self.check("package.status", {}, NOT_APPLICABLE)
@@ -325,21 +327,40 @@ class LivePolicyTests(unittest.TestCase):
     def test_device_contrasts_match_except_for_operation(self):
         with tempfile.TemporaryDirectory() as folder:
             metadata = write_device_find_contrasts(Path(folder), True)
-            self.assertEqual(metadata["classes"], {"精确": 3, "不涉及": 3})
+            self.assertEqual(metadata["classes"], {"精确": 3, "不涉及": 6})
+            self.assertEqual(metadata["total"], 9)
             with (Path(folder) / metadata["path"]).open(encoding="utf-8") as stream:
                 rows = list(map(json.loads, stream))
-        for locate, ring in zip(rows[::2], rows[1::2], strict=True):
-            self.assertEqual(locate["group_id"], ring["group_id"])
-            self.assertEqual(locate["split"], "train")
-            self.assertEqual(ring["split"], "train")
-            self.assertTrue(locate["reference"]["synthetic"])
-            a = locate["model_input"]["intent_with_parameters"]
-            b = ring["model_input"]["intent_with_parameters"]
-            self.assertEqual(a["intent_id"], "device.find")
-            self.assertEqual(a["parameters"].pop("operation"), "query_target_location")
-            self.assertEqual(b["parameters"].pop("operation"), "ring")
-            self.assertEqual(a, b)
-            self.assertEqual((locate["label"]["precision"], ring["label"]["precision"]), ("精确", "不涉及"))
+        operations = {
+            "query_target_location": NOT_APPLICABLE,
+            "ring": NOT_APPLICABLE,
+            "navigate_to_target": "精确",
+        }
+        for kind, offset in zip(("phone", "watch", "tablet"), range(0, 9, 3), strict=True):
+            group = rows[offset:offset + 3]
+            seen_operations = set()
+            for row in group:
+                self.assertEqual(row["group_id"], f"synthetic:train:{kind}")
+                self.assertEqual(row["split"], "train")
+                self.assertTrue(row["reference"]["synthetic"])
+                intent = row["model_input"]["intent_with_parameters"]
+                self.assertEqual(intent["intent_id"], "device.find")
+                operation = intent["parameters"].pop("operation")
+                self.assertEqual(intent["parameters"], {"target_device_type": kind})
+                self.assertEqual(row["label"]["precision"], operations[operation])
+                seen_operations.add(operation)
+            self.assertEqual(seen_operations, operations.keys())
+
+    def test_device_operation_is_normalized_from_structured_slots(self):
+        for value, operation, label in (
+            ("查看目标设备的地图位置", "query_target_location", NOT_APPLICABLE),
+            ("播放铃声", "ring", NOT_APPLICABLE),
+            ("从当前位置导航到目标设备", "navigate_to_target", "精确"),
+        ):
+            with self.subTest(operation=operation):
+                candidate = next(adapt_cmpa({"input": "帮我找手机", "output": f"查找手机: [操作: {value}]"}))
+                self.assertEqual(candidate.intent["parameters"]["operation"], operation)
+                self.assertEqual(precision_for(candidate.intent).tier, label)
 
 
 if __name__ == "__main__":

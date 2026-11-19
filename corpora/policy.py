@@ -51,7 +51,7 @@ with Path(__file__).with_name("non_location_intents.json").open(encoding="utf-8"
     }
 
 
-POLICY_VERSION = "precision-weak-v5-reviewed-intents"
+POLICY_VERSION = "precision-weak-v6-caller-location"
 NO_POSITION = "none"
 TARGET_DEVICE = "target_device"
 STORED_TRACK = "stored_history"
@@ -152,10 +152,12 @@ def precision_for(intent):
     if code == "device.find":
         operation = params.get("operation")
         if operation == "query_target_location":
-            return PolicyLabel("精确", "device_find_query_target_location", True)
+            return PolicyLabel(NOT_APPLICABLE, "device_find_target_location_only")
         if operation == "ring":
             return PolicyLabel(NOT_APPLICABLE, "device_find_ring_only")
-        return review("device_find_operation_unknown")
+        if operation != "navigate_to_target":
+            return review("device_find_operation_unknown")
+        code = "navigation.start"
 
     if code == "location.self":
         requested = params.get("requested_granularity")
