@@ -169,7 +169,6 @@ HERE = r"(?:这儿|这里|这边|此处|我这(?:儿|里|边)|我(?:的)?当前(
 ORIGIN_HERE = re.compile(r"(?:从|以)" + HERE)
 DESTINATION_HERE = re.compile(r"(?:到|去|至)\s*(?:我这(?:儿|里|边)|设备当前位置|手机当前位置|我(?:的)?当前位置)")
 PICKUP_HERE = re.compile(r"(?:到|在|去)" + HERE + r"(?:来)?接(?:上)?我|" + HERE + r"出发")
-DELIVER_HERE = re.compile(r"(?:送|配送)到" + HERE)
 DEVICE_NEARBY = re.compile(r"(?:我(?:的)?|这(?:里|儿|边))(?:附近|周边)|离我|\bnear me\b|\bclosest to me\b", re.I)
 LOCAL_WEATHER = re.compile(r"我(?:的)?这(?:里|儿|边)|我(?:的)?所在地区|我们这座城市|本地|当地")
 ORDER_STATUS = re.compile(r"订单.{0,5}(?:状态|进度|怎么样|什么时候到|好了吗)|外卖现在什么状况")
@@ -227,11 +226,12 @@ def make_intent(code, pairs, *, text="", single_turn=False, anchor=None, label=N
     if code == "ride.order":
         if "pickup" not in params and "origin" in params:
             params["pickup"] = params.pop("origin")
+    if code == "delivery.order":
+        params.pop("delivery_source", None)
     role_values = {
         "origin_source": params.get("origin"),
         "destination_source": params.get("destination"),
         "pickup_source": params.get("pickup"),
-        "delivery_source": params.get("delivery_address"),
         "address_source": params.get("address") or params.get("delivery_address"),
         "location_source": location,
     }
@@ -248,7 +248,6 @@ def make_intent(code, pairs, *, text="", single_turn=False, anchor=None, label=N
                 "origin_source": ORIGIN_HERE.search(text),
                 "destination_source": DESTINATION_HERE.search(text),
                 "pickup_source": PICKUP_HERE.search(text) or ORIGIN_HERE.search(text),
-                "delivery_source": DELIVER_HERE.search(text),
             }
             for field, matched in cues.items():
                 if field in rule.fields and matched and params[field] == UNKNOWN:

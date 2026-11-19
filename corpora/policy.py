@@ -100,7 +100,7 @@ RULES = {
     "local_service.search": Rule("城市级", WHERE),
     "travel.index": Rule("城市级", WHERE),
     "jobs.search": Rule("城市级", WHERE),
-    "delivery.order": Rule("精确", ("delivery_source",)),
+    "delivery.order": Rule("精确", ()),
     "restaurant.reserve": Rule("城市级", WHERE),
     "calendar.set": Rule("城市级", WHERE),
     "calendar.update": Rule("城市级", WHERE),

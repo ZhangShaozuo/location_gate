@@ -212,7 +212,7 @@ class LivePolicyTests(unittest.TestCase):
             ("local_service.search", current, "城市级"),
             ("travel.index", current, "城市级"),
             ("jobs.search", current, "城市级"),
-            ("delivery.order", {"delivery_source": "device_current"}, "精确"),
+            ("delivery.order", {}, "精确"),
             ("restaurant.reserve", current, "城市级"),
             ("calendar.update", current, "城市级"),
             ("calendar.remove", current, "城市级"),
@@ -231,7 +231,7 @@ class LivePolicyTests(unittest.TestCase):
             self.check("transit.rail_ticket", params, "城市级")
             self.check("transit.bus_query", params, "精确")
         self.check("ride.order", {"destination_source": "device_current"}, "精确")
-        self.check("delivery.order", {"delivery_source": "saved_place"}, "精确")
+        self.check("delivery.order", {"delivery_address": "公司"}, "精确")
         self.check("weather.query", {"location_source": "named_place"}, "城市级")
         self.check("weather.query", {}, "城市级")
         self.check("location.self", {"requested_granularity": "coarse_unspecified"}, "城市级", {"notice": "prompt"})
@@ -314,6 +314,16 @@ class LivePolicyTests(unittest.TestCase):
         self.assertEqual(precision_for(intent).tier, "精确")
         how_to = next(adapt_cmpa({"input": "如何查看我的当前位置", "output": "查询当前位置: []"}))
         self.assertEqual(precision_for(how_to.intent).tier, "精确")
+
+    def test_delivery_order_omits_delivery_source_from_model_input(self):
+        raw = "点份披萨送到这里"
+        for slots in ("食物: 披萨", "食物: 披萨, delivery_source: device_current"):
+            with self.subTest(slots=slots):
+                candidate = next(adapt_cmpa({"input": raw, "output": f"点外卖: [{slots}]"}))
+                row, tier = make_row(candidate, "cmpa", "train", "example", 0, True)
+                self.assertEqual(row["model_input"]["intent_with_parameters"]["parameters"], {"food_type": "披萨"})
+                self.assertEqual(row["reference"]["utterance"], raw)
+                self.assertEqual(tier, "精确")
 
     def test_named_rail_stations_are_normalized_to_their_roles(self):
         item = next(adapt_cmpa({
