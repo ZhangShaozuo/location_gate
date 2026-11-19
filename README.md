@@ -4,11 +4,13 @@
 
 ## 在 Linux 上运行
 
+新版策略见 [现网动作映射](POLICY.md)，模型与人工评估见 [训练方案](TRAINING.md)。
+
 需要 Python 3.10 或更高版本，并使用 Python 自带的 SQLite。仅用标准库即可运行。在内存受限的服务器上，可以安装可选的 `ijson` 以流式解析体积较大的 JSON 文件。
 
 ```bash
-unzip location-intent-corpora.zip
-cd location-intent-corpora
+git clone https://github.com/ZhangShaozuo/location_gate.git
+cd location_gate
 
 python3 prepare.py \
   --raw-dir ./raw \
@@ -69,8 +71,8 @@ python3 prepare.py \
     }
   },
   "label": {
-    "precision": "模糊",
-    "coarse_level": "区域级"
+    "precision": null,
+    "coarse_level": null
   }
 }
 ```
@@ -78,28 +80,17 @@ python3 prepare.py \
 - **意图输入**用 `model_input.intent_label` 或 `model_input.intent_with_parameters`。用同一批样本和划分就能对比两种输入。
 - **标签**用 `label.precision` 做精确和模糊二分类，或用 `label.coarse_level or label.precision` 做精度分档。「精确」和「不涉及」的 `coarse_level` 为 `null`。
 - **审核**用 `annotation.rule` 和 `annotation.review_required`。每条记录也有 `source`、`source_id`、`group_id` 和 `turn_index`，方便回到原始样本。
-- **参考文本**用 `--with-reference` 输出到 `reference`。它包含原句和最近几个对话消息，供人工核对。安全模型直接读取选定的 `model_input` 字段。
+- **参考文本**默认输出到每条记录顶层的 `reference`。其中 `reference.utterance` 是原始用户输入，`reference.turns_through_current_user` 保存当前轮及最近几条对话，供人工核对。主划分和两个旁路目录都保留该字段。安全模型直接读取选定的 `model_input` 字段。旧版可显式传 `--with-reference`，需要导出省略原文的副本时传 `--no-reference`。
 
 ## 精度弱标注
 
-精度标签由本项目的规则生成。规则函数 `precision_for` 接收归一后的意图和参数。精确类别表示意图已有清楚的位置角色或精度诉求，所有精确样本标为需要优先复核。
+精度标签由 [现网动作映射](POLICY.md) 生成。策略只接收统一意图和参数，要求位置来源与任务的实际角色一致。上方样例已给出目的地，上车点来源未知，因此两个标签字段为 `null`，进入待复核。天气地点未指定同样进入待复核。按城市查询天气时，已指定的城市可直接用于服务查询。若明确以设备当前位置为参照，则判为城市级。
 
-| 已提取的意图和参数 | 标注结果 |
-|---|---|
-| 本地天气，或查询地点未指定 | 模糊·城市级 |
-| 已指定查询地名的天气，如「北京天气」 | 不涉及设备定位 |
-| 找设备附近的餐馆或查询区域路况 | 模糊·区域级 |
-| 搜索参照点为已确定的前文实体或外部地名 | 不涉及设备定位 |
-| 导航起点、打车上车点或外卖配送地址明确为设备当前位置 | 精确 |
-| 用户明确查询自己的坐标、具体位置或详细地址 | 精确 |
-| 用户明确问自己在哪个国家、城市或区 | 对应的模糊级别 |
-| 未说明导航起点、打车上车点或当前位置所需精度 | 模糊·区域级，并标记为优先复核 |
-| 设置定时闹钟、调音量等与设备位置无关的任务 | 不涉及设备定位 |
-| 「到家后提醒」等带位置触发条件的非定位领域意图，或现有规则未覆盖的意图 | 待复核，精度为 `null` |
-
-「国家级」用于确实需要设备位置且只需国家范围的任务，例如「我在哪个国家」。「不涉及」在 JSON 中写作 `{"precision":"不涉及","coarse_level":null}`。缺少规则依据的意图单独进入复核。
+「国家级」用于确实需要设备所在国家的任务。「不涉及」写作 `{"precision":"不涉及","coarse_level":null}`。上车点、配送地址等位置角色已由用户给出时可使用该参数完成业务。
 
 默认主划分只包含位置精度样本。去重后的「不涉及」样本按划分放在 `not_applicable/`，待复核样本放在 `needs_review/`。需要把「不涉及」作为第五类时，加 `--include-not-applicable`。此时主划分和 `not_applicable/` 中可能同时存在该类记录，训练直接读取主划分即可。
+
+终端为每个划分分别打印主文件条数 `total`、去重总数 `deduplicated_total`，以及 `not_applicable_saved` 和 `needs_review_saved`。主文件的标签分布见 `classes`。
 
 这些标签用于训练原型和检查覆盖范围。精确放行效果应在有人工真值的测试集上测量。弱标签和真实用户位置授权属于不同环节。
 
@@ -120,12 +111,20 @@ python3 prepare.py \
 
 `summary.json` 的 `stages` 包含提取后、去重后和主划分的分布。每阶段都有按来源、按划分和按标签的计数。`sidecars` 记录另存的两组样本。`exported_intent_distribution` 给出主划分每个意图的总数及各标签数。`intent_labels_with_multiple_precision_classes` 列出同一个无参数意图对应多个标签的情况，例如「叫车」会因上车点来源不同而改变标签。
 
-MASSIVE zh-CN 和 CMPA-SLU 全量实测合计输入 24,341 条，去重后的 23,580 条分布如下。其余三个来源用样本验证，完整五库总量以实际运行的统计报告为准。
+在 MASSIVE zh-CN 和 CMPA-SLU 上完整重跑新版策略，去重后保留 23,580 条。主划分条数反映公开数据中位置来源足以支持精度判断的意图覆盖率。其余三套使用样本验证适配。
 
-| 划分 | 主划分总数 | 精确 | 模糊·区域级 | 模糊·城市级 | 模糊·国家级 | 不涉及 | 待复核 |
+| 划分 | 主划分 | 精确 | 区域级 | 城市级 | 国家级 | 不涉及 | 待复核 |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| 训练 | 1,594 | 9 | 906 | 679 | 0 | 10,041 | 3,903 |
-| 验证 | 353 | 2 | 177 | 174 | 0 | 2,122 | 1,054 |
-| 测试 | 416 | 3 | 205 | 208 | 0 | 2,880 | 1,217 |
+| 训练 | 84 | 38 | 34 | 12 | 0 | 9,643 | 5,811 |
+| 验证 | 19 | 12 | 5 | 2 | 0 | 2,084 | 1,426 |
+| 测试 | 23 | 18 | 3 | 2 | 0 | 2,785 | 1,705 |
 
-可运行 `python3 -m unittest discover -s tests -v` 核查多轮引用、确认状态、去重和训练集配额。
+已有原始数据的仓库可以用 `git pull --ff-only origin main` 后离线生成新版本。
+
+```bash
+python3 prepare.py --raw-dir ./raw --out-dir ./data-location-v3 --datasets massive cmpa --offline
+```
+
+旧复核结果使用旧策略口径。本版从原始数据重建标签，`summary.json` 记录策略版本。
+
+可运行 `python3 -m unittest discover -s tests -v` 核查多轮引用、现网策略、去重和训练集配额。

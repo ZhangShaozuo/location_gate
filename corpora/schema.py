@@ -1,26 +1,20 @@
 """Common intent taxonomy, location roles, and weak-label policy."""
 
-from dataclasses import dataclass
 import json
 import re
 import unicodedata
 
+from .policy import (
+    CLASSES, DEVICE, HISTORY, NAMED, NEEDS_REVIEW, NOT_APPLICABLE,
+    POSITION_SOURCES, PRECISION_CLASSES, REPORTED_TIERS, SAVED, UNKNOWN,
+    RULES, PolicyLabel, precision_for,
+)
 
-PRECISION_CLASSES = ("精确", "区域级", "城市级", "国家级")
-NOT_APPLICABLE = "不涉及"
-NEEDS_REVIEW = "待复核"
-CLASSES = PRECISION_CLASSES + (NOT_APPLICABLE,)
-REPORTED_TIERS = CLASSES + (NEEDS_REVIEW,)
-UNKNOWN = "unknown"
-DEVICE = "device_current"
-HISTORY = "previous_entity"
-NAMED = "named_place"
-SAVED = "saved_place"
-FIXED = {HISTORY, NAMED, SAVED}
 
 INTENTS = {
     "weather.query": "查询天气",
     "weather.rain": "查询降雨",
+    "weather.alert": "查询天气预警",
     "weather.environment": "查询环境或生活指数",
     "navigation.start": "开始导航",
     "navigation.stop": "结束导航",
@@ -43,13 +37,34 @@ INTENTS = {
     "event.search": "查找或推荐活动",
     "transit.query": "查询公共交通",
     "transit.ticket": "查询或办理交通票务",
+    "transit.flight_ticket": "查询或预订机票",
+    "transit.rail_ticket": "查询或预订火车票",
+    "transit.flight_traffic": "查询机场航班流量",
+    "transit.trip_status": "查询已订行程",
+    "transit.bus_query": "查询公交地铁",
+    "transit.ride_code": "查看乘车码",
+    "device.find": "查找设备",
+    "device.find_menu": "打开查找设备界面",
+    "fitness.start": "开始运动",
+    "fitness.history": "查询运动轨迹",
+    "fitness.activity_types": "查看运动类型",
+    "package.ship": "寄快递",
+    "package.receive": "收快递",
+    "package.status": "查询快递状态",
+    "local_service.search": "查找本地服务",
+    "travel.index": "查询旅游指数",
+    "jobs.search": "查找招聘信息",
     "traffic.query": "查询路况",
     "alarm.set": "设置闹钟",
     "alarm.query": "查询闹钟",
     "alarm.remove": "删除闹钟",
     "calendar.query": "查询日程",
     "calendar.set": "创建日程",
+    "calendar.update": "修改日程",
     "calendar.remove": "删除日程",
+    "reminder.create": "创建提醒",
+    "note.create": "创建备忘",
+    "information.capture": "记录信息",
     "audio.volume.up": "调高音量",
     "audio.volume.down": "调低音量",
 }
@@ -66,6 +81,7 @@ SLOT_ALIASES = {
     "目的地": "destination", "终点": "destination", "到达城市": "destination",
     "destination_city": "destination", "to_city": "destination",
     "配送地址": "delivery_address", "收货地址": "delivery_address",
+    "上门地址": "address", "寄件地址": "address", "收件地址": "address",
     "时间": "time", "出发时间": "time", "日期": "date", "时段": "time_of_day",
     "timeofday": "time_of_day", "天气现象": "weather_descriptor",
     "店名": "name", "名称": "name", "business_name": "name", "restaurant_name": "name",
@@ -80,6 +96,10 @@ SLOT_ALIASES = {
     "商品名称": "item_name", "食物": "food_type",
     "源领域": "source_domain", "周边景点": "nearby_attractions",
     "周边餐馆": "nearby_restaurants", "周边酒店": "nearby_hotels",
+}
+REFERENCE_ONLY_SLOTS = {
+    "utterance", "raw_text", "user_request", "query", "text", "content", "message",
+    "事项", "内容", "文本内容", "短信内容", "device_location_cue", "resolution_status",
 }
 
 
@@ -101,6 +121,8 @@ def normalize_slots(pairs):
     grouped = {}
     for key, value in pairs:
         key = canonical_slot(key)
+        if key in REFERENCE_ONLY_SLOTS:
+            continue
         for atom in items(value):
             if atom is None or isinstance(atom, (dict, list, tuple)):
                 continue
@@ -126,10 +148,11 @@ ORIGIN_HERE = re.compile(r"(?:从|以)" + HERE)
 DESTINATION_HERE = re.compile(r"(?:到|去|至)\s*(?:我这(?:儿|里|边)|设备当前位置|手机当前位置|我(?:的)?当前位置)")
 PICKUP_HERE = re.compile(r"(?:到|在|去)" + HERE + r"(?:来)?接(?:上)?我|" + HERE + r"出发")
 DELIVER_HERE = re.compile(r"(?:送|配送)到" + HERE)
-NEARBY = re.compile(r"附近|周边|最近的|离我近|nearby|near me|closest to me", re.I)
+DEVICE_NEARBY = re.compile(r"(?:我(?:的)?|这(?:里|儿|边))(?:附近|周边)|离我|\bnear me\b|\bclosest to me\b", re.I)
 LOCAL_WEATHER = re.compile(r"我(?:的)?这(?:里|儿|边)|我(?:的)?所在地区|我们这座城市|本地|当地")
 ORDER_STATUS = re.compile(r"订单.{0,5}(?:状态|进度|怎么样|什么时候到|好了吗)|外卖现在什么状况")
 PRECISE_SELF = re.compile(r"具体位置|精确位[置址]|详细地址|经纬度|坐标|门牌号")
+COARSE_SELF = re.compile(r"大概|粗略|模糊|大致")
 SELF_LEVELS = (
     ("country", re.compile(r"哪个国家|什么国家|哪一个国家")),
     ("city", re.compile(r"哪个城市|哪座城市|什么城市|哪个市")),
@@ -147,42 +170,18 @@ LOCATION_TRIGGER = re.compile(
     r"(?:到|回)(?:家|公司|学校)(?:就)?(?:提醒|通知)|\b(?:when i (?:arrive|leave|get home))\b",
     re.I,
 )
-LOCATION_CONTROL = {"cmpa.打开GPS", "cmpa.关闭GPS", "cmpa.打开GPS设置面板"}
-NON_LOCATION = {
-    "navigation.stop", "delivery.status", "location.address", "place.details",
-    "hotel.details", "restaurant.details", "restaurant.reserve",
-}
-NON_LOCATION_PREFIXES = (
-    "alarm.", "calendar.", "audio.", "massive.alarm_", "massive.audio_",
-    "massive.calendar_", "massive.cooking_", "massive.datetime_", "massive.email_", "massive.general_",
-    "massive.iot_", "massive.lists_", "massive.music_", "massive.play_",
-)
-NON_LOCATION_MASSIVE = {
-    "qa_currency", "qa_definition", "qa_maths", "qa_stock", "recommendation_movies",
-}
-CMPA_NON_LOCATION = re.compile(
-    r"设置(?:手机|导航键|显示|屏幕|应用|日期时间|输|桌面|日程|定时开关机)|"
-    r"(?:关闭|打开)(?:闹钟|手机|WIFI|蓝牙|NFC|静音|振动|勿扰|飞行|热点|手电筒|省电|卡[一二]数据)|"
-    r"(?:调[大小]|把)手机(?:音量|字体)|(?:调亮|调暗|关闭)屏幕|"
-    r"(?:开始|继续|停止)播放|播放(?:音乐|视频|下一首|上一首)|查询手机(?:型号|软件版本|内存|名称)|"
-    r"换算(?:面积|长度|重量|时间)单位|讲(?:笑话|故事)|倒计时|四则运算|设置主题|"
-    r"(?:微信|支付宝)(?:转账|付款|收款|视频电话|语音电话)|"
-    r"(?:充值话费|带金额充话费|查询话费余额|查询数据流量|查询现在几点了|设置锁屏背景)"
-)
-SGD_NON_LOCATION = {
-    "PlayMedia", "PlayMovie", "PlaySong", "FindMusic", "SearchMusic", "LookupSong",
-    "PlayMusic", "FindMovies", "GetAccountBalance", "TransferMoney", "CheckBalance",
-}
-
-
 def ref_kind(value, *, anchor=None):
     values = [compact(atom) for atom in items(value) if atom]
     if not values:
         return UNKNOWN
     candidates = set()
     for atom in values:
-        if CURRENT.fullmatch(atom):
+        if atom in POSITION_SOURCES:
+            candidates.add(atom)
+        elif CURRENT.fullmatch(atom):
             candidates.add(DEVICE)
+        elif atom in {"附近", "本地", "当地", "nearby", "local"}:
+            candidates.add(UNKNOWN)
         elif PRONOUN.fullmatch(atom) or SYMBOLIC_REFERENCE.fullmatch(atom):
             candidates.add(HISTORY if anchor else UNKNOWN)
         elif SAVED_PLACE.fullmatch(atom):
@@ -206,132 +205,56 @@ def make_intent(code, pairs, *, text="", single_turn=False, anchor=None, label=N
             or (single_turn and RAIN.search(text))
         ):
             code = "weather.rain"
-        params["location_source"] = ref_kind(location, anchor=anchor)
-        if not location and single_turn and (LOCAL_WEATHER.search(text) or CURRENT.search(text)):
-            params["location_source"] = DEVICE
-
-    if code in {"navigation.start", "route.query", "route.estimate", "transit.query", "transit.ticket"}:
-        params["origin_source"] = ref_kind(params.get("origin"), anchor=anchor)
-        if single_turn and "origin" not in params and ORIGIN_HERE.search(text):
-            params["origin_source"] = DEVICE
-        if ref_kind(params.get("destination"), anchor=anchor) == DEVICE or (
-            single_turn and DESTINATION_HERE.search(text)
-        ):
-            params["destination_source"] = DEVICE
-
     if code == "ride.order":
         if "pickup" not in params and "origin" in params:
             params["pickup"] = params.pop("origin")
-        params["pickup_source"] = ref_kind(params.get("pickup"), anchor=anchor)
-        if single_turn and "pickup" not in params and (PICKUP_HERE.search(text) or ORIGIN_HERE.search(text)):
-            params["pickup_source"] = DEVICE
-
-    if code == "delivery.order":
-        params["delivery_source"] = ref_kind(params.get("delivery_address"), anchor=anchor)
-        if single_turn and "delivery_address" not in params and DELIVER_HERE.search(text):
-            params["delivery_source"] = DEVICE
-
+    role_values = {
+        "origin_source": params.get("origin"),
+        "destination_source": params.get("destination"),
+        "pickup_source": params.get("pickup"),
+        "delivery_source": params.get("delivery_address"),
+        "address_source": params.get("address") or params.get("delivery_address"),
+        "location_source": location,
+    }
+    rule = RULES.get(code)
+    if rule:
+        for field in rule.fields:
+            if field not in params:
+                value = role_values[field]
+                params[field] = ref_kind(value, anchor=anchor)
+                if field == "location_source" and anchor and not value:
+                    params[field] = HISTORY
+        if single_turn:
+            cues = {
+                "origin_source": ORIGIN_HERE.search(text),
+                "destination_source": DESTINATION_HERE.search(text),
+                "pickup_source": PICKUP_HERE.search(text) or ORIGIN_HERE.search(text),
+                "delivery_source": DELIVER_HERE.search(text),
+            }
+            for field, matched in cues.items():
+                if field in rule.fields and matched and params[field] == UNKNOWN:
+                    params[field] = DEVICE
+            if "location_source" in rule.fields and params["location_source"] == UNKNOWN:
+                local_weather = code.startswith("weather.") and LOCAL_WEATHER.search(text)
+                local_search = (
+                    (code.endswith(".search") or code in ("transit.bus_query", "traffic.query"))
+                    and DEVICE_NEARBY.search(text)
+                )
+                if local_weather or local_search or CURRENT.search(text):
+                    params["location_source"] = DEVICE
     if code == "location.self":
-        params["location_source"] = DEVICE
-        params["requested_granularity"] = next(
-            (level for level, rule in SELF_LEVELS if rule.search(text)), UNKNOWN
-        ) if single_turn else UNKNOWN
-
-    if code.endswith(".search") or code in {"traffic.query", "hotel.reserve"}:
-        params["location_source"] = ref_kind(location, anchor=anchor)
-        if anchor:
-            params["location_source"] = HISTORY
-        elif single_turn and not location and (NEARBY.search(text) or CURRENT.search(text)):
-            params["location_source"] = DEVICE
-        if single_turn and NEARBY.search(text):
-            params["search_scope"] = "nearby"
-
-    if single_turn and UNCERTAIN_ACTION.search(text):
-        params["resolution_status"] = "uncertain"
-
-    if LOCATION_TRIGGER.search(text) or CURRENT.search(text) or re.search(r"离我(?!们)", text):
-        params["device_location_cue"] = True
+        params.setdefault("location_source", DEVICE)
+        if single_turn and "requested_granularity" not in params:
+            params["requested_granularity"] = next(
+                (level for level, cue in SELF_LEVELS if cue.search(text)),
+                "coarse_unspecified" if COARSE_SELF.search(text) else UNKNOWN,
+            )
+    if code in {"alarm.set", "calendar.set", "calendar.update", "reminder.create"} and LOCATION_TRIGGER.search(text):
+        params.setdefault("trigger_type", "geofence")
+    if single_turn and (rule or code == "location.self") and UNCERTAIN_ACTION.search(text):
+        params["intent_state"] = "unresolved"
 
     return {"intent_id": code, "label": INTENTS.get(code, label or code), "parameters": params}
-
-
-@dataclass(frozen=True)
-class PolicyLabel:
-    tier: str
-    rule: str
-    review: bool = False
-
-    def record(self):
-        if self.tier in {NOT_APPLICABLE, NEEDS_REVIEW}:
-            return {
-                "precision": NOT_APPLICABLE if self.tier == NOT_APPLICABLE else None,
-                "coarse_level": None,
-            }
-        return {
-            "precision": "精确" if self.tier == "精确" else "模糊",
-            "coarse_level": None if self.tier == "精确" else self.tier,
-        }
-
-
-def precision_for(intent):
-    code = intent["intent_id"]
-    params = intent["parameters"]
-    if code in LOCATION_CONTROL:
-        return PolicyLabel(NOT_APPLICABLE, "toggle_location_setting")
-    namespace, _, native = code.partition(".")
-    unrelated = (
-        code in NON_LOCATION or code.startswith(NON_LOCATION_PREFIXES)
-        or (namespace == "massive" and native in NON_LOCATION_MASSIVE)
-        or (namespace == "cmpa" and CMPA_NON_LOCATION.fullmatch(native))
-        or (namespace == "sgd" and native in SGD_NON_LOCATION)
-    )
-    if unrelated:
-        if params.get("device_location_cue"):
-            return PolicyLabel(NEEDS_REVIEW, "non_location_intent_with_device_cue", True)
-        return PolicyLabel(NOT_APPLICABLE, "known_non_location_intent")
-    if params.get("resolution_status") == "uncertain":
-        return PolicyLabel(NEEDS_REVIEW, "uncertain_action", True)
-    if code.startswith("weather."):
-        loc = params["location_source"]
-        if loc in FIXED:
-            return PolicyLabel(NOT_APPLICABLE, "weather_fixed_place")
-        return PolicyLabel("城市级", "weather_device_or_unspecified", loc == UNKNOWN)
-    if code == "location.self":
-        tier = params["requested_granularity"]
-        if tier == "precise":
-            return PolicyLabel("精确", "explicit_precise_self_location", True)
-        if tier == UNKNOWN:
-            return PolicyLabel("区域级", "self_location_granularity_unspecified", True)
-        return PolicyLabel({"country": "国家级", "city": "城市级", "district": "区域级"}[tier], "explicit_coarse_self_location")
-    role = {
-        "navigation.start": "origin_source", "route.query": "origin_source",
-        "ride.order": "pickup_source", "delivery.order": "delivery_source",
-    }.get(code)
-    if role:
-        if code in {"navigation.start", "route.query"} and params.get("destination_source") == DEVICE:
-            return PolicyLabel("精确", "explicit_device_destination", True)
-        if params[role] == DEVICE:
-            if params.get("confirmation") in {"pending_reply", "declined_or_corrected"}:
-                return PolicyLabel("区域级", "pending_transaction_confirmation", True)
-            return PolicyLabel("精确", f"explicit_device_{role}", True)
-        if params[role] in FIXED:
-            return PolicyLabel(NOT_APPLICABLE, f"fixed_{role}")
-        return PolicyLabel("区域级", f"unspecified_{role}", True)
-    if code in {"route.estimate", "transit.query"}:
-        if params["origin_source"] in FIXED and params.get("destination_source") != DEVICE:
-            return PolicyLabel(NOT_APPLICABLE, "fixed_route_origin")
-        return PolicyLabel("区域级", "rough_route_or_transit", params["origin_source"] == UNKNOWN)
-    if code == "transit.ticket":
-        if params["origin_source"] in FIXED and params.get("destination_source") != DEVICE:
-            return PolicyLabel(NOT_APPLICABLE, "fixed_ticket_origin")
-        return PolicyLabel("城市级", "intercity_ticket", True)
-    if "location_source" in params and (code.endswith(".search") or code in {"traffic.query", "hotel.reserve"}):
-        if params["location_source"] in FIXED:
-            return PolicyLabel(NOT_APPLICABLE, "search_fixed_place")
-        if params["location_source"] == DEVICE:
-            return PolicyLabel("区域级", "search_around_device")
-        return PolicyLabel("区域级", "search_reference_unspecified", True)
-    return PolicyLabel(NEEDS_REVIEW, "unmapped_location_relevance", True)
 
 
 def canonical_json(obj):

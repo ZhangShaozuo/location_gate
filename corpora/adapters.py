@@ -29,28 +29,46 @@ MASSIVE_MAP = {
 }
 CMPA_MAP = {
     "查询天气": "weather.query", "查询去某地的路线": "route.query",
+    "查天气预警": "weather.alert", "查询天气预警": "weather.alert",
     "查询PM指数": "weather.environment", "查询紫外线": "weather.environment",
     "查询洗车指数": "weather.environment", "查询穿衣指数": "weather.environment",
     "查询运动指数": "weather.environment", "查询钓鱼指数": "weather.environment",
     "导航": "navigation.start", "退出导航": "navigation.stop", "打车": "ride.order",
     "查询当前位置": "location.self", "查询地址": "location.address",
-    "订火车票": "transit.ticket", "订机票": "transit.ticket",
-    "查询火车行程信息": "transit.query", "查询航班行程信息": "transit.query",
+    "订火车票": "transit.rail_ticket", "查询火车票": "transit.rail_ticket",
+    "订机票": "transit.flight_ticket", "查询机票": "transit.flight_ticket",
+    "查询机场航班流量": "transit.flight_traffic",
+    "查询火车行程信息": "transit.trip_status", "查询航班行程信息": "transit.trip_status",
+    "搜索公交": "transit.bus_query", "搜公交": "transit.bus_query", "查询公交": "transit.bus_query",
+    "查询地铁": "transit.bus_query", "查看乘车码": "transit.ride_code",
+    "查找手机": "device.find", "查找设备": "device.find",
+    "打开查找我的设备": "device.find_menu",
+    "开始运动": "fitness.start", "查询运动数据": "fitness.history",
+    "查看运动类型": "fitness.activity_types",
+    "寄快递": "package.ship", "收快递": "package.receive",
+    "查待签收快递": "package.status", "查已签收快递": "package.status",
+    "查找家电维修": "local_service.search", "查找保洁服务": "local_service.search",
+    "查找收纳服务": "local_service.search",
+    "查旅游指数": "travel.index", "查询旅游指数": "travel.index",
+    "查找招聘信息": "jobs.search", "查找地点": "place.search",
     "点外卖": "delivery.order", "设置闹钟": "alarm.set", "删除闹钟": "alarm.remove",
+    "叫外卖": "delivery.order", "订餐厅": "restaurant.reserve", "小艺帮打订餐厅": "restaurant.reserve",
     "查询闹钟": "alarm.query", "创建日程": "calendar.set", "查询日程": "calendar.query",
     "设置日程": "calendar.set", "订酒店": "hotel.reserve", "查询周边": "place.search",
-    "删除日程": "calendar.remove", "调高音量": "audio.volume.up", "调低音量": "audio.volume.down",
+    "修改日程": "calendar.update", "取消日程": "calendar.remove", "删除日程": "calendar.remove",
+    "创建提醒": "reminder.create", "创建备忘": "note.create", "记录信息": "information.capture",
+    "调高音量": "audio.volume.up", "调低音量": "audio.volume.down",
 }
 SGD_MAP = {
     "GetWeather": "weather.query", "GetRide": "ride.order",
     "FindRestaurants": "restaurant.search", "ReserveRestaurant": "restaurant.reserve",
     "SearchHotels": "hotel.search", "FindHotels": "hotel.search",
     "ReserveHotel": "hotel.reserve", "BookHotel": "hotel.reserve",
-    "FindBus": "transit.query", "FindTrains": "transit.query",
-    "GetTrainTimes": "transit.query", "FindFlights": "transit.ticket",
-    "SearchRoundtripFlights": "transit.ticket", "SearchOnewayFlight": "transit.ticket",
-    "SearchOnewayFlights": "transit.ticket", "BuyBusTicket": "transit.ticket",
-    "BuyTrainTicket": "transit.ticket", "FindEvents": "event.search",
+    "FindBus": "transit.bus_query", "FindTrains": "transit.query",
+    "GetTrainTimes": "transit.query", "FindFlights": "transit.flight_ticket",
+    "SearchRoundtripFlights": "transit.flight_ticket", "SearchOnewayFlight": "transit.flight_ticket",
+    "SearchOnewayFlights": "transit.flight_ticket", "BuyBusTicket": "transit.ticket",
+    "BuyTrainTicket": "transit.rail_ticket", "FindEvents": "event.search",
     "FindAttractions": "place.search", "AddAlarm": "alarm.set",
     "GetAlarms": "alarm.query", "GetEvents": "calendar.query", "AddEvent": "calendar.set",
 }
@@ -58,9 +76,9 @@ DOMAINS = {
     "景点": "place.search", "旅游景点": "place.search", "酒店": "hotel.search",
     "餐馆": "restaurant.search", "餐厅": "restaurant.search", "美食": "restaurant.search",
     "出租": "ride.order", "出租车": "ride.order", "打车": "ride.order",
-    "地铁": "transit.query", "公交": "transit.query",
+    "地铁": "transit.bus_query", "公交": "transit.bus_query",
     "天气": "weather.query", "旅游": "place.search",
-    "火车": "transit.query", "飞机": "transit.ticket",
+    "火车": "transit.query", "飞机": "transit.flight_ticket",
 }
 DETAILS = {
     "place.search": "place.details", "hotel.search": "hotel.details",
@@ -85,6 +103,9 @@ MASSIVE_DEST = re.compile(r"(?:到|去|前往)\s*\[place_name\s*:\s*([^\]]+)\]")
 CMPA_OUTPUT = re.compile(r"([^:\n：]+)\s*[:：]\s*\[(.*)\]\s*", re.DOTALL)
 CMPA_PAIR = re.compile(r"(?:^|[,，;；])\s*([\w/ -]+?)\s*[:：]\s*")
 PUBLIC_TRANSIT = re.compile(r"地铁|公交|高铁|火车|轻轨|列车|航班|车票")
+BUS_SUBWAY = re.compile(r"地铁|公交|公共汽车|轻轨")
+FLIGHT_TICKET = re.compile(r"机票|航班")
+RAIL_TICKET = re.compile(r"火车|高铁|列车")
 ROUTE = re.compile(r"怎么走|怎样走|指路|路线|导航|怎么回家")
 DISTANCE = re.compile(r"多久|多远|多长时间|多少时间|距离|要多长|几公里|耗时")
 DIRECT_NAV = re.compile(r"^(?:开始|现在|请|帮我|给我|步行|骑行|驾车)*导航(?:去|到|至|回)?")
@@ -108,6 +129,8 @@ def adapt_massive(row):
     if native == "transport_query":
         if DIRECT_NAV.search(text):
             code = "navigation.start"
+        elif BUS_SUBWAY.search(text):
+            code = "transit.bus_query"
         elif PUBLIC_TRANSIT.search(text):
             code = "transit.query"
         elif DISTANCE.search(text):
@@ -116,6 +139,11 @@ def adapt_massive(row):
             code = "route.query"
     if native == "takeaway_query" and ORDER_STATUS.search(text):
         code = "delivery.status"
+    if native == "transport_ticket":
+        if FLIGHT_TICKET.search(text):
+            code = "transit.flight_ticket"
+        elif RAIL_TICKET.search(text):
+            code = "transit.rail_ticket"
     if native == "recommendation_locations" and any(
         key == "business_type" and re.search(r"餐馆|餐厅|饭店|餐饮", value)
         for key, value in pairs

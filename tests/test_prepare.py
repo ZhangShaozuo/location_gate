@@ -11,7 +11,7 @@ from unittest.mock import patch
 from corpora.adapters import adapt_crosswoz, adapt_risawoz, adapt_sgd, adapt_cmpa
 from corpora.schema import NEEDS_REVIEW, NOT_APPLICABLE, PRECISION_CLASSES, make_intent, precision_for
 from corpora.sources import download, sgd_records
-from prepare import deduplicate, init_database, quotas, sample
+from prepare import deduplicate, init_database, make_row, quotas, sample
 
 
 class DialogueTests(unittest.TestCase):
@@ -88,7 +88,7 @@ class DialogueTests(unittest.TestCase):
         a = next(adapt_cmpa(row))
         self.assertEqual(a.intent["parameters"]["pickup_source"], "unknown")
         self.assertEqual(a.intent["parameters"]["destination"], "机场")
-        self.assertEqual(precision_for(a.intent).tier, "区域级")
+        self.assertEqual(precision_for(a.intent).tier, NEEDS_REVIEW)
 
     def test_cmpa_keeps_colons_within_time_value(self):
         row = {"input": "明天早上七点开会", "output": "设置闹钟: [时间: 07:00, 事件: 开会]"}
@@ -176,6 +176,86 @@ class PipelineTests(unittest.TestCase):
                 with self.assertRaises(OSError):
                     download("https://example.test/file", target, None, 1, 0)
             self.assertEqual(list(target.parent.iterdir()), [])
+
+
+class LivePolicyTests(unittest.TestCase):
+    def check(self, code, fields, tier, requirements=None):
+        decision = precision_for({"intent_id": code, "parameters": fields})
+        self.assertEqual(decision.tier, tier, code)
+        self.assertEqual(decision.requirements(), requirements or {}, code)
+
+    def test_live_rows_have_the_expected_precision_and_scope(self):
+        current = {"location_source": "device_current"}
+        origin = {"origin_source": "device_current"}
+        cases = [
+            ("route.query", origin, "精确"),
+            ("route.estimate", origin, "精确"),
+            ("navigation.start", origin, "精确", {"mode": "continuous"}),
+            ("weather.query", current, "城市级"),
+            ("weather.alert", current, "城市级"),
+            ("location.self", {}, "精确", {"notice": "prompt"}),
+            ("place.search", current, "精确", {"notice": "notify"}),
+            ("ride.order", {"pickup_source": "device_current"}, "精确"),
+            ("transit.flight_ticket", origin, "城市级"),
+            ("transit.rail_ticket", origin, "城市级"),
+            ("transit.flight_traffic", current, "城市级"),
+            ("transit.bus_query", current, "精确"),
+            ("transit.ride_code", current, "城市级"),
+            ("device.find", {"location_source": "target_device"}, "精确"),
+            ("fitness.start", current, "精确", {"notice": "notify", "mode": "continuous"}),
+            ("fitness.history", {"location_source": "stored_history"}, "区域级", {"mode": "route_overview"}),
+            ("package.ship", {"address_source": "device_current"}, "精确"),
+            ("package.receive", {"address_source": "device_current"}, "精确"),
+            ("local_service.search", current, "城市级"),
+            ("travel.index", current, "城市级"),
+            ("jobs.search", current, "城市级"),
+            ("delivery.order", {"delivery_source": "device_current"}, "精确"),
+            ("restaurant.reserve", current, "城市级"),
+            ("calendar.update", current, "城市级"),
+            ("calendar.remove", current, "城市级"),
+            ("reminder.create", current, "城市级"),
+            ("note.create", current, "城市级"),
+            ("information.capture", current, "城市级"),
+        ]
+        for case in cases:
+            with self.subTest(intent=case[0]):
+                self.check(*case)
+
+    def test_fixed_missing_and_ambiguous_locations(self):
+        fixed = {"origin_source": "named_place", "destination_source": "named_place"}
+        for code in ("route.query", "transit.rail_ticket", "transit.bus_query"):
+            self.check(code, fixed, NOT_APPLICABLE)
+        self.check("route.query", {"origin_source": "named_place"}, NEEDS_REVIEW)
+        self.check("ride.order", {"destination_source": "device_current"}, NEEDS_REVIEW)
+        self.check("delivery.order", {"delivery_source": "saved_place"}, NOT_APPLICABLE)
+        self.check("weather.query", {"location_source": "named_place"}, NOT_APPLICABLE)
+        self.check("weather.query", {}, NEEDS_REVIEW)
+        self.check("location.self", {"requested_granularity": "coarse_unspecified"}, NEEDS_REVIEW)
+        self.check("device.find", {"location_source": "device_current"}, NEEDS_REVIEW)
+        self.check("device.find_menu", {}, NOT_APPLICABLE)
+        self.check("package.status", {}, NOT_APPLICABLE)
+        self.check("fitness.activity_types", {}, NOT_APPLICABLE)
+        self.check("fitness.start", {"tracking_mode": "no_route"}, NOT_APPLICABLE)
+        self.check("reminder.create", {"trigger_type": "geofence"}, NEEDS_REVIEW)
+        self.check("calendar.update", {"time": "17:00"}, NOT_APPLICABLE)
+
+    def test_reference_stays_outside_the_intent_and_the_label(self):
+        raw = {"input": "告诉我当前位置", "output": "查询当前位置: [内容: 整句文本]"}
+        candidate = next(adapt_cmpa(raw))
+        row, tier = make_row(candidate, "cmpa", "train", "example", 0, True)
+        self.assertEqual(tier, "精确")
+        self.assertEqual(row["annotation"]["location_requirements"], {"notice": "prompt"})
+        self.assertEqual(row["reference"]["utterance"], raw["input"])
+        self.assertNotIn("reference", row["model_input"])
+        params = row["model_input"]["intent_with_parameters"]["parameters"]
+        self.assertNotIn("内容", params)
+        self.assertNotIn("device_location_cue", params)
+
+    def test_named_poi_proximity_does_not_imply_device_position(self):
+        unbound = make_intent("place.search", [], text="图书馆附近的咖啡店", single_turn=True)
+        bound = make_intent("place.search", [], text="我附近的咖啡店", single_turn=True)
+        self.assertEqual(precision_for(unbound).tier, NEEDS_REVIEW)
+        self.assertEqual(precision_for(bound).tier, "精确")
 
 
 if __name__ == "__main__":

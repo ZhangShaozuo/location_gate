@@ -13,6 +13,7 @@ from tempfile import TemporaryDirectory
 from zipfile import BadZipFile
 
 from corpora.adapters import adapt
+from corpora.policy import POLICY_VERSION
 from corpora.schema import (
     CLASSES, NEEDS_REVIEW, NOT_APPLICABLE, PRECISION_CLASSES, REPORTED_TIERS,
     canonical_json, compact, precision_for,
@@ -21,7 +22,6 @@ from corpora.sources import NAMES, SPLITS, ensure_source, source_records
 
 
 SCHEMA_VERSION = "location-intent-v2"
-POLICY_VERSION = "precision-weak-v2"
 
 
 def positive_int(value):
@@ -73,6 +73,8 @@ def make_row(candidate, source, split, native_id, sequence, with_reference):
                 {"role": role, "text": utterance} for role, utterance in candidate.context
             ],
         }
+    if requirements := policy.requirements():
+        row["annotation"]["location_requirements"] = requirements
     return row, policy.tier
 
 
@@ -315,7 +317,15 @@ def write_output(conn, data_dir, args, inputs, groups, no_intents):
     (data_dir / "summary.json").write_text(
         json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
-    return final
+    return {
+        split: {
+            **final[split],
+            "deduplicated_total": stages["deduplicated"]["by_split"][split]["total"],
+            "not_applicable_saved": sidecars["not_applicable"]["by_split"][split]["total"],
+            "needs_review_saved": sidecars["needs_review"]["by_split"][split]["total"],
+        }
+        for split in SPLITS
+    }
 
 
 def prepare(args):
@@ -354,7 +364,15 @@ def main():
     parser.add_argument("--offline", action="store_true", help="使用本地缓存，关闭下载")
     parser.add_argument("--timeout", type=positive_int, default=60, help="网络连接和读取超时（秒）")
     parser.add_argument("--retries", type=nonnegative_int, default=2)
-    parser.add_argument("--with-reference", action="store_true", help="另存原句和最近对话作为核对资料")
+    reference_options = parser.add_mutually_exclusive_group()
+    reference_options.add_argument(
+        "--with-reference", action="store_true", default=True,
+        help="保留原句和最近对话作为核对资料（默认）",
+    )
+    reference_options.add_argument(
+        "--no-reference", dest="with_reference", action="store_false",
+        help="导出省略参考文本的副本",
+    )
     parser.add_argument(
         "--include-not-applicable", action="store_true",
         help="将「不涉及」纳入主划分，供五分类实验",
