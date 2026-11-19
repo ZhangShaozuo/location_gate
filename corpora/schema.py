@@ -7,7 +7,7 @@ import unicodedata
 from .policy import (
     CLASSES, DEVICE, HISTORY, NAMED, NEEDS_REVIEW, NOT_APPLICABLE,
     POSITION_SOURCES, PRECISION_CLASSES, REPORTED_TIERS, SAVED, UNKNOWN,
-    RULES, PolicyLabel, precision_for,
+    RULES, SCENE_ENABLE_INTENTS, SOCIAL_POST_INTENTS, PolicyLabel, precision_for,
 )
 
 
@@ -99,11 +99,22 @@ SLOT_ALIASES = {
     "源领域": "source_domain", "周边景点": "nearby_attractions",
     "周边餐馆": "nearby_restaurants", "周边酒店": "nearby_hotels",
     "查找方式": "operation", "操作": "operation",
+    "触发方式": "trigger_type",
 }
 DEVICE_FIND_OPERATIONS = {
     "响铃": "ring", "播放铃声": "ring", "让设备响铃": "ring",
     "定位设备": "query_target_location", "查询设备位置": "query_target_location",
     "查询目标设备位置": "query_target_location",
+}
+SOCIAL_POST_OPERATIONS = {
+    "附带当前位置": "share_current_location",
+    "显示当前位置": "share_current_location",
+    "分享当前位置": "share_current_location",
+}
+SCENE_TRIGGERS = {
+    "地理围栏": "geofence", "场景围栏": "geofence",
+    "到达地点": "enter_location", "离开地点": "leave_location",
+    "手动": "manual", "定时": "schedule", "按时间": "time",
 }
 REFERENCE_ONLY_SLOTS = {
     "utterance", "raw_text", "user_request", "query", "text", "content", "message",
@@ -258,6 +269,14 @@ def make_intent(code, pairs, *, text="", single_turn=False, anchor=None, label=N
         operation = params.get("operation")
         if isinstance(operation, str):
             params["operation"] = DEVICE_FIND_OPERATIONS.get(operation, operation)
+    if code in SOCIAL_POST_INTENTS:
+        operation = params.get("operation")
+        if isinstance(operation, str):
+            params["operation"] = SOCIAL_POST_OPERATIONS.get(operation, operation)
+    if code in SCENE_ENABLE_INTENTS:
+        trigger_type = params.get("trigger_type")
+        if isinstance(trigger_type, str):
+            params["trigger_type"] = SCENE_TRIGGERS.get(trigger_type, trigger_type)
     if code in {"alarm.set", "calendar.set", "calendar.update", "reminder.create"} and LOCATION_TRIGGER.search(text):
         params.setdefault("trigger_type", "geofence")
 

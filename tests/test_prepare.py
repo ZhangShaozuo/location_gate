@@ -105,7 +105,7 @@ class DialogueTests(unittest.TestCase):
     def test_country_is_reserved_for_device_country_request(self):
         country = make_intent("location.self", [], text="我在哪个国家", single_turn=True)
         self.assertEqual(precision_for(country).record(), {"precision": "模糊", "coarse_level": "国家级"})
-        unknown = make_intent("cmpa.其他意图", [], text="把我现在的位置发出去", single_turn=True)
+        unknown = make_intent("cmpa.未收录意图", [], text="把我现在的位置发出去", single_turn=True)
         self.assertEqual(precision_for(unknown).record(), {"precision": None, "coarse_level": None})
 
 
@@ -242,6 +242,47 @@ class LivePolicyTests(unittest.TestCase):
         self.check("fitness.start", {"tracking_mode": "no_route"}, NOT_APPLICABLE)
         self.check("reminder.create", {"trigger_type": "geofence"}, "城市级")
         self.check("calendar.update", {"time": "17:00"}, "城市级")
+
+    def test_reviewed_fact_social_and_app_intents_do_not_use_location(self):
+        codes = (
+            "cmpa.其他意图", "cmpa.搜索查询互联网", "massive.qa_factoid",
+            "massive.social_query", "cmpa.发送短信", "cmpa.通过微信发送消息",
+            "cmpa.小程序/公众号", "cmpa.支付宝功能", "cmpa.在指定应用中按关键字搜索",
+            "cmpa.买东西", "cmpa.查询应用里的图片",
+        )
+        for code in codes:
+            with self.subTest(intent=code):
+                self.check(code, {}, NOT_APPLICABLE)
+
+    def test_social_post_current_location_requires_an_explicit_operation(self):
+        intent = make_intent("massive.social_post", [("操作", "显示当前位置")])
+        self.assertEqual(intent["parameters"], {"operation": "share_current_location"})
+        self.assertEqual(precision_for(intent).record(), {"precision": "模糊", "coarse_level": "城市级"})
+        self.check("social.post", intent["parameters"], "城市级")
+        self.check("massive.social_post", {"location": "巴黎"}, NOT_APPLICABLE)
+        reference_only = make_intent("massive.social_post", [], text="发帖并显示当前位置", single_turn=True)
+        self.assertEqual(precision_for(reference_only).tier, NOT_APPLICABLE)
+        row = {
+            "id": "15387", "locale": "zh-CN", "intent": "social_post",
+            "utt": "把我的现在的位置发微博",
+            "annot_utt": "把我的现在的位置 [media_type : 发微博]",
+        }
+        reviewed = next(adapt_massive(row)).intent
+        self.assertEqual(reviewed["parameters"]["operation"], "share_current_location")
+        self.assertEqual(precision_for(reviewed).tier, "城市级")
+        unreviewed = next(adapt_massive({**row, "id": "another"})).intent
+        self.assertEqual(precision_for(unreviewed).tier, NOT_APPLICABLE)
+
+    def test_scene_trigger_uses_only_structured_parameters(self):
+        for value in ("地理围栏", "到达地点", "离开地点"):
+            with self.subTest(trigger=value):
+                row = {"input": "启动智能情景", "output": f"使能智能情景: [触发方式: {value}]"}
+                intent = next(adapt_cmpa(row)).intent
+                self.assertEqual(precision_for(intent).tier, "精确")
+        for value in ("manual", "schedule", "time"):
+            self.check("scene.enable", {"trigger_type": value}, NOT_APPLICABLE)
+        self.check("cmpa.使能智能情景", {}, NEEDS_REVIEW)
+        self.check("scene.enable", {"trigger_type": "other"}, NEEDS_REVIEW)
 
     def test_reference_stays_outside_the_intent_and_the_label(self):
         raw = {"input": "告诉我当前位置", "output": "查询当前位置: [内容: 整句文本]"}

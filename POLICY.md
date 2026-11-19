@@ -30,12 +30,21 @@
 
 本地新闻采用城市级。通用交通信息采用区域级。明确要求粗略当前位置但未指定档位时采用城市级。明确由位置进入或离开触发的闹钟仍需单独确认档位。
 
+已复核的「其他意图」、查询事实、搜索互联网、查询社交内容、发短信和发微信消息均标为不涉及。小程序或公众号操作、支付宝功能、应用内关键词搜索、买东西和查询应用内图片等本批已复核操作也标为不涉及。
+
 ## 参数可以改变同一意图的标注
 
-| `intent_id` | `operation` | 标签 |
+| 意图 | 结构化参数 | 标签 |
 |---|---|---|
-| `device.find` | `query_target_location` | 精确 |
-| `device.find` | `ring` | 不涉及设备定位 |
-| `device.find` | 缺失或未识别 | 待复核 |
+| 查找设备 | `operation=query_target_location` | 精确 |
+| 查找设备 | `operation=ring` | 不涉及 |
+| 查找设备 | `operation` 缺失或未识别 | 待复核 |
+| 发布社交内容 | `operation=share_current_location` | 模糊·城市级（当前默认） |
+| 发布社交内容 | 普通发布，未选择附带当前设备位置 | 不涉及 |
+| 启动智能情景 | `trigger_type` 为 `geofence`、`enter_location` 或 `leave_location` | 精确 |
+| 启动智能情景 | `trigger_type` 为 `manual`、`schedule` 或 `time` | 不涉及 |
+| 启动智能情景 | `trigger_type` 缺失或未识别 | 待复核 |
+
+发布内容里的地点名可以单独作为参数保留。涉及当前位置的社交发布由智能体提供 `operation=share_current_location`。MASSIVE zh-CN 的 15387 号样本经人工检查，在数据适配阶段补录了原数据遗漏的该参数。智能情景的触发类型也来自结构化参数，例如场景配置中的「到达地点」。
 
 设备查找样本保留目标设备类型。对照样本中的同一对使用相同的类型及意图，各对仅改变 `operation`。是否需要告知、可否持续使用、返回轨迹概览等要求存放在 `annotation.location_requirements` 中，由调用系统执行。

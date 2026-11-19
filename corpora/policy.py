@@ -51,7 +51,7 @@ with Path(__file__).with_name("non_location_intents.json").open(encoding="utf-8"
     }
 
 
-POLICY_VERSION = "precision-weak-v4-attempted-location-call"
+POLICY_VERSION = "precision-weak-v5-reviewed-intents"
 NO_POSITION = "none"
 TARGET_DEVICE = "target_device"
 STORED_TRACK = "stored_history"
@@ -60,6 +60,9 @@ SELF_GRANULARITY = {
     "precise": "精确", "district": "区域级", "city": "城市级", "country": "国家级",
     "coarse_unspecified": "城市级",
 }
+SOCIAL_POST_INTENTS = {"massive.social_post", "social.post"}
+SCENE_ENABLE_INTENTS = {"cmpa.使能智能情景", "scene.enable"}
+GEOFENCE_TRIGGERS = ("geofence", "enter_location", "leave_location")
 
 
 @dataclass(frozen=True)
@@ -162,11 +165,24 @@ def precision_for(intent):
     if code == "fitness.start" and params.get("tracking_mode") == "no_route":
         return PolicyLabel(NOT_APPLICABLE, "exercise_without_route")
 
+    if code in SOCIAL_POST_INTENTS:
+        if params.get("operation") == "share_current_location":
+            return PolicyLabel("城市级", "social_post_current_location")
+        return PolicyLabel(NOT_APPLICABLE, "social_post_without_current_location")
+
+    if code in SCENE_ENABLE_INTENTS:
+        trigger = params.get("trigger_type")
+        if trigger in GEOFENCE_TRIGGERS:
+            return PolicyLabel("精确", "scene_geofence_trigger", True)
+        if trigger in ("manual", "schedule", "time"):
+            return PolicyLabel(NOT_APPLICABLE, "scene_non_location_trigger")
+        return review("scene_trigger_unknown")
+
     rule = RULES.get(code)
     if rule:
         return PolicyLabel(rule.tier, code, rule.tier == "精确", rule.notice, rule.mode)
 
-    if code == "alarm.set" and params.get("trigger_type") in ("geofence", "enter_location", "leave_location"):
+    if code == "alarm.set" and params.get("trigger_type") in GEOFENCE_TRIGGERS:
         return review("geofence_alarm_policy_unspecified")
 
     namespace, _, native = code.partition(".")

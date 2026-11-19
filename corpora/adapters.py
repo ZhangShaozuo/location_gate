@@ -127,6 +127,12 @@ def adapt_massive(row):
     if len(pairs) != annotated.count("["):
         raise ValueError("MASSIVE 槽位标记无法完整解析")
     code = MASSIVE_MAP.get(native, "massive." + native)
+    if (
+        native == "social_post" and row.get("locale") == "zh-CN" and str(row.get("id")) == "15387"
+        and not any(canonical_slot(key) == "operation" for key, _ in pairs)
+    ):
+        # Manually reviewed: the source slots omit the post's current-location attachment.
+        pairs.append(("operation", "share_current_location"))
     text = compact(raw)
     if native == "transport_query":
         if DIRECT_NAV.search(text):
