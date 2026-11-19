@@ -20,9 +20,11 @@ except ImportError:
 
 
 SPLITS = ("train", "dev", "test")
-NAMES = ("massive", "cmpa", "crosswoz", "risawoz", "sgd")
+NAMES = ("massive", "cmpa", "crosswoz", "smp2019", "risawoz", "sgd")
+TRAIN_ONLY_SOURCES = {"smp2019"}
 CMPA = "417b15e5e988ac1a6241fb9b8aef60a35dbfe71c"
 CROSS = "df82c9fdff91b9b130f2d6b89110d3870ba6260e"
+SMP2019 = "65ad29bba6a625dea72b3353298171c43f927e4a"
 SGD = "e852981ae34990f4358979625854259302feaa78"
 HF_RISA = "https://huggingface.co/datasets/GEM/RiSAWOZ/resolve/main"
 GITHUB = "https://raw.githubusercontent.com"
@@ -41,6 +43,10 @@ DOWNLOADS = {
         )
         for split in ("train", "val", "test")
     },
+    "smp2019": {"smp2019/train.json": (
+        f"{GITHUB}/ygwpz/SMP2019-ECDT-NLU/{SMP2019}/dataSet/train.json",
+        "32e897dd76ab4dfa021f0334236514cf2f4d44e108e6e95984fd46d0a79e7a50",
+    )},
     "risawoz": {
         f"risawoz/{split}.json": (f"{HF_RISA}/{split}.json", None)
         for split in SPLITS
@@ -201,6 +207,10 @@ def source_records(root, dataset):
             path = root / "crosswoz" / f"{native}.json.zip"
             for identifier, row in zip_records(path, f"{native}.json", "mapping"):
                 yield split, str(identifier), row
+    elif dataset == "smp2019":
+        with (root / "smp2019" / "train.json").open("rb") as stream:
+            for index, row in enumerate(read_json(stream, "array")):
+                yield "train", str(index), row
     elif dataset == "risawoz":
         for split in SPLITS:
             with (root / "risawoz" / f"{split}.json").open("rb") as stream:

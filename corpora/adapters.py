@@ -61,6 +61,15 @@ CMPA_MAP = {
     "创建提醒": "reminder.create", "创建备忘": "note.create", "记录信息": "information.capture",
     "调高音量": "audio.volume.up", "调低音量": "audio.volume.down",
 }
+SMP2019_MAP = {
+    ("map", "ROUTE"): "route.query", ("map", "POSITION"): "location.address",
+    ("weather", "QUERY"): "weather.query",
+    ("flight", "QUERY"): "transit.flight_ticket", ("train", "QUERY"): "transit.rail_ticket",
+    ("bus", "QUERY"): "transit.coach_query", ("news", "PLAY"): "news.play",
+    ("app", "LAUNCH"): "app.launch", ("message", "SEND"): "message.send",
+    ("music", "PLAY"): "music.play",
+}
+SMP2019_SELF = re.compile(r"(?:我|我们)(?:的)?(?:现在(?:在|的)|所在(?:的)?)")
 SGD_MAP = {
     "GetWeather": "weather.query", "GetRide": "ride.order",
     "FindRestaurants": "restaurant.search", "ReserveRestaurant": "restaurant.reserve",
@@ -180,6 +189,35 @@ def adapt_cmpa(row):
     pairs = [(a.group(1), content[a.end():end].strip()) for a, end in zip(matches, boundaries)]
     code = CMPA_MAP.get(native, "cmpa." + native)
     yield utterance_candidate(code, pairs, raw, native, native)
+
+
+def smp2019_place(slots, prefix):
+    parts = []
+    for kind in ("country", "province", "city", "area", "poi"):
+        value = slots.get(f"{prefix}_{kind}")
+        if value and value not in parts:
+            parts.append(value)
+    return "".join(parts)
+
+
+def adapt_smp2019(row):
+    domain, action, raw, slots = row["domain"], row["intent"], row["text"], row["slots"]
+    native = f"{domain}.{action.casefold()}"
+    code = SMP2019_MAP.get((domain, action), "smp2019." + native)
+    pairs = []
+    if code in {"route.query", "transit.flight_ticket", "transit.rail_ticket", "transit.coach_query"}:
+        pairs = [
+            ("origin", smp2019_place(slots, "startLoc") or slots.get("Src")),
+            ("destination", smp2019_place(slots, "endLoc") or slots.get("Dest")),
+        ]
+    if code in {"weather.query", "location.address", "news.play"}:
+        location = smp2019_place(slots, "location")
+        pairs = [("location", location), ("weather_descriptor", slots.get("subfocus"))]
+        if code == "weather.query" and slots.get("subfocus") == "雨":
+            code = "weather.rain"
+        if code == "location.address" and not location:
+            code = "location.self" if SMP2019_SELF.search(compact(raw)) else "smp2019.map.position_unknown"
+    yield utterance_candidate(code, pairs, raw, native)
 
 
 def domain_kind(domain):
@@ -382,6 +420,8 @@ def adapt(dataset, row, window):
         yield from adapt_cmpa(row)
     elif dataset == "crosswoz":
         yield from adapt_crosswoz(row, window)
+    elif dataset == "smp2019":
+        yield from adapt_smp2019(row)
     elif dataset == "risawoz":
         yield from adapt_risawoz(row, window)
     elif dataset == "sgd":

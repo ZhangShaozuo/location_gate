@@ -8,10 +8,13 @@ from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
-from corpora.adapters import adapt_crosswoz, adapt_risawoz, adapt_sgd, adapt_cmpa, adapt_massive
+from corpora.adapters import adapt_crosswoz, adapt_risawoz, adapt_sgd, adapt_cmpa, adapt_massive, adapt_smp2019
 from corpora.schema import NEEDS_REVIEW, NOT_APPLICABLE, PRECISION_CLASSES, make_intent, precision_for
 from corpora.sources import download, sgd_records
-from prepare import deduplicate, init_database, make_row, quotas, sample, write_device_find_contrasts
+from prepare import (
+    deduplicate, init_database, make_row, quotas, sample,
+    write_device_find_contrasts, write_self_location_contrasts,
+)
 
 
 class DialogueTests(unittest.TestCase):
@@ -152,7 +155,7 @@ class PipelineTests(unittest.TestCase):
                     ))
             deduplicate(db)
             options = SimpleNamespace(
-                include_not_applicable=False, max_train=None, max_train_per_class=None,
+                include_not_applicable=False, max_train=None, max_train_per_class=None, max_train_per_source=None,
                 train_sampling="natural",
             )
             sample(db, options)
@@ -166,6 +169,25 @@ class PipelineTests(unittest.TestCase):
                 (f"{split}:{tier}",) for split in ("train", "dev", "test")
                 for tier in ("精确", NOT_APPLICABLE)
             })
+
+    def test_training_source_cap_keeps_held_out_records(self):
+        with sqlite3.connect(":memory:") as db:
+            init_database(db)
+            db_rows = []
+            for dataset in ("massive", "crosswoz"):
+                for split, size in (("train", 9), ("dev", 4)):
+                    for i in range(size):
+                        key = f"{dataset}:{split}:{i}"
+                        tier = "精确" if i % 2 else "城市级"
+                        db_rows.append((key, dataset, split, 0, tier, i, key, key, "intent", "意图", 0, "{}"))
+            db.executemany("INSERT INTO candidates VALUES(?,?,?,?,?,?,?,?,?,?,?,?)", db_rows)
+            deduplicate(db)
+            sample(db, SimpleNamespace(include_not_applicable=False, max_train=None, max_train_per_class=None,
+                                       max_train_per_source=3, train_sampling="balanced"))
+            self.assertEqual(list(db.execute("""
+                SELECT dataset, split, COUNT(*) FROM eligible JOIN selected USING(id)
+                GROUP BY dataset, split ORDER BY dataset, split
+            """)), [(ds, sp, n) for ds in ("crosswoz", "massive") for sp, n in (("dev", 4), ("train", 3))])
 
     def test_dedupe_prefers_test_over_train(self):
         with sqlite3.connect(":memory:") as db:
@@ -322,12 +344,32 @@ class LivePolicyTests(unittest.TestCase):
         candidate = next(adapt_cmpa(raw))
         row, tier = make_row(candidate, "cmpa", "train", "example", 0, True)
         self.assertEqual(tier, "精确")
-        self.assertEqual(row["annotation"]["location_requirements"], {"notice": "prompt"})
-        self.assertEqual(row["reference"]["utterance"], raw["input"])
-        self.assertNotIn("reference", row["model_input"])
-        params = row["model_input"]["intent_with_parameters"]["parameters"]
-        self.assertNotIn("内容", params)
-        self.assertNotIn("device_location_cue", params)
+        self.assertEqual(row["meta"]["notice"], "prompt")
+        self.assertEqual(row["ref"]["text"], raw["input"])
+        self.assertEqual(row["slots"], {})
+        export, _ = make_row(candidate, "cmpa", "train", "example", 0, False)
+        self.assertNotIn("ref", export)
+
+    def test_smp2019_maps_slot_roles_without_mistaking_named_places_for_self_location(self):
+        cases = (
+            ("map", "ROUTE", "从济源市到河南省电信分公司怎么走",
+             {"startLoc_city": "济源市", "endLoc_poi": "电信分公司", "endLoc_province": "河南省"},
+             "route.query", {"from": "济源市", "to": "河南省电信分公司"}, "精确"),
+            ("map", "POSITION", "河北在哪里", {"location_province": "河北"},
+             "location.address", {"loc": "河北"}, "精确"),
+            ("map", "POSITION", "我现在在哪个国家", {}, "location.self", {"level": "country"}, "国家级模糊"),
+            ("weather", "QUERY", "今天有雨吗", {"subfocus": "雨", "datetime_date": "今天"},
+             "weather.rain", {}, "城市级模糊"),
+            ("bus", "QUERY", "从无锡到阜阳的车", {"Src": "无锡", "Dest": "阜阳"},
+             "transit.coach_query", {"from": "无锡", "to": "阜阳"}, "城市级模糊"),
+        )
+        for domain, action, raw, slots, code, expected_slots, label in cases:
+            with self.subTest(code=code):
+                candidate = next(adapt_smp2019({"text": raw, "domain": domain, "intent": action, "slots": slots}))
+                row, _ = make_row(candidate, "smp2019", "train", "example", 0, False)
+                self.assertEqual(row["intent"], code)
+                self.assertEqual(row["slots"], expected_slots)
+                self.assertEqual(row["label"], label)
 
     def test_named_poi_proximity_is_not_inferred_as_device_input(self):
         unbound = make_intent("place.search", [], text="图书馆附近的咖啡店", single_turn=True)
@@ -352,8 +394,8 @@ class LivePolicyTests(unittest.TestCase):
             with self.subTest(slots=slots):
                 candidate = next(adapt_cmpa({"input": raw, "output": f"点外卖: [{slots}]"}))
                 row, tier = make_row(candidate, "cmpa", "train", "example", 0, True)
-                self.assertEqual(row["model_input"]["intent_with_parameters"]["parameters"], {"food_type": "披萨"})
-                self.assertEqual(row["reference"]["utterance"], raw)
+                self.assertEqual(row["slots"], {})
+                self.assertEqual(row["ref"]["text"], raw)
                 self.assertEqual(tier, "精确")
 
     def test_named_rail_stations_are_normalized_to_their_roles(self):
@@ -381,16 +423,24 @@ class LivePolicyTests(unittest.TestCase):
             group = rows[offset:offset + 3]
             seen_operations = set()
             for row in group:
-                self.assertEqual(row["group_id"], f"synthetic:train:{kind}")
-                self.assertEqual(row["split"], "train")
-                self.assertTrue(row["reference"]["synthetic"])
-                intent = row["model_input"]["intent_with_parameters"]
-                self.assertEqual(intent["intent_id"], "device.find")
-                operation = intent["parameters"].pop("operation")
-                self.assertEqual(intent["parameters"], {"target_device_type": kind})
-                self.assertEqual(row["label"]["precision"], operations[operation])
+                self.assertTrue(row["id"].startswith(f"synthetic:train:{kind}:"))
+                self.assertEqual(row["intent"], "device.find")
+                operation = row["slots"]["op"]
+                self.assertEqual(row["slots"], {"op": operation})
+                self.assertEqual(row["label"], operations[operation])
                 seen_operations.add(operation)
             self.assertEqual(seen_operations, operations.keys())
+
+    def test_self_location_contrasts_cover_all_four_labels(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            (root / "augmentation").mkdir()
+            metadata = write_self_location_contrasts(root, False)
+            rows = [json.loads(line) for line in (root / metadata["path"]).read_text().splitlines()]
+        self.assertEqual({r["intent"] for r in rows}, {"location.self"})
+        self.assertEqual({r["slots"]["level"]: r["label"] for r in rows}, {
+            "precise": "精确", "district": "区域级模糊", "city": "城市级模糊", "country": "国家级模糊",
+        })
 
     def test_device_operation_is_normalized_from_structured_slots(self):
         for value, operation, label in (

@@ -23,6 +23,7 @@ NON_LOCATION = {
     "navigation.stop", "delivery.status", "place.details",
     "hotel.details", "restaurant.details", "transit.trip_status", "package.status",
     "device.find_menu", "fitness.activity_types", "calendar.query",
+    "app.launch", "message.send", "music.play",
 }
 NON_LOCATION_PREFIXES = (
     "alarm.", "audio.", "massive.alarm_", "massive.audio_",
@@ -45,13 +46,18 @@ SGD_NON_LOCATION = {
     "PlayMedia", "PlayMovie", "PlaySong", "FindMusic", "SearchMusic", "LookupSong",
     "PlayMusic", "FindMovies", "GetAccountBalance", "TransferMoney", "CheckBalance",
 }
+SMP2019_NON_LOCATION_DOMAINS = {
+    "app", "contacts", "cookbook", "email", "epg", "health", "joke", "lottery", "match", "message",
+    "music", "novel", "poetry", "radio", "riddle", "stock", "story", "telephone", "translation",
+    "tvchannel", "video", "website",
+}
 with Path(__file__).with_name("non_location_intents.json").open(encoding="utf-8") as source:
     REVIEWED_NON_LOCATION = {
         f"{namespace}.{name}" for namespace, names in json.load(source).items() for name in names
     }
 
 
-POLICY_VERSION = "precision-weak-v6-caller-location"
+POLICY_VERSION = "precision-weak-v7-smp2019"
 NO_POSITION = "none"
 TARGET_DEVICE = "target_device"
 STORED_TRACK = "stored_history"
@@ -90,6 +96,7 @@ RULES = {
     "transit.flight_ticket": Rule("城市级", ORIGINS),
     "transit.rail_ticket": Rule("城市级", ORIGINS),
     "transit.ticket": Rule("城市级", ORIGINS),
+    "transit.coach_query": Rule("城市级", ORIGINS),
     "transit.flight_traffic": Rule("城市级", WHERE),
     "transit.bus_query": Rule("精确", ("location_source", *ORIGINS)),
     "transit.ride_code": Rule("城市级", WHERE),
@@ -194,6 +201,7 @@ def precision_for(intent):
         or (namespace == "massive" and native in NON_LOCATION_MASSIVE)
         or (namespace == "cmpa" and CMPA_NON_LOCATION.fullmatch(native))
         or (namespace == "sgd" and native in SGD_NON_LOCATION)
+        or (namespace == "smp2019" and native.partition(".")[0] in SMP2019_NON_LOCATION_DOMAINS)
     )
     if unrelated:
         return PolicyLabel(NOT_APPLICABLE, "known_non_location_intent")

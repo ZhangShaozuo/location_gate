@@ -15,13 +15,17 @@ from zipfile import BadZipFile
 from corpora.adapters import Candidate, adapt
 from corpora.policy import POLICY_VERSION
 from corpora.schema import (
-    CLASSES, NEEDS_REVIEW, NOT_APPLICABLE, PRECISION_CLASSES, REPORTED_TIERS,
-    canonical_json, compact, precision_for,
+    CLASSES, INTENTS, INTENT_ALIASES, NEEDS_REVIEW, NOT_APPLICABLE, PRECISION_CLASSES,
+    REPORTED_TIERS, canonical_json, compact, make_intent, model_slots, precision_for,
 )
-from corpora.sources import NAMES, SPLITS, ensure_source, source_records
+from corpora.sources import NAMES, SPLITS, TRAIN_ONLY_SOURCES, ensure_source, source_records
 
 
-SCHEMA_VERSION = "location-intent-v2"
+SCHEMA_VERSION = "location-slots-v3"
+LABEL_NAMES = {
+    "精确": "精确", "区域级": "区域级模糊", "城市级": "城市级模糊", "国家级": "国家级模糊",
+    NOT_APPLICABLE: NOT_APPLICABLE, NEEDS_REVIEW: NEEDS_REVIEW,
+}
 
 
 def positive_int(value):
@@ -48,33 +52,19 @@ def make_row(candidate, source, split, native_id, sequence, with_reference):
     group = f"{source}:{split}:{native_id}"
     row = {
         "id": f"{group}:{candidate.turn}:{sequence}",
-        "source": source,
-        "source_id": native_id,
-        "split": split,
-        "group_id": group,
-        "turn_index": candidate.turn,
-        "model_input": {
-            "intent_label": intent["label"],
-            "intent_with_parameters": intent,
-        },
-        "label": policy.record(),
-        "annotation": {
-            "source": "weak_rule",
-            "policy": POLICY_VERSION,
-            "rule": policy.rule,
-            "review_required": policy.review,
-        },
+        "intent": INTENT_ALIASES.get(intent["intent_id"], intent["intent_id"]),
+        "slots": model_slots(intent),
+        "label": LABEL_NAMES[policy.tier],
     }
     if with_reference:
-        row["reference"] = {
-            "utterance": candidate.utterance,
-            "original_intent_or_domain": candidate.original_intent,
-            "turns_through_current_user": [
-                {"role": role, "text": utterance} for role, utterance in candidate.context
-            ],
-        }
-    if requirements := policy.requirements():
-        row["annotation"]["location_requirements"] = requirements
+        row["ref"] = {"text": candidate.utterance, "native": candidate.original_intent}
+        if len(candidate.context) > 1:
+            row["ref"]["ctx"] = candidate.context[:-1]
+    metadata = policy.requirements()
+    if policy.review:
+        metadata.update(review=True, rule=policy.rule)
+    if metadata:
+        row["meta"] = metadata
     return row, policy.tier
 
 
@@ -116,13 +106,13 @@ def ingest(conn, datasets, args):
                 for sequence, candidate in enumerate(adapt(source, raw, args.context_turns)):
                     row, tier = make_row(candidate, source, split, native_id, sequence, args.with_reference)
                     fingerprint = stable_hash(canonical_json([
-                        compact(candidate.utterance).casefold(), candidate.intent,
+                        compact(candidate.utterance).casefold(), row["intent"], row["slots"],
                     ]))
                     conn.execute("INSERT INTO candidates VALUES(?,?,?,?,?,?,?,?,?,?,?,?)", (
                         row["id"], source, split, split_priority[split], tier, total, fingerprint,
                         stable_hash(f"{args.seed}:{row['id']}"),
-                        candidate.intent["intent_id"], candidate.intent["label"],
-                        int(row["annotation"]["review_required"]), canonical_json(row),
+                        row["intent"], INTENTS.get(row["intent"], candidate.intent["label"]),
+                        int(row.get("meta", {}).get("review", False)), canonical_json(row),
                     ))
                     total += 1
                     converted += 1
@@ -130,8 +120,9 @@ def ingest(conn, datasets, args):
                     no_intents[source][split] += 1
             except (KeyError, TypeError, ValueError, sqlite3.IntegrityError) as exc:
                 raise ValueError(f"{source} {split} {native_id} 处理失败：{exc}") from exc
-        if not all(groups[source].get(split) for split in SPLITS):
-            raise ValueError(f"{source} 的 train、dev、test 中至少一个划分为空")
+        required_splits = ("train",) if source in TRAIN_ONLY_SOURCES else SPLITS
+        if not all(groups[source].get(split) for split in required_splits):
+            raise ValueError(f"{source} 缺少必需的划分：{', '.join(required_splits)}")
         conn.commit()
     if not total:
         raise ValueError("没有产生任何意图样本")
@@ -190,12 +181,17 @@ def sample(conn, args):
         INSERT INTO selected SELECT id FROM eligible
         WHERE split != 'train' AND tier IN ({placeholders})
     """, classes)
-    sources_by_tier = defaultdict(Counter)
+    tiers_by_source = defaultdict(Counter)
     for tier, dataset, count in conn.execute(f"""
         SELECT tier, dataset, COUNT(*) FROM eligible
         WHERE split='train' AND tier IN ({placeholders}) GROUP BY tier, dataset
     """, classes):
-        sources_by_tier[tier][dataset] = count
+        tiers_by_source[dataset][tier] = count
+    sources_by_tier = defaultdict(Counter)
+    for dataset, tiers in tiers_by_source.items():
+        for tier, count in quotas(tiers, args.max_train_per_source, args.train_sampling, classes).items():
+            if count:
+                sources_by_tier[tier][dataset] = count
     counts = Counter({tier: sum(sources.values()) for tier, sources in sources_by_tier.items()})
     if args.max_train_per_class:
         counts = Counter({tier: min(n, args.max_train_per_class) for tier, n in counts.items()})
@@ -270,11 +266,26 @@ def write_device_find_contrasts(data_dir, with_reference):
                 }
                 candidate = Candidate(intent, text, (("user", text),), 0, "device.find")
                 row, tier = make_row(candidate, "synthetic", "train", kind, sequence, with_reference)
-                row["annotation"]["source"] = "synthetic_contrast"
-                if with_reference:
-                    row["reference"]["synthetic"] = True
                 stream.write(canonical_json(row) + "\n")
-                counts[tier] += 1
+                counts[LABEL_NAMES[tier]] += 1
+    return {"path": relative.as_posix(), "total": sum(counts.values()), "classes": dict(counts)}
+
+
+def write_self_location_contrasts(data_dir, with_reference):
+    relative = Path("augmentation/self-location-contrast.jsonl")
+    counts = Counter()
+    with (data_dir / relative).open("w", encoding="utf-8") as stream:
+        for sequence, (level, text) in enumerate((
+            ("precise", "告诉我现在的精确坐标"),
+            ("district", "我现在在哪个行政区"),
+            ("city", "我现在在哪座城市"),
+            ("country", "我现在在哪个国家"),
+        )):
+            intent = make_intent("location.self", [("requested_granularity", level)])
+            candidate = Candidate(intent, text, (("user", text),), 0, "location.self")
+            row, tier = make_row(candidate, "synthetic", "train", "self-location", sequence, with_reference)
+            stream.write(canonical_json(row) + "\n")
+            counts[LABEL_NAMES[tier]] += 1
     return {"path": relative.as_posix(), "total": sum(counts.values()), "classes": dict(counts)}
 
 
@@ -325,11 +336,13 @@ def write_output(conn, data_dir, args, inputs, groups, no_intents):
     report = {
         "schema": SCHEMA_VERSION,
         "label_policy": POLICY_VERSION,
+        "label_names": LABEL_NAMES,
         "download_inputs": inputs,
         "official_groups": groups,
         "groups_without_emitted_intents": no_intents,
         "settings": {
             "max_train": args.max_train, "max_train_per_class": args.max_train_per_class,
+            "max_train_per_source": args.max_train_per_source,
             "train_sampling": args.train_sampling, "seed": args.seed,
             "include_reference": args.with_reference, "context_turns": args.context_turns,
             "include_not_applicable": args.include_not_applicable,
@@ -337,6 +350,7 @@ def write_output(conn, data_dir, args, inputs, groups, no_intents):
         "stages": stages,
         "sidecars": sidecars,
         "augmentation": write_device_find_contrasts(data_dir, args.with_reference),
+        "self_location_contrasts": write_self_location_contrasts(data_dir, args.with_reference),
         "exported_intent_distribution": intent_distribution(conn),
         "intent_labels_with_multiple_precision_classes": conflict,
         "warnings": warnings,
@@ -407,11 +421,12 @@ def main():
     parser.add_argument("--context-turns", type=positive_int, default=6)
     parser.add_argument("--max-train", type=positive_int, help="训练集总上限")
     parser.add_argument("--max-train-per-class", type=positive_int, help="训练集每个精度类的上限")
+    parser.add_argument("--max-train-per-source", type=positive_int, help="主训练集每个语料来源的条数上限")
     parser.add_argument("--train-sampling", choices=("natural", "balanced"), default="natural")
     parser.add_argument("--seed", type=int, default=2026)
     args = parser.parse_args()
-    if args.train_sampling == "balanced" and args.max_train is None:
-        parser.error("--train-sampling balanced 需要同时给出 --max-train")
+    if args.train_sampling == "balanced" and args.max_train is None and args.max_train_per_source is None:
+        parser.error("--train-sampling balanced 需要给出 --max-train 或 --max-train-per-source")
     try:
         final = prepare(args)
     except (OSError, ValueError, BadZipFile, TarError) as exc:

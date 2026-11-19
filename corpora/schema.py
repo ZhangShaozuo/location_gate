@@ -7,7 +7,8 @@ import unicodedata
 from .policy import (
     CLASSES, DEVICE, HISTORY, NAMED, NEEDS_REVIEW, NOT_APPLICABLE,
     POSITION_SOURCES, PRECISION_CLASSES, REPORTED_TIERS, SAVED, UNKNOWN,
-    RULES, SCENE_ENABLE_INTENTS, SOCIAL_POST_INTENTS, PolicyLabel, precision_for,
+    GEOFENCE_TRIGGERS, RULES, SCENE_ENABLE_INTENTS, SELF_GRANULARITY, SOCIAL_POST_INTENTS,
+    PolicyLabel, precision_for,
 )
 
 
@@ -39,6 +40,7 @@ INTENTS = {
     "news.play": "播报新闻",
     "transit.query": "查询公共交通",
     "transit.ticket": "查询或办理交通票务",
+    "transit.coach_query": "查询城际客车",
     "transit.flight_ticket": "查询或预订机票",
     "transit.rail_ticket": "查询或预订火车票",
     "transit.flight_traffic": "查询机场航班流量",
@@ -69,6 +71,32 @@ INTENTS = {
     "information.capture": "记录信息",
     "audio.volume.up": "调高音量",
     "audio.volume.down": "调低音量",
+    "app.launch": "打开应用",
+    "message.send": "发送消息",
+    "music.play": "播放音乐",
+    "social.post": "发布社交内容",
+    "scene.enable": "启动智能情景",
+}
+
+INTENT_ALIASES = {
+    "cmpa.打开应用": "app.launch", "cmpa.发送短信": "message.send",
+    "cmpa.通过微信发送消息": "message.send",
+    "cmpa.播放音乐": "music.play", "massive.play_music": "music.play",
+    "sgd.PlayMusic": "music.play", "sgd.PlaySong": "music.play",
+    **dict.fromkeys(SOCIAL_POST_INTENTS, "social.post"),
+    **dict.fromkeys(SCENE_ENABLE_INTENTS, "scene.enable"),
+}
+
+GEO_SLOT_FIELDS = {
+    "location_source": ("loc", "src", ("location", "area")),
+    "origin_source": ("from", "from_src", ("origin",)),
+    "destination_source": ("to", "to_src", ("destination",)),
+    "pickup_source": ("pickup", "pickup_src", ("pickup",)),
+    "address_source": ("loc", "src", ("address", "delivery_address")),
+}
+PLACE_INTENTS = {
+    "location.address", "place.search", "place.details", "hotel.search", "hotel.details",
+    "hotel.reserve", "restaurant.search", "restaurant.details", "restaurant.reserve",
 }
 
 SLOT_ALIASES = {
@@ -287,3 +315,46 @@ def make_intent(code, pairs, *, text="", single_turn=False, anchor=None, label=N
 
 def canonical_json(obj):
     return json.dumps(obj, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
+
+def model_slots(intent):
+    """Project normalized intent parameters onto the shared location slot vocabulary."""
+    code = intent["intent_id"]
+    params = intent["parameters"]
+    rule = RULES.get(code)
+    slots = {}
+    for field in rule.fields if rule else ():
+        slot, source_slot, keys = GEO_SLOT_FIELDS[field]
+        for key in keys:
+            if params.get(key):
+                slots[slot] = params[key]
+                break
+        source = params.get(field)
+        if isinstance(source, str) and source in POSITION_SOURCES - {UNKNOWN, NAMED}:
+            slots[source_slot] = source
+    if code == "ride.order" and params.get("destination"):
+        slots["to"] = params["destination"]
+    if code in PLACE_INTENTS:
+        if params.get("name") and "loc" not in slots:
+            slots["loc"] = params["name"]
+        if params.get("reference_place"):
+            slots["near"] = params["reference_place"]
+    if code == "location.self":
+        level = params.get("requested_granularity")
+        if isinstance(level, str) and level in SELF_GRANULARITY:
+            slots["level"] = level
+    if code == "device.find" or code in SOCIAL_POST_INTENTS:
+        operation = params.get("operation")
+        allowed = (
+            ("query_target_location", "ring", "navigate_to_target")
+            if code == "device.find" else ("share_current_location",)
+        )
+        if operation in allowed:
+            slots["op"] = operation
+    if code in SCENE_ENABLE_INTENTS or code in {"alarm.set", "reminder.create", "calendar.set", "calendar.update"}:
+        trigger = params.get("trigger_type")
+        if trigger in (*GEOFENCE_TRIGGERS, "manual", "schedule", "time"):
+            slots["trigger"] = trigger
+    if code == "fitness.start" and params.get("tracking_mode") == "no_route":
+        slots["track"] = "no_route"
+    return slots

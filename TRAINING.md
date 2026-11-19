@@ -1,16 +1,7 @@
-# 已发起定位调用时的精度训练
+# 定位精度四分类实验
 
-## 首轮实验
+使用主文件的 `label` 作为目标。两个实验使用同样的训练、验证和测试划分，分别输入 `intent` 和 `intent + slots`。 `ref`、`id`、`meta` 用于追溯和分组。SMP2019 的公开副本进入训练划分。
 
-1. 以 `precision_for` 作为条件规则基线。对已经进入定位流程的意图，使用精确和模糊二分类。模型输入取 `model_input.intent_with_parameters` 中的意图 ID 和决策相关的结构化参数，例如 `operation`、`trigger_type`、`requested_granularity`、`tracking_mode`。模型输出字段是 `label.precision`，模糊粒度另存于 `label.coarse_level`。
-2. CPU 上用 `OneHotEncoder` 加 `LogisticRegression(class_weight="balanced")` 跑一个轻量对照。将只用意图 ID 和附带结构化参数的结果对比。待人工样本覆盖充分后，用 CatBoost 做第二个基线。
-3. 按现网用途抽取人工样本，按对话和模板分组切分。逐项查看精确误放行率、精确召回率与宏平均 F1。模型阈值在验证集确定，再对锁定的测试集报告结果。
+本轮四套公开语料覆盖精确、区域级模糊、城市级模糊三档。 `augmentation/self-location-contrast.jsonl` 包含国家级的合成规则验收样本。要训练和评估正式四分类，需要另外收集国家级的独立训练和人工测试样本。相同结构化输入的合成改写适用于验收同一条规则。
 
-[Scikit-learn OneHotEncoder](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OneHotEncoder.html) · [Scikit-learn LogisticRegression](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html) · [CatBoost 类别特征](https://catboost.ai/docs/en/features/categorical-features)
-
-## 样本使用
-
-- 精确和模糊二分类以主划分为起点。保留 `not_applicable/` 用作调用边界检查。信息不足的意图保留在 `needs_review/`，例如查找设备缺少操作参数。
-- `augmentation/device-find-contrast.jsonl` 包含三组共 9 条合成样本，可用于验收同一意图在不同 `operation` 下的规则行为。查看目标设备位置和响铃标为不涉及，导航标为精确。精确和模糊二分类中，只加入精度属于这两类的合成行。每组使用相同的 `group_id`，固定在训练划分。
-- 只从 `model_input` 提取训练字段。原句通过 `reference` 供人工复核。避免把来源、原句、样本 ID、规则名和标签元数据引入模型输入。
-- 两库重跑得到 5,770 条精度弱标注，二分类有精确和模糊两种标签。用实际已发起定位调用的人工样本独立测试。若后续训练模糊粒度子模型，再补齐目前缺失的国家级样本。
+用规则结果建立对照，再用类别特征上的逻辑回归训练轻量基线。可按来源和类别报告召回率、宏平均 F1 及把模糊误判为精确的比例。正式评估应使用独立人工标注的定位调用场景，按对话和模板分组。保留 `not_applicable/` 用来检查调用边界。
