@@ -9,6 +9,7 @@ import unittest
 from unittest.mock import patch
 
 from corpora.adapters import adapt_crosswoz, adapt_risawoz, adapt_sgd, adapt_cmpa, adapt_massive, adapt_smp2019
+from corpora.policy import OUTSIDE_SCOPE
 from corpora.schema import NEEDS_REVIEW, NOT_APPLICABLE, PRECISION_CLASSES, make_intent, precision_for
 from corpora.sources import download, sgd_records
 from prepare import (
@@ -136,9 +137,10 @@ class DialogueTests(unittest.TestCase):
         self.assertEqual(precision_for(triggered).tier, "精确")
         self.assertEqual(precision_for(after_email).tier, NOT_APPLICABLE)
 
-    def test_country_is_reserved_for_device_country_request(self):
+    def test_country_is_outside_precision_training_scope(self):
         country = make_intent("location.self", [], text="我在哪个国家", single_turn=True)
-        self.assertEqual(precision_for(country).record(), {"precision": "模糊", "coarse_level": "国家级"})
+        self.assertEqual(precision_for(country).tier, OUTSIDE_SCOPE)
+        self.assertEqual(precision_for(country).record(), {"precision": None, "coarse_level": None})
         unknown = make_intent("cmpa.未收录意图", [], text="把我现在的位置发出去", single_turn=True)
         self.assertEqual(precision_for(unknown).record(), {"precision": None, "coarse_level": None})
 
@@ -203,7 +205,7 @@ class PipelineTests(unittest.TestCase):
     def test_balanced_no_duplication(self):
         caps = dict(zip(PRECISION_CLASSES, (2, 100, 100, 100)))
         result = quotas(caps, 32, "balanced", PRECISION_CLASSES)
-        self.assertEqual(list(result.values()), [2, 10, 10, 10])
+        self.assertEqual(list(result.values()), [2, 15, 15])
         result = quotas(caps, 5, "natural", PRECISION_CLASSES)
         self.assertEqual(sum(result.values()), 5)
         self.assertGreater(result["精确"], 0)
@@ -359,7 +361,7 @@ class LivePolicyTests(unittest.TestCase):
              "查询路线", {"from": "济源市", "to": "河南省电信分公司"}, NOT_APPLICABLE),
             ("map", "POSITION", "河北在哪里", {"location_province": "河北"},
              "查询地点地址", {"loc": "河北"}, NOT_APPLICABLE),
-            ("map", "POSITION", "我现在在哪个国家", {}, "查询当前位置", {"level": "country"}, "国家级模糊"),
+            ("map", "POSITION", "我现在在哪个国家", {}, "查询当前位置", {"level": "country"}, OUTSIDE_SCOPE),
             ("weather", "QUERY", "今天有雨吗", {"subfocus": "雨", "datetime_date": "今天"},
              "查询降雨", {}, "城市级模糊"),
             ("bus", "QUERY", "从无锡到阜阳的车", {"Src": "无锡", "Dest": "阜阳"},
@@ -429,7 +431,7 @@ class LivePolicyTests(unittest.TestCase):
             ("找<500米的药店", "精确", {"src": "device_current", "radius_m": 500}),
             ("找步行5分钟内的药店", "精确", {"src": "device_current", "scope": "walking_time"}),
             ("找我所在城市的景点", "城市级", {"src": "device_current", "level": "city"}),
-            ("找我所在国家的旅游景点", "国家级", {"src": "device_current", "level": "country"}),
+            ("找我所在国家的旅游景点", OUTSIDE_SCOPE, {"src": "device_current", "level": "country"}),
             ("查图书馆附近500米以内的咖啡馆", NOT_APPLICABLE, {"src": "fixed"}),
             ("找离我家最近的餐厅", NOT_APPLICABLE, {"src": "fixed"}),
             ("找2公里以内的餐厅", NEEDS_REVIEW, {"src": "device_current", "radius_m": 2000}),
@@ -491,7 +493,7 @@ class LivePolicyTests(unittest.TestCase):
                 seen_operations.add(operation)
             self.assertEqual(seen_operations, operations.keys())
 
-    def test_self_location_contrasts_cover_all_four_labels(self):
+    def test_self_location_contrasts_cover_all_three_labels(self):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)
             (root / "augmentation").mkdir()
@@ -499,7 +501,7 @@ class LivePolicyTests(unittest.TestCase):
             rows = [json.loads(line) for line in (root / metadata["path"]).read_text().splitlines()]
         self.assertEqual({r["intent"] for r in rows}, {"查询当前位置"})
         self.assertEqual({r["slots"]["level"]: r["label"] for r in rows}, {
-            "precise": "精确", "district": "区域级模糊", "city": "城市级模糊", "country": "国家级模糊",
+            "precise": "精确", "district": "区域级模糊", "city": "城市级模糊",
         })
 
     def test_device_operation_is_normalized_from_structured_slots(self):

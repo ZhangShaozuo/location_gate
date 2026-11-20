@@ -331,3 +331,174 @@ def ground_single_turn_review(intent, utterance):
         return intent
     resolved = {**intent, "intent_id": code, "parameters": params}
     return intent if precision_for(resolved).tier == NEEDS_REVIEW else resolved
+
+
+ATTRACTION_REQUEST = re.compile(
+    r"(?:找|挑|推荐|介绍|查询|查找|有没有|想去|想玩|想逛|想带|想找|看看|选择|安排|打听|帮我一个|想和.{0,8}去)"
+    r"[^。！？!?]{0,55}(?:景点|景区|公园|门票|游玩时长|游玩的时长)|"
+    r"(?:景点|景区)[^。！？!?]{0,38}(?:推荐|有没有|给我介绍|帮我找|票价|门票|评分|能玩|适合)|"
+    r"哪(?:个|些|一处)(?:景点|景区)|(?:门票|票价)[^。！？!?]{0,26}(?:的(那种)?地方吗|景点)|"
+    r"(?:游玩时长|游玩的时长|游玩时间|票价|门票|评分|能玩)[^。！？!?]{0,40}(?:景点|景区|的地方)|"
+    r"(?:找|推荐)[^。！？!?]{0,30}(?:地方玩|地方散散心)"
+)
+RESTAURANT_REQUEST = re.compile(
+    r"餐馆|餐厅|饭馆|火锅店|吃饭|用餐|推荐菜|人均消费|(?:哪|谁)家.{0,14}(?:好吃|能做|能吃|比较正宗|有)|"
+    r"想吃|海鲜吃|喝杯.{0,6}咖啡"
+)
+HOTEL_REQUEST = re.compile(r"酒店|宾馆|住宿|客房|入住|订房")
+NEW_SELECTION = re.compile(
+    r"推荐|介绍|挑选|选择|选一(?:家|个)|找|安排|有(?:没有|无|什么|吗|提供)|(?:哪|哪一|谁)(?:家|个)|"
+    r"(?:在哪|哪能|哪有|去哪)吃|哪有呀|好去处|想去|想逛|想玩|想预约|想预订|需要一家|评分|票价|门票"
+)
+OTHER_REFERENCE = re.compile(r"那[里儿家]|那(?:个|座|处)(?:地方|景点|公园|酒店|餐厅)|他们|这些|上述|刚才|指定地点")
+PREVIOUS_SUBJECT = re.compile(r"这[家座处个](?:餐馆|餐厅|酒店|宾馆|景点|景区|公园)|那[家座处个]")
+LOCATION_DEPENDENT = re.compile(r"周边|附近|周围|就近|离我|从这里|当前位置|半径|步行.{0,12}分钟")
+DELIVERY_STATUS = re.compile(
+    r"(?:餐|外卖|外送|订单|送餐).{0,14}(?:什么时候.{0,6}(?:到|送|好)|到了没|怎么样|什么状况|怎么回事|"
+    r"怎样了|在哪|多久|进度|状态)|(?:什么时候|何时).{0,12}(?:取.{0,4}(?:餐|订单)|收到外送)|"
+    r"(?:准备|处理).{0,6}订单.{0,6}(?:时间|多久)|(?:取餐|取外卖).{0,6}(?:时间|多久)|"
+    r"订单.{0,4}(?:外送|派送)情况|(?:看|查).{0,6}是否.{0,5}(?:派送|送到)|"
+    r"什么时候.{0,8}(?:去)?拿我的菜|餐食订购怎样了"
+)
+MERCHANT_DELIVERY = re.compile(
+    r"(?:饭馆|餐馆|餐厅|商家|中餐|他们|你们|[一-龥]{2,12})(?:有|提供|是否提供|接)(?:外送|外卖)|"
+    r"(?:饭馆|餐馆|餐厅|商家).{0,5}(?:有|能|提供|接|做).{0,5}(?:外卖|外送)"
+)
+TIMETABLE = re.compile(
+    r"(?:(?:告诉我|查[一下看]*|请)?(?:明天的|今天的)?(?:火车|列车)的?时间(?:是什么|是几点)?|"
+    r"(?:火车|列车)今天(?:几点|什么时候)(?:开|到)|(?:火车|列车)(?:什么时候发车|几点到达)|"
+    r"列车时刻地址|(?:火车|列车)(?:时间地点|十点准点吗)|(?:我的火车|这班火车)(?:什么时候|几点)(?:到|出发)|"
+    r"(?:下午|上午|早上).{1,8}的火车晚点吗|(?:印第安纳波利斯|巴格马蒂)特快(?:的时间是)?几点(?:开)?)[。!?]?"
+)
+TRAFFIC_OVERVIEW = re.compile(
+    r"(?:今天|今天早上|现在|目前|此刻|本地|城市里)?(?:的)?"
+    r"(?:交通(?:怎么样|顺畅吗|有多糟糕|畅通吗|报告)?|道路(?:交通|畅通)|有交通(?:问题)?吗|显示交通)[。!?]?"
+)
+
+
+def finish_place_search(code, params, text):
+    if params.get("radius_m") or CN_RADIUS.search(text):
+        return
+    if code == "place.search":
+        if re.search(r"这片区域|在镇上找", text) and re.search(r"商店|食品店|景点", text):
+            set_device_scope(params, level="city" if "镇上" in text else "district")
+            return
+        fresh = ATTRACTION_REQUEST.search(text)
+    elif code == "restaurant.search":
+        fresh = RESTAURANT_REQUEST.search(text) and NEW_SELECTION.search(text)
+    else:
+        if hotel := re.fullmatch(r"([^，。!?]{2,20}(?:酒店|宾馆)\([^)]{1,30}\))的(?:酒店类型|房型)[?。]?", text):
+            set_place(params, hotel[1])
+            return
+        fresh = HOTEL_REQUEST.search(text) and (
+            NEW_SELECTION.search(text) or re.search(r"^有.{1,20}酒店.{0,26}吗", text)
+        )
+    if not fresh or re.search(r"导航|怎么走|精确位置|营业时间|几点打烊", text):
+        return
+    reference = OTHER_REFERENCE.search(text)
+    if reference and not re.search(r"^(?:这些(?:菜|食物|设施)|他们)", text[reference.start():]):
+        if not NEW_SELECTION.search(text[:reference.start()]):
+            return
+    mention = PREVIOUS_SUBJECT.search(text)
+    if mention and not NEW_SELECTION.search(text[:mention.start()]):
+        return
+    if fixed_place(params, text):
+        return
+    if LOCATION_DEPENDENT.search(text):
+        # A nearby clause can ask about the as-yet unselected new place's surroundings.
+        # Only reuse it for the search when its anchor is evident.
+        if not FUTURE_ANCHOR.search(text) or not re.search(r"(?:再|顺便|以及|和它|它的)", text):
+            effective_scope(params, text)
+            return
+    if code == "restaurant.search":
+        set_device_scope(params, scope="nearby")
+    else:
+        set_device_scope(params, level="city")
+
+
+def finish_delivery(params, text):
+    if DELIVERY_STATUS.search(text):
+        params["location_source"] = NO_POSITION
+    elif MERCHANT_DELIVERY.search(text) and not (
+        LOCATION_DEPENDENT.search(text) or LOCAL.search(text) or re.search(r"他们|它们", text)
+    ):
+        if not fixed_place(params, text):
+            params["location_source"] = NO_POSITION
+
+
+def finish_ride(params, text):
+    if re.search(r"^(?:打开|设置|谷歌).{0,8}(?:优步|来福车|滴滴)$|出租车.{0,9}(?:电话号码|服务公司)", text):
+        return
+    if OTHER_REFERENCE.search(text):
+        return
+    if pickup := re.search(r"(?:从|到)(我(?:的)?家(?:里)?|家里|公司|办公室)(?:来|接|出发|预[订定]|叫|上车)", text):
+        set_place(params, pickup[1], "pickup_source", "pickup")
+        return
+    if re.search(
+        r"预定.{0,18}(?:优步|出租车)|(?:出租车|优步).{0,6}(?:预[订定]|接车)|"
+        r"(?:叫车去|找辆出租车|找辆.{0,13}顺风车|准备妥出租车|[订定]个车|[订定]出租车)|"
+        r"(?:离我最近|最近的)(?:优步|出租车)|^call taxi\b|"
+        r"下一辆出租车.{0,8}(?:[订定]|预约)|找[一]?辆优步|找[一]?个滴滴司机|"
+        r"(?:今[晚天]|明[天早]|下周).{0,16}(?:去|到)[^。!?]{1,10}(?:出租车|滴滴)",
+        text, re.I,
+    ):
+        params["pickup_source"] = DEVICE
+
+
+def finish_route(params, text):
+    if match := re.fullmatch(
+        r"(?:请|告诉我|给我|可以|帮我|查一下)*"
+        r"([一-龥]{1,14}(?:警察局|公安局|公园|银行|影院|医院|学校|车站)|必胜客|肯德基|麦当劳)"
+        r"怎么走[。!?]?", text,
+    ):
+        set_place(params, match[1], "destination_source", "destination")
+        params["origin_source"] = DEVICE
+
+
+def finish_activity(params, text):
+    if OTHER_REFERENCE.search(text):
+        return
+    if re.search(r"我们城市|我的城市|我的镇上|镇上|我们地区", text):
+        set_device_scope(params, level="city")
+    elif re.search(r"近处.{0,8}活动", text):
+        set_device_scope(params, scope="nearby")
+    elif re.search(r"(?:即将举行的活动|(?:展览|演唱会|音乐会|展会|活动).{0,6}(?:举行|举办)|"
+                   r"(?:有什么|查下|找找|接下来).{0,16}(?:展览|展会|音乐会|演唱会|活动))", text):
+        set_device_scope(params, level="city")
+
+
+def finish_scene(params, text):
+    if re.search(r"我(?:在)?(?:学习|看电影|阅读|健身)时", text):
+        params["trigger_type"] = "activity"
+    elif re.search(r"(?:打开扫地机器人|启动智能热水器)", text):
+        params["trigger_type"] = "manual"
+
+
+def resolve_remaining_single_turn(intent, utterance):
+    """Add grounding to the remaining standalone records with identifiable semantics."""
+    code = canonical_intent_code(intent)
+    params = intent["parameters"].copy()
+    text = compact(utterance)
+    if not text or NO_DEVICE_LOCATION.search(text):
+        return intent
+    if code in SEARCH_REVIEW_CODES:
+        finish_place_search(code, params, text)
+    elif code == "delivery.search":
+        finish_delivery(params, text)
+    elif code == "ride.order":
+        finish_ride(params, text)
+    elif code in {"route.query", "route.estimate"}:
+        finish_route(params, text)
+    elif code == "transit.query" and TIMETABLE.fullmatch(text):
+        params["location_source"] = NO_POSITION
+    elif code == "traffic.query" and TRAFFIC_OVERVIEW.fullmatch(text):
+        set_device_scope(params, level="city")
+    elif code == "event.search":
+        finish_activity(params, text)
+    elif code == "scene.enable":
+        finish_scene(params, text)
+    else:
+        return intent
+
+    resolved = {**intent, "intent_id": code, "parameters": params}
+    return intent if precision_for(resolved).tier == NEEDS_REVIEW else resolved

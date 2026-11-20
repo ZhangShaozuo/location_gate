@@ -13,8 +13,8 @@ from tempfile import TemporaryDirectory
 from zipfile import BadZipFile
 
 from corpora.adapters import Candidate, adapt
-from corpora.policy import POLICY_VERSION
-from corpora.review import ground_single_turn_review
+from corpora.policy import DEFERRED_MULTI_TURN, OUTSIDE_SCOPE, POLICY_VERSION
+from corpora.review import ground_single_turn_review, resolve_remaining_single_turn
 from corpora.schema import (
     CLASSES, NEEDS_REVIEW, NOT_APPLICABLE, PRECISION_CLASSES, REPORTED_TIERS,
     canonical_intent_code, canonical_json, chinese_intent_name, compact, make_intent,
@@ -23,10 +23,11 @@ from corpora.schema import (
 from corpora.sources import NAMES, SPLITS, TRAIN_ONLY_SOURCES, ensure_source, source_records
 
 
-SCHEMA_VERSION = "location-device-slots-v6"
+SCHEMA_VERSION = "location-device-slots-v7"
 LABEL_NAMES = {
-    "精确": "精确", "区域级": "区域级模糊", "城市级": "城市级模糊", "国家级": "国家级模糊",
+    "精确": "精确", "区域级": "区域级模糊", "城市级": "城市级模糊",
     NOT_APPLICABLE: NOT_APPLICABLE, NEEDS_REVIEW: NEEDS_REVIEW,
+    DEFERRED_MULTI_TURN: DEFERRED_MULTI_TURN, OUTSIDE_SCOPE: OUTSIDE_SCOPE,
 }
 
 
@@ -69,6 +70,8 @@ def make_row(candidate, source, split, native_id, sequence, with_reference, *, i
     metadata = expected.requirements()
     if expected.review:
         metadata.update(review=True, rule=expected.rule)
+    if expected.tier == OUTSIDE_SCOPE:
+        metadata["rule"] = expected.rule
     if metadata:
         row["meta"] = metadata
     return row, policy.tier
@@ -116,11 +119,19 @@ def ingest(conn, datasets, args):
                     single_turn = candidate.turn == 0 and len(candidate.context) == 1
                     if single_turn and precision_for(original).tier == NEEDS_REVIEW:
                         intent = ground_single_turn_review(original, candidate.utterance)
+                    earlier = intent
+                    if single_turn and precision_for(earlier).tier == NEEDS_REVIEW:
+                        intent = resolve_remaining_single_turn(earlier, candidate.utterance)
                     row, tier = make_row(
                         candidate, source, split, native_id, sequence, args.with_reference, intent=intent,
                     )
                     if intent is not original:
                         row.setdefault("meta", {})["single_turn_review"] = True
+                    if intent is not earlier:
+                        row["meta"]["v10_resolved"] = True
+                    if tier == NEEDS_REVIEW and not single_turn:
+                        tier = DEFERRED_MULTI_TURN
+                        row["label"] = LABEL_NAMES[tier]
                     fingerprint = stable_hash(canonical_json([
                         compact(candidate.utterance).casefold(), canonical_intent_code(original), original["parameters"],
                     ]))
@@ -297,7 +308,6 @@ def write_self_location_contrasts(data_dir, with_reference):
             ("precise", "告诉我现在的精确坐标"),
             ("district", "我现在在哪个行政区"),
             ("city", "我现在在哪座城市"),
-            ("country", "我现在在哪个国家"),
         )):
             intent = make_intent("location.self", [("requested_granularity", level)])
             candidate = Candidate(intent, text, (("user", text),), 0, "location.self")
@@ -316,8 +326,8 @@ def validate_model_inputs(conn):
     reviewed = Counter()
     for split, encoded in conn.execute("""
         SELECT e.split, c.row_json FROM eligible e JOIN candidates c ON e.id=c.id
-        WHERE e.tier != ?
-    """, (NEEDS_REVIEW,)):
+        WHERE e.tier NOT IN (?, ?, ?)
+    """, (NEEDS_REVIEW, DEFERRED_MULTI_TURN, OUTSIDE_SCOPE)):
         row = json.loads(encoded)
         if row["intent"] in INTENT_CODES_BY_NAME:
             tier = reviewed_label(row["intent"], row["slots"])
@@ -347,7 +357,10 @@ def write_output(conn, data_dir, args, inputs, groups, no_intents):
         SELECT c.* FROM candidates c JOIN selected s ON c.id = s.id
     """)
     sidecars = {}
-    for name, tier in ((None, None), ("not_applicable", NOT_APPLICABLE), ("needs_review", NEEDS_REVIEW)):
+    for name, tier in (
+        (None, None), ("not_applicable", NOT_APPLICABLE), ("needs_review", NEEDS_REVIEW),
+        ("deferred_multi_turn", DEFERRED_MULTI_TURN), ("outside_scope", OUTSIDE_SCOPE),
+    ):
         directory = data_dir / name if name else data_dir
         if name:
             directory.mkdir()
@@ -431,6 +444,8 @@ def write_output(conn, data_dir, args, inputs, groups, no_intents):
             "deduplicated_total": stages["deduplicated"]["by_split"][split]["total"],
             "not_applicable_saved": sidecars["not_applicable"]["by_split"][split]["total"],
             "needs_review_saved": sidecars["needs_review"]["by_split"][split]["total"],
+            "deferred_multi_turn_saved": sidecars["deferred_multi_turn"]["by_split"][split]["total"],
+            "outside_scope_saved": sidecars["outside_scope"]["by_split"][split]["total"],
         }
         for split in SPLITS
     }
@@ -483,7 +498,7 @@ def main():
     )
     parser.add_argument(
         "--include-not-applicable", action="store_true",
-        help="将「不涉及」纳入主划分，供五分类实验",
+        help="将「不涉及」纳入主划分，供四分类实验",
     )
     parser.add_argument("--context-turns", type=positive_int, default=6)
     parser.add_argument("--max-train", type=positive_int, help="训练集总上限")

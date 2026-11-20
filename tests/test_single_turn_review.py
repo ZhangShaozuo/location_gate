@@ -4,7 +4,7 @@ import unittest
 
 from corpora.adapters import utterance_candidate
 from corpora.policy import NEEDS_REVIEW, NOT_APPLICABLE
-from corpora.review import ground_single_turn_review
+from corpora.review import ground_single_turn_review, resolve_remaining_single_turn
 from corpora.schema import reviewed_label
 from prepare import LABEL_NAMES, make_row, model_record, validate_model_inputs
 
@@ -13,6 +13,8 @@ class SingleTurnReviewTests(unittest.TestCase):
     def row(self, code, text, pairs=()):
         candidate = utterance_candidate(code, pairs, text, code)
         intent = ground_single_turn_review(candidate.intent, text)
+        if intent is candidate.intent:
+            intent = resolve_remaining_single_turn(intent, text)
         return make_row(candidate, "sample", "train", 0, 0, True, intent=intent)[0]
 
     def test_confirmed_searches_keep_the_sources_that_change_the_label(self):
@@ -105,3 +107,19 @@ class SingleTurnReviewTests(unittest.TestCase):
                 ))
             with self.assertRaisesRegex(ValueError, "同一模型输入的标签冲突"):
                 validate_model_inputs(conn)
+
+    def test_residual_search_grounds_default_and_preserves_unknown_reference(self):
+        cases = (
+            ("place.search", "麻烦推荐个评分4分以上的景点", "城市级", {"src": "device_current", "level": "city"}),
+            ("hotel.search", "帮我找个合适的酒店吧，这家酒店最好有空调。", "城市级",
+             {"src": "device_current", "level": "city"}),
+            ("restaurant.search", "你知道哪家餐馆的评分是5分，还能吃到水煮牛肉吗？", "区域级",
+             {"src": "device_current", "scope": "nearby"}),
+            ("place.search", "那个景点有什么好玩的？", NEEDS_REVIEW, {}),
+        )
+        for code, text, tier, slots in cases:
+            with self.subTest(text=text):
+                result = self.row(code, text)
+                self.assertEqual(result["slots"], slots)
+                self.assertEqual(result["label"], LABEL_NAMES[tier])
+                self.assertEqual(reviewed_label(result["intent"], slots), tier)
