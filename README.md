@@ -10,7 +10,7 @@
 git pull --ff-only origin main
 python3 prepare.py \
   --raw-dir ./raw \
-  --out-dir ./data-location-device-v8 \
+  --out-dir ./data-location-device-v9 \
   --datasets massive cmpa crosswoz smp2019
 ```
 
@@ -29,7 +29,7 @@ SMP2019 读取公开副本的 2,579 条训练样本，仅进入训练划分。�
 
 ## 意图和槽位
 
-`schema` 为 `location-device-slots-v5`。导出使用统一中文意图名称，下例是一条 SMP2019 导出行，其起点和终点都已给出。
+`schema` 为 `location-device-slots-v6`。导出使用统一中文意图名称，下例是一条 SMP2019 追溯记录，其起点和终点都已给出。
 
 ```json
 {"id":"smp2019:train:200:0:0","intent":"查询路线","slots":{"from":"济源市","to":"河南省电信分公司"},"label":"不涉及","ref":{"text":"从济源市到河南省电信分公司怎么走","native":"map.route"}}
@@ -44,7 +44,7 @@ SMP2019 读取公开副本的 2,579 条训练样本，仅进入训练划分。�
 | `ref` | 保留 `text` 原话、`native` 源标签，以及适用时的 `ctx` 历史消息。用 `--no-reference` 可省略。 |
 | `meta` | 按需记录复核标记、依据或调用要求，如 `notice` 和 `mode`。 |
 
-模型输入为 `intent` 或 `intent + slots`，目标为 `label`。 `from` 和 `to` 表示起点和终点，`pickup` 表示上车点，`loc` 表示显式地点，`near` 表示附近搜索的参照地点。明确的来源用 `src`、`from_src`、`to_src` 和 `pickup_src` 表示，如 `device_current`、`saved_place`、`previous_entity`。明确的地点和起终点保留在原有槽位。确知使用既有位置但找不到可导出的地点名时，可以用 `fixed` 标记来源。 `scope` 与 `radius_m` 记录本机附近、最近、步行时间和距离限制等定位精度依据。
+模型输入为 `intent + slots`，目标为 `label`。 `from` 和 `to` 表示起点和终点，`pickup` 表示上车点，`loc` 表示显式地点，`near` 表示附近搜索的参照地点。明确的来源用 `src`、`from_src`、`to_src` 和 `pickup_src` 表示，如 `device_current`、`saved_place`、`previous_entity`。明确的地点和起终点保留在原有槽位。 `fixed` 记录既有参照来源，含义可与 `loc` 一起判断。 `none` 表示该操作无需位置来源，例如查已有外卖订单或影片信息。 `scope` 与 `radius_m` 记录本机附近、最近、步行时间和距离限制等定位精度依据。
 
 `op` 表示会影响定位的操作，例如让设备响铃或导航到目标设备。 `level` 表示查询当前位置时明确要求的粒度，取 `precise`、`district`、`city`、`country` 或 `coarse_unspecified`。 `trigger` 表示触发方式，例如地理围栏，`track` 表示影响位置使用的运动追踪条件。餐品、人数、价格等参数留在原语料和参考文本中。
 
@@ -52,9 +52,11 @@ SMP2019 读取公开副本的 2,579 条训练样本，仅进入训练划分。�
 
 ## 划分、统计和弱标注
 
-- 顶层 `train.jsonl`、`dev.jsonl`、`test.jsonl` 默认用于精度分类。按规范化原话、统一意图和源语义参数去重，跨划分重复时优先保留测试集，其次验证集。
+- `model/{train,dev,test}.jsonl` 是单条输入训练视图。文件仅含 `intent`、`slots` 和 `label`。顶层对应划分保留追溯字段和已有对话样本。两处沿用原数据划分和基于源记录的去重，跨划分重复时优先保留测试集，其次验证集。
 - `not_applicable/` 保存「不涉及」样本。训练模型识别「不涉及」时，用 `--include-not-applicable` 同时把这类样本纳入主文件。 `needs_review/` 保存暂未定档的样本。
+- 已确认的复核规则只补标无前文的例子。新补标记录用 `meta.single_turn_review` 标识。导出逐条从位置槽位复算精度，并检查相同 `intent + slots` 的已定档记录是否有冲突标签。
 - `summary.json` 的 `stages` 按来源、划分、标签统计提取、去重及导出结果。 `label_names` 将历史统计简称映射到 JSONL 中的完整标签。 `exported_intent_distribution` 以内部意图 ID 为键，`label` 为导出的中文意图名称。 `sidecars` 记录两个旁路目录的分布。
+- `model_input_splits` 统计实际训练视图，`model_input_checks.single_turn_reviews` 统计本轮补标。
 - `augmentation/` 提供两组规则验收文件。 `device-find-contrast.jsonl` 覆盖查询目标、响铃、导航。 `self-location-contrast.jsonl` 覆盖同一意图请求四档精度的四条合成记录。合成样本单独计数。
 - 精度来自 [现网规则](POLICY.md) 的弱标注。训练和评估方式见 [训练方案](TRAINING.md)。
 

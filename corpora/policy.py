@@ -57,7 +57,7 @@ with Path(__file__).with_name("non_location_intents.json").open(encoding="utf-8"
     }
 
 
-POLICY_VERSION = "precision-weak-v8-device-scope"
+POLICY_VERSION = "precision-weak-v9-single-turn-review"
 NO_POSITION = "none"
 TARGET_DEVICE = "target_device"
 STORED_TRACK = "stored_history"
@@ -69,11 +69,13 @@ SELF_GRANULARITY = {
 SOCIAL_POST_INTENTS = {"massive.social_post", "social.post"}
 SCENE_ENABLE_INTENTS = {"cmpa.使能智能情景", "scene.enable"}
 GEOFENCE_TRIGGERS = ("geofence", "enter_location", "leave_location")
+NON_LOCATION_TRIGGERS = ("manual", "schedule", "time", "bluetooth", "wifi")
 ROUTE_INTENTS = {"route.query", "route.estimate"}
 TICKET_INTENTS = {"transit.flight_ticket", "transit.rail_ticket", "transit.ticket", "transit.coach_query"}
 SEARCH_INTENTS = {
     "place.search", "restaurant.search", "hotel.search", "delivery.search", "event.search",
-    "local_service.search", "jobs.search", "transit.bus_query", "traffic.query",
+    "local_service.search", "jobs.search", "transit.bus_query", "transit.query", "traffic.query",
+    "hotel.reserve", "cinema.query",
 }
 GEO_CONTENT_INTENTS = {
     "calendar.set", "calendar.update", "calendar.remove",
@@ -130,13 +132,14 @@ RULES = {
     "note.create": Rule("城市级", WHERE),
     "information.capture": Rule("城市级", WHERE),
     # Existing public-corpus intents adjacent to the live business table.
-    "transit.query": Rule("区域级", ORIGINS),
+    "transit.query": Rule("区域级", (*WHERE, *ORIGINS)),
     "traffic.query": Rule("区域级", WHERE),
     "hotel.search": Rule("区域级", WHERE),
     "hotel.reserve": Rule("区域级", WHERE),
     "restaurant.search": Rule("城市级", WHERE),
     "delivery.search": Rule("区域级", WHERE),
     "event.search": Rule("区域级", WHERE),
+    "cinema.query": Rule("城市级", WHERE),
     "news.query": Rule("城市级", WHERE),
     "news.play": Rule("城市级", WHERE),
 }
@@ -222,12 +225,18 @@ def precision_for(intent):
         trigger = params.get("trigger_type")
         if trigger in GEOFENCE_TRIGGERS:
             return PolicyLabel("精确", "scene_geofence_trigger", True)
-        if trigger in ("manual", "schedule", "time"):
+        if trigger in NON_LOCATION_TRIGGERS:
             return PolicyLabel(NOT_APPLICABLE, "scene_non_location_trigger")
         return review("scene_trigger_unknown")
 
     if code in GEO_CONTENT_INTENTS | {"alarm.set"} and params.get("trigger_type") in GEOFENCE_TRIGGERS:
         return PolicyLabel("精确", "device_geofence_trigger", True)
+
+    if code == "cinema.release_date":
+        return PolicyLabel(NOT_APPLICABLE, "film_release_date")
+
+    if code == "traffic.query" and params.get("origin_source") == DEVICE:
+        return PolicyLabel("精确", "device_route_traffic", True)
 
     rule = RULES.get(code)
     if rule:

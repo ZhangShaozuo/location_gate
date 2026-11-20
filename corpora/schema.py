@@ -7,7 +7,8 @@ import unicodedata
 from .policy import (
     CLASSES, DEVICE, HISTORY, NAMED, NEEDS_REVIEW, NOT_APPLICABLE,
     POSITION_SOURCES, PRECISION_CLASSES, REPORTED_TIERS, SAVED, UNKNOWN,
-    FIXED, GEOFENCE_TRIGGERS, GEO_CONTENT_INTENTS, RULES, SCENE_ENABLE_INTENTS, SEARCH_INTENTS,
+    FIXED, GEOFENCE_TRIGGERS, GEO_CONTENT_INTENTS, NON_LOCATION_TRIGGERS,
+    RULES, SCENE_ENABLE_INTENTS, SEARCH_INTENTS,
     SELF_GRANULARITY, SOCIAL_POST_INTENTS,
     PolicyLabel, precision_for,
 )
@@ -37,6 +38,8 @@ INTENTS = {
     "restaurant.details": "查询餐馆详情",
     "restaurant.reserve": "预订餐馆",
     "event.search": "查找或推荐活动",
+    "cinema.query": "查询影院或影片",
+    "cinema.release_date": "查询影片上映日期",
     "news.query": "查询新闻",
     "news.play": "播报新闻",
     "transit.query": "查询公共交通",
@@ -402,7 +405,9 @@ def make_intent(code, pairs, *, text="", single_turn=False, anchor=None, label=N
     }
     rule = RULES.get(code)
     if rule:
-        for field in rule.fields:
+        # Generic transit gains a location role only when a review resolves the task.
+        fields = rule.fields if code != "transit.query" else ("origin_source", "destination_source")
+        for field in fields:
             if field not in params:
                 value = role_values[field]
                 params[field] = ref_kind(value, anchor=anchor)
@@ -415,12 +420,12 @@ def make_intent(code, pairs, *, text="", single_turn=False, anchor=None, label=N
                 "pickup_source": PICKUP_HERE.search(text) or ORIGIN_HERE.search(text),
             }
             for field, matched in cues.items():
-                if field in rule.fields and matched and params[field] == UNKNOWN:
+                if field in fields and matched and params[field] == UNKNOWN:
                     params[field] = DEVICE
-            if "location_source" in rule.fields and params["location_source"] == UNKNOWN:
+            if "location_source" in fields and params["location_source"] == UNKNOWN:
                 if LOCAL_REGION.search(text) or DEVICE_NEARBY.search(text) or CURRENT.search(text):
                     params["location_source"] = DEVICE
-        if code in SEARCH_INTENTS:
+        if code in SEARCH_INTENTS - {"transit.query", "hotel.reserve", "cinema.query"}:
             apply_search_scope(params, text, single_turn)
         if single_turn and code == "delivery.order" and params["address_source"] == UNKNOWN:
             if DELIVER_SAVED.search(text):
@@ -428,7 +433,7 @@ def make_intent(code, pairs, *, text="", single_turn=False, anchor=None, label=N
             elif DELIVER_CURRENT.search(text):
                 params["address_source"] = DEVICE
         if NO_DEVICE_LOCATION.search(text):
-            for field in rule.fields:
+            for field in fields:
                 if params[field] in (DEVICE, UNKNOWN):
                     params[field] = "none"
             if code in ("navigation.start", "fitness.start"):
@@ -505,7 +510,12 @@ def model_slots(intent):
             slots["loc"] = params["name"]
         if params.get("reference_place") and params["reference_place"] != params.get("name"):
             slots["near"] = params["reference_place"]
-    for field in rule.fields if rule else ():
+    fields = rule.fields if rule else ()
+    if code == "traffic.query":
+        fields = (*fields, "origin_source", "destination_source")
+    for field in fields:
+        if code == "transit.query" and field == "location_source" and field not in params:
+            continue
         slot, source_slot, keys = GEO_SLOT_FIELDS[field]
         for key in keys:
             if params.get(key):
@@ -514,6 +524,8 @@ def model_slots(intent):
         source = params.get(field)
         has_place = slot in slots or slot == "loc" and "near" in slots
         if source in (NAMED, HISTORY) and not has_place:
+            slots[source_slot] = "fixed"
+        elif source == NAMED and ref_kind(slots.get(slot) or slots.get("near")) != NAMED:
             slots[source_slot] = "fixed"
         elif isinstance(source, str) and source in POSITION_SOURCES - {UNKNOWN, NAMED}:
             slots[source_slot] = source
@@ -537,8 +549,39 @@ def model_slots(intent):
             slots["op"] = operation
     if code in SCENE_ENABLE_INTENTS | GEO_CONTENT_INTENTS | {"alarm.set"}:
         trigger = params.get("trigger_type")
-        if trigger in (*GEOFENCE_TRIGGERS, "manual", "schedule", "time"):
+        if trigger in (*GEOFENCE_TRIGGERS, *NON_LOCATION_TRIGGERS):
             slots["trigger"] = trigger
     if code in ("fitness.start", "navigation.start") and params.get("tracking_mode") in ("route", "no_route"):
         slots["track"] = params["tracking_mode"]
     return slots
+
+
+def policy_from_slots(code, slots):
+    """Evaluate the rule using only the exported location evidence."""
+    rule = RULES.get(code)
+    fields = rule.fields if rule else ()
+    if code == "traffic.query":
+        fields = (*fields, "origin_source", "destination_source")
+    params = {}
+    for field in fields:
+        slot, source_slot, _ = GEO_SLOT_FIELDS[field]
+        value = slots.get(slot)
+        if field == "location_source" and value is None:
+            value = slots.get("near")
+        params[field] = slots.get(source_slot) or ref_kind(value)
+    for slot, field in (
+        ("scope", "search_scope"), ("radius_m", "radius_m"), ("level", "requested_granularity"),
+        ("op", "operation"), ("trigger", "trigger_type"), ("track", "tracking_mode"),
+    ):
+        if slot in slots:
+            params[field] = slots[slot]
+    return precision_for({"intent_id": code, "parameters": params})
+
+
+def reviewed_label(intent_name, slots):
+    """Recompute the policy tier for a unified Chinese intent and model slots."""
+    code = INTENT_CODES_BY_NAME[intent_name]
+    return policy_from_slots(code, slots).tier
+
+
+INTENT_CODES_BY_NAME = {name: code for code, name in INTENTS.items()}

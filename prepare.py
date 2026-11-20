@@ -14,15 +14,16 @@ from zipfile import BadZipFile
 
 from corpora.adapters import Candidate, adapt
 from corpora.policy import POLICY_VERSION
+from corpora.review import ground_single_turn_review
 from corpora.schema import (
     CLASSES, NEEDS_REVIEW, NOT_APPLICABLE, PRECISION_CLASSES, REPORTED_TIERS,
     canonical_intent_code, canonical_json, chinese_intent_name, compact, make_intent,
-    model_slots, precision_for,
+    INTENT_CODES_BY_NAME, model_slots, policy_from_slots, precision_for, reviewed_label,
 )
 from corpora.sources import NAMES, SPLITS, TRAIN_ONLY_SOURCES, ensure_source, source_records
 
 
-SCHEMA_VERSION = "location-device-slots-v5"
+SCHEMA_VERSION = "location-device-slots-v6"
 LABEL_NAMES = {
     "精确": "精确", "区域级": "区域级模糊", "城市级": "城市级模糊", "国家级": "国家级模糊",
     NOT_APPLICABLE: NOT_APPLICABLE, NEEDS_REVIEW: NEEDS_REVIEW,
@@ -47,23 +48,27 @@ def stable_hash(value):
     return hashlib.blake2b(value.encode("utf-8"), digest_size=16).hexdigest()
 
 
-def make_row(candidate, source, split, native_id, sequence, with_reference):
-    intent = candidate.intent
-    policy = precision_for(intent)
+def make_row(candidate, source, split, native_id, sequence, with_reference, *, intent=None):
+    intent = intent if intent is not None else candidate.intent
+    slots = model_slots(intent)
+    policy = policy_from_slots(canonical_intent_code(intent), slots)
+    expected = precision_for(intent)
+    if policy.tier != expected.tier:
+        raise ValueError(f"{chinese_intent_name(intent)} 的槽位无法还原标签：{slots} / {expected.tier} / {policy.tier}")
     group = f"{source}:{split}:{native_id}"
     row = {
         "id": f"{group}:{candidate.turn}:{sequence}",
         "intent": chinese_intent_name(intent),
-        "slots": model_slots(intent),
+        "slots": slots,
         "label": LABEL_NAMES[policy.tier],
     }
     if with_reference:
         row["ref"] = {"text": candidate.utterance, "native": candidate.original_intent}
         if len(candidate.context) > 1:
             row["ref"]["ctx"] = candidate.context[:-1]
-    metadata = policy.requirements()
-    if policy.review:
-        metadata.update(review=True, rule=policy.rule)
+    metadata = expected.requirements()
+    if expected.review:
+        metadata.update(review=True, rule=expected.rule)
     if metadata:
         row["meta"] = metadata
     return row, policy.tier
@@ -87,6 +92,7 @@ def init_database(conn):
         );
         CREATE TABLE native_groups(dataset TEXT, split TEXT, native_id TEXT,
             PRIMARY KEY(dataset, split, native_id));
+        CREATE TABLE single_turn_candidates(id TEXT PRIMARY KEY);
     """)
 
 
@@ -105,17 +111,27 @@ def ingest(conn, datasets, args):
                 groups[source][split] += 1
                 converted = 0
                 for sequence, candidate in enumerate(adapt(source, raw, args.context_turns)):
-                    row, tier = make_row(candidate, source, split, native_id, sequence, args.with_reference)
-                    code = canonical_intent_code(candidate.intent)
+                    original = candidate.intent
+                    intent = original
+                    single_turn = candidate.turn == 0 and len(candidate.context) == 1
+                    if single_turn and precision_for(original).tier == NEEDS_REVIEW:
+                        intent = ground_single_turn_review(original, candidate.utterance)
+                    row, tier = make_row(
+                        candidate, source, split, native_id, sequence, args.with_reference, intent=intent,
+                    )
+                    if intent is not original:
+                        row.setdefault("meta", {})["single_turn_review"] = True
                     fingerprint = stable_hash(canonical_json([
-                        compact(candidate.utterance).casefold(), code, candidate.intent["parameters"],
+                        compact(candidate.utterance).casefold(), canonical_intent_code(original), original["parameters"],
                     ]))
                     conn.execute("INSERT INTO candidates VALUES(?,?,?,?,?,?,?,?,?,?,?,?)", (
                         row["id"], source, split, split_priority[split], tier, total, fingerprint,
                         stable_hash(f"{args.seed}:{row['id']}"),
-                        code, row["intent"],
+                        canonical_intent_code(intent), row["intent"],
                         int(row.get("meta", {}).get("review", False)), canonical_json(row),
                     ))
+                    if single_turn:
+                        conn.execute("INSERT INTO single_turn_candidates VALUES(?)", (row["id"],))
                     total += 1
                     converted += 1
                 if not converted:
@@ -291,7 +307,41 @@ def write_self_location_contrasts(data_dir, with_reference):
     return {"path": relative.as_posix(), "total": sum(counts.values()), "classes": dict(counts)}
 
 
+def model_record(row):
+    return {key: row[key] for key in ("intent", "slots", "label")}
+
+
+def validate_model_inputs(conn):
+    labels = {}
+    reviewed = Counter()
+    for split, encoded in conn.execute("""
+        SELECT e.split, c.row_json FROM eligible e JOIN candidates c ON e.id=c.id
+        WHERE e.tier != ?
+    """, (NEEDS_REVIEW,)):
+        row = json.loads(encoded)
+        if row["intent"] in INTENT_CODES_BY_NAME:
+            tier = reviewed_label(row["intent"], row["slots"])
+            if LABEL_NAMES[tier] != row["label"]:
+                raise ValueError(f"中文意图和位置槽位无法还原样本标签：{row['id']}")
+        key = (row["intent"], canonical_json(row["slots"]))
+        previous = labels.setdefault(key, row["label"])
+        if row["label"] != previous:
+            raise ValueError(f"同一模型输入的标签冲突：{key} / {previous} / {row['label']}")
+        if row.get("meta", {}).get("single_turn_review"):
+            reviewed[split, row["label"]] += 1
+    return {
+        "conflicting_inputs": 0, "distinct_finalized_inputs": len(labels),
+        "single_turn_reviews": {
+            split: {label: count for (part, label), count in reviewed.items() if part == split}
+            for split in SPLITS
+        },
+    }
+
+
 def write_output(conn, data_dir, args, inputs, groups, no_intents):
+    model_checks = validate_model_inputs(conn)
+    model_dir = data_dir / "model"
+    model_dir.mkdir()
     conn.execute("""
         CREATE TEMP VIEW output_rows AS
         SELECT c.* FROM candidates c JOIN selected s ON c.id = s.id
@@ -316,6 +366,19 @@ def write_output(conn, data_dir, args, inputs, groups, no_intents):
                     """, (split,))
                 for (encoded,) in rows:
                     out.write(encoded + "\n")
+    model_splits = {}
+    for split in SPLITS:
+        classes = Counter(dict.fromkeys(LABEL_NAMES.values(), 0))
+        with (model_dir / f"{split}.jsonl").open("w", encoding="utf-8") as out:
+            for (encoded,) in conn.execute("""
+                SELECT o.row_json FROM output_rows o
+                JOIN single_turn_candidates s ON o.id=s.id
+                WHERE o.split=? ORDER BY o.rank,o.id
+            """, (split,)):
+                record = model_record(json.loads(encoded))
+                classes[record["label"]] += 1
+                out.write(canonical_json(record) + "\n")
+        model_splits[split] = {"total": sum(classes.values()), "classes": dict(classes)}
     stages = {}
     for stage, table in (("extracted", "candidates"), ("deduplicated", "eligible"), ("exported", "output_rows")):
         per_source = distribution(conn, table)
@@ -350,6 +413,8 @@ def write_output(conn, data_dir, args, inputs, groups, no_intents):
             "include_not_applicable": args.include_not_applicable,
         },
         "stages": stages,
+        "model_input_checks": model_checks,
+        "model_input_splits": model_splits,
         "sidecars": sidecars,
         "augmentation": write_device_find_contrasts(data_dir, args.with_reference),
         "self_location_contrasts": write_self_location_contrasts(data_dir, args.with_reference),
