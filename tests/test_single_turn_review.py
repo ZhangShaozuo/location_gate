@@ -21,7 +21,7 @@ class SingleTurnReviewTests(unittest.TestCase):
         cases = (
             ("restaurant.search", "帮我推荐一个评分5分的餐馆", (), "区域级",
              {"src": "device_current", "scope": "nearby"}),
-            ("restaurant.search", "在颐和园附近找家餐厅", (), NOT_APPLICABLE, {"loc": "颐和园"}),
+            ("restaurant.search", "在颐和园附近找家餐厅", (), NOT_APPLICABLE, {"loc": "颐和园", "scope": "nearby"}),
             ("hotel.search", "帮我找一家舒适型的酒店", (), "城市级",
              {"src": "device_current", "level": "city"}),
             ("hotel.reserve", "帮我预订附近的酒店", (("location", "附近"),), "区域级",

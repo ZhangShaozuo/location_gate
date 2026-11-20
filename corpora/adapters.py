@@ -15,6 +15,7 @@ class Candidate:
     context: tuple
     turn: int
     original_intent: str
+    stream: str | None = None
 
 
 MASSIVE_MAP = {
@@ -122,6 +123,7 @@ ROUTE = re.compile(r"怎么走|怎样走|指路|路线|导航|怎么回家")
 DISTANCE = re.compile(r"多久|多远|多长时间|多少时间|距离|要多长|几公里|耗时")
 DIRECT_NAV = re.compile(r"^(?:开始|现在|请|帮我|给我|步行|骑行|驾车)*导航(?:去|到|至|回)?")
 POINTING_CONTEXT = re.compile(r"这里|这儿|那里|那儿|他家|他们家|这个地方|这个景点|这家|这些(?:景点|酒店|餐馆|地点)|上述|前面(?:的|提到的)")
+FRESH_TASK = re.compile(r"另外|再.{0,5}(?:帮我|推荐|找|查询)|接下来|还想.{0,6}(?:找|查|去|订)|另一(?:家|个|座)|重新")
 NEARBY_SLOTS = {"nearby_attractions", "nearby_restaurants", "nearby_hotels"}
 SGD_NAME_BREAK = re.compile(r"(?<!^)(?=[A-Z])")
 
@@ -237,12 +239,15 @@ def action_groups(acts):
 
 def last_named(acts, subjects):
     for domain, group in action_groups(acts).items():
-        for action, key, value in group:
-            if (
-                action in {"inform", "recommend"} and key == "name" and value
-                and str(value).casefold() not in {"none", "?", "无"}
-            ):
-                subjects[domain_kind(domain)] = compact(value)
+        names = {
+            compact(value) for action, key, value in group
+            if action in {"inform", "recommend"} and key == "name" and value
+            and str(value).casefold() not in {"none", "?", "无"}
+        }
+        if len(names) == 1:
+            subjects[domain_kind(domain)] = next(iter(names))
+        elif names:
+            subjects.pop(domain_kind(domain), None)
 
 
 def resolve_dialogue_intent(
@@ -286,7 +291,7 @@ def bounded_context(history, window):
     return tuple(history[-window:])
 
 
-def adapt_crosswoz(doc, window):
+def adapt_crosswoz(doc, window, *, keep_snapshots=False):
     turns = doc.get("messages", doc.get("message"))
     if not isinstance(turns, list):
         raise ValueError("CrossWOZ 缺少逐轮 messages 数组")
@@ -316,6 +321,10 @@ def adapt_crosswoz(doc, window):
                 continue
             code = domain_kind(domain)
             state = states[code]
+            if FRESH_TASK.search(raw) and any(action == "request" and key == "name" for action, key, _ in acts):
+                state.clear()
+                if not any(action == "select" and key == "source_domain" for action, key, _ in acts):
+                    subjects.pop(code, None)
             for action, key, value in acts:
                 if action == "inform" and value not in (None, ""):
                     state[key] = value
@@ -324,7 +333,7 @@ def adapt_crosswoz(doc, window):
                 domain, acts, state, subjects, raw, detail_slots=detail_slots, turn_references=turn_references,
             )
             fingerprint = canonical_json(intent)
-            if fingerprint != prior.get(code):
+            if keep_snapshots or fingerprint != prior.get(code):
                 prior[code] = fingerprint
                 yield Candidate(intent, raw, bounded_context(history, window), index, domain)
 
@@ -338,7 +347,7 @@ def state_parameters(belief, domain):
     return pairs
 
 
-def adapt_risawoz(doc, window):
+def adapt_risawoz(doc, window, *, keep_snapshots=False):
     history, subjects, prior = [], {}, {}
     for index, record in enumerate(doc["dialogue"]):
         raw = record["user_utterance"]
@@ -355,7 +364,7 @@ def adapt_risawoz(doc, window):
             intent = resolve_dialogue_intent(domain, acts, current, subjects, raw)
             key = domain_kind(domain)
             fingerprint = canonical_json(intent)
-            if fingerprint != prior.get(key):
+            if keep_snapshots or fingerprint != prior.get(key):
                 prior[key] = fingerprint
                 yield Candidate(intent, raw, bounded_context(history, window), index, domain)
         system = record.get("system_utterance")
@@ -368,7 +377,7 @@ def action_names(frame):
     return {x["act"] for x in frame.get("actions", [])}
 
 
-def adapt_sgd(doc, window):
+def adapt_sgd(doc, window, *, keep_snapshots=False):
     history, prior = [], {}
     confirming_services = set()
     for index, turn in enumerate(doc["turns"]):
@@ -406,23 +415,23 @@ def adapt_sgd(doc, window):
                     pairs.append(("confirmation", "pending_reply"))
             intent = make_intent(code, pairs, text=raw, label=label)
             fingerprint = canonical_json(intent)
-            if fingerprint == prior.get(service):
+            if not keep_snapshots and fingerprint == prior.get(service):
                 continue
             prior[service] = fingerprint
-            yield Candidate(intent, raw, bounded_context(history, window), index, native)
+            yield Candidate(intent, raw, bounded_context(history, window), index, native, service)
         confirming_services.clear()
 
 
-def adapt(dataset, row, window):
+def adapt(dataset, row, window, *, keep_snapshots=False):
     if dataset == "massive":
         yield from adapt_massive(row)
     elif dataset == "cmpa":
         yield from adapt_cmpa(row)
     elif dataset == "crosswoz":
-        yield from adapt_crosswoz(row, window)
+        yield from adapt_crosswoz(row, window, keep_snapshots=keep_snapshots)
     elif dataset == "smp2019":
         yield from adapt_smp2019(row)
     elif dataset == "risawoz":
-        yield from adapt_risawoz(row, window)
+        yield from adapt_risawoz(row, window, keep_snapshots=keep_snapshots)
     elif dataset == "sgd":
-        yield from adapt_sgd(row, window)
+        yield from adapt_sgd(row, window, keep_snapshots=keep_snapshots)

@@ -13,8 +13,9 @@ from tempfile import TemporaryDirectory
 from zipfile import BadZipFile
 
 from corpora.adapters import Candidate, adapt
-from corpora.policy import DEFERRED_MULTI_TURN, OUTSIDE_SCOPE, POLICY_VERSION
-from corpora.review import ground_single_turn_review, resolve_remaining_single_turn
+from corpora.dialogues import DIALOGUE_SOURCES, assemble_dialogue, reference_turn_positions, transcript
+from corpora.grounding import ground_location_evidence, resolve_task
+from corpora.policy import OUTSIDE_SCOPE, POLICY_VERSION
 from corpora.schema import (
     CLASSES, NEEDS_REVIEW, NOT_APPLICABLE, PRECISION_CLASSES, REPORTED_TIERS,
     canonical_intent_code, canonical_json, chinese_intent_name, compact, make_intent,
@@ -23,11 +24,11 @@ from corpora.schema import (
 from corpora.sources import NAMES, SPLITS, TRAIN_ONLY_SOURCES, ensure_source, source_records
 
 
-SCHEMA_VERSION = "location-device-slots-v7"
+SCHEMA_VERSION = "location-device-slots-v8"
 LABEL_NAMES = {
     "精确": "精确", "区域级": "区域级模糊", "城市级": "城市级模糊",
     NOT_APPLICABLE: NOT_APPLICABLE, NEEDS_REVIEW: NEEDS_REVIEW,
-    DEFERRED_MULTI_TURN: DEFERRED_MULTI_TURN, OUTSIDE_SCOPE: OUTSIDE_SCOPE,
+    OUTSIDE_SCOPE: OUTSIDE_SCOPE,
 }
 
 
@@ -95,7 +96,13 @@ def init_database(conn):
         );
         CREATE TABLE native_groups(dataset TEXT, split TEXT, native_id TEXT,
             PRIMARY KEY(dataset, split, native_id));
-        CREATE TABLE single_turn_candidates(id TEXT PRIMARY KEY);
+        CREATE TABLE dialogue_groups(
+            id TEXT PRIMARY KEY, dataset TEXT NOT NULL, split TEXT NOT NULL, transcript TEXT NOT NULL
+        );
+        CREATE TABLE dialogue_tasks(
+            id TEXT PRIMARY KEY, dialogue_id TEXT NOT NULL, evidence_turns TEXT NOT NULL
+        );
+        CREATE INDEX tasks_by_dialogue ON dialogue_tasks(dialogue_id);
     """)
 
 
@@ -113,26 +120,34 @@ def ingest(conn, datasets, args):
                 conn.execute("INSERT INTO native_groups VALUES(?,?,?)", (source, split, native_id))
                 groups[source][split] += 1
                 converted = 0
-                for sequence, candidate in enumerate(adapt(source, raw, args.context_turns)):
+                dialogue_id = None
+                if source in DIALOGUE_SOURCES:
+                    dialogue_id = f"{source}:{split}:{native_id}"
+                    tasks = assemble_dialogue(source, raw, args.context_turns)
+                    reference = transcript(source, raw) if args.with_reference else []
+                    positions = reference_turn_positions(source, raw)
+                    conn.execute("INSERT INTO dialogue_groups VALUES(?,?,?,?)", (
+                        dialogue_id, source, split, canonical_json(reference),
+                    ))
+                    candidates = (
+                        (task.candidate, [positions.get(turn, turn) for turn in task.evidence_turns])
+                        for task in tasks
+                    )
+                else:
+                    candidates = ((candidate, None) for candidate in adapt(source, raw, args.context_turns))
+                for sequence, (candidate, evidence_turns) in enumerate(candidates):
                     original = candidate.intent
                     intent = original
-                    single_turn = candidate.turn == 0 and len(candidate.context) == 1
-                    if single_turn and precision_for(original).tier == NEEDS_REVIEW:
-                        intent = ground_single_turn_review(original, candidate.utterance)
-                    earlier = intent
-                    if single_turn and precision_for(earlier).tier == NEEDS_REVIEW:
-                        intent = resolve_remaining_single_turn(earlier, candidate.utterance)
+                    if not dialogue_id:
+                        intent = resolve_task(
+                            ground_location_evidence(original, candidate.utterance), candidate.utterance,
+                        )
                     row, tier = make_row(
                         candidate, source, split, native_id, sequence, args.with_reference, intent=intent,
                     )
-                    if intent is not original:
+                    if intent is not original and precision_for(original).tier == NEEDS_REVIEW and tier != NEEDS_REVIEW:
                         row.setdefault("meta", {})["single_turn_review"] = True
-                    if intent is not earlier:
-                        row["meta"]["v10_resolved"] = True
-                    if tier == NEEDS_REVIEW and not single_turn:
-                        tier = DEFERRED_MULTI_TURN
-                        row["label"] = LABEL_NAMES[tier]
-                    fingerprint = stable_hash(canonical_json([
+                    fingerprint = stable_hash(dialogue_id + ":" + str(sequence)) if dialogue_id else stable_hash(canonical_json([
                         compact(candidate.utterance).casefold(), canonical_intent_code(original), original["parameters"],
                     ]))
                     conn.execute("INSERT INTO candidates VALUES(?,?,?,?,?,?,?,?,?,?,?,?)", (
@@ -141,8 +156,10 @@ def ingest(conn, datasets, args):
                         canonical_intent_code(intent), row["intent"],
                         int(row.get("meta", {}).get("review", False)), canonical_json(row),
                     ))
-                    if single_turn:
-                        conn.execute("INSERT INTO single_turn_candidates VALUES(?)", (row["id"],))
+                    if dialogue_id:
+                        conn.execute("INSERT INTO dialogue_tasks VALUES(?,?,?)", (
+                            row["id"], dialogue_id, canonical_json(evidence_turns),
+                        ))
                     total += 1
                     converted += 1
                 if not converted:
@@ -326,8 +343,8 @@ def validate_model_inputs(conn):
     reviewed = Counter()
     for split, encoded in conn.execute("""
         SELECT e.split, c.row_json FROM eligible e JOIN candidates c ON e.id=c.id
-        WHERE e.tier NOT IN (?, ?, ?)
-    """, (NEEDS_REVIEW, DEFERRED_MULTI_TURN, OUTSIDE_SCOPE)):
+        WHERE e.tier NOT IN (?, ?)
+    """, (NEEDS_REVIEW, OUTSIDE_SCOPE)):
         row = json.loads(encoded)
         if row["intent"] in INTENT_CODES_BY_NAME:
             tier = reviewed_label(row["intent"], row["slots"])
@@ -348,6 +365,38 @@ def validate_model_inputs(conn):
     }
 
 
+def write_dialogues(conn, data_dir, with_reference):
+    directory = data_dir / "dialogues"
+    directory.mkdir()
+    statistics = {}
+    for split in SPLITS:
+        sizes = Counter()
+        with (directory / f"{split}.jsonl").open("w", encoding="utf-8") as out:
+            for dialogue_id, source, encoded in conn.execute("""
+                SELECT id,dataset,transcript FROM dialogue_groups WHERE split=? ORDER BY id
+            """, (split,)):
+                items = []
+                for item_json, evidence in conn.execute("""
+                    SELECT c.row_json,t.evidence_turns FROM dialogue_tasks t
+                    JOIN candidates c ON c.id=t.id WHERE t.dialogue_id=?
+                    ORDER BY c.read_order
+                """, (dialogue_id,)):
+                    item = json.loads(item_json)
+                    item.pop("ref", None)
+                    if with_reference:
+                        item["turns"] = json.loads(evidence)
+                    items.append(item)
+                row = {"id": dialogue_id, "source": source, "intents": items}
+                if with_reference:
+                    row["ref"] = {"turns": json.loads(encoded)}
+                out.write(canonical_json(row) + "\n")
+                sizes["dialogues"] += 1
+                sizes["tasks"] += len(items)
+                sizes["needs_review"] += sum(item["label"] == NEEDS_REVIEW for item in items)
+        statistics[split] = dict(sizes)
+    return statistics
+
+
 def write_output(conn, data_dir, args, inputs, groups, no_intents):
     model_checks = validate_model_inputs(conn)
     model_dir = data_dir / "model"
@@ -359,7 +408,7 @@ def write_output(conn, data_dir, args, inputs, groups, no_intents):
     sidecars = {}
     for name, tier in (
         (None, None), ("not_applicable", NOT_APPLICABLE), ("needs_review", NEEDS_REVIEW),
-        ("deferred_multi_turn", DEFERRED_MULTI_TURN), ("outside_scope", OUTSIDE_SCOPE),
+        ("outside_scope", OUTSIDE_SCOPE),
     ):
         directory = data_dir / name if name else data_dir
         if name:
@@ -385,7 +434,6 @@ def write_output(conn, data_dir, args, inputs, groups, no_intents):
         with (model_dir / f"{split}.jsonl").open("w", encoding="utf-8") as out:
             for (encoded,) in conn.execute("""
                 SELECT o.row_json FROM output_rows o
-                JOIN single_turn_candidates s ON o.id=s.id
                 WHERE o.split=? ORDER BY o.rank,o.id
             """, (split,)):
                 record = model_record(json.loads(encoded))
@@ -428,6 +476,7 @@ def write_output(conn, data_dir, args, inputs, groups, no_intents):
         "stages": stages,
         "model_input_checks": model_checks,
         "model_input_splits": model_splits,
+        "dialogue_splits": write_dialogues(conn, data_dir, args.with_reference),
         "sidecars": sidecars,
         "augmentation": write_device_find_contrasts(data_dir, args.with_reference),
         "self_location_contrasts": write_self_location_contrasts(data_dir, args.with_reference),
@@ -444,7 +493,6 @@ def write_output(conn, data_dir, args, inputs, groups, no_intents):
             "deduplicated_total": stages["deduplicated"]["by_split"][split]["total"],
             "not_applicable_saved": sidecars["not_applicable"]["by_split"][split]["total"],
             "needs_review_saved": sidecars["needs_review"]["by_split"][split]["total"],
-            "deferred_multi_turn_saved": sidecars["deferred_multi_turn"]["by_split"][split]["total"],
             "outside_scope_saved": sidecars["outside_scope"]["by_split"][split]["total"],
         }
         for split in SPLITS
@@ -500,7 +548,7 @@ def main():
         "--include-not-applicable", action="store_true",
         help="将「不涉及」纳入主划分，供四分类实验",
     )
-    parser.add_argument("--context-turns", type=positive_int, default=6)
+    parser.add_argument("--context-turns", type=positive_int, default=6, help="顶层任务原话的历史摘录长度")
     parser.add_argument("--max-train", type=positive_int, help="训练集总上限")
     parser.add_argument("--max-train-per-class", type=positive_int, help="训练集每个精度类的上限")
     parser.add_argument("--max-train-per-source", type=positive_int, help="主训练集每个语料来源的条数上限")

@@ -254,7 +254,7 @@ DEVICE_NEARBY = re.compile(
 LOCAL_REGION = re.compile(r"我(?:的)?这(?:里|儿|边)|我(?:们)?(?:当前|现在)?所在(?:的)?(?:国家|城市|市|地区|区)|我们这座城市")
 NEAREST = re.compile(
     r"离[^，。！？]{0,15}最近|距离[^，。！？]{0,15}最近|\b(?:nearest|closest)\b|"
-    r"(?:最近的|最近一家)(?=[^，。！？]{0,12}(?:店|医院|景点|车站|站点|路口|公园|酒店|宾馆|餐馆|餐厅|银行|商场|超市|厕所|停车场|咖啡馆))",
+    r"(?:最近的|最近一家)(?=[^，。！？]{0,12}(?:店|医院|景点|车站|站点|路口|公园|酒店|宾馆|餐馆|餐厅|银行|商场|超市|厕所|停车场|咖啡馆|健身房|健身馆))",
     re.I,
 )
 WALKING_TIME = re.compile(r"(?:步行|走路)\s*(?:\d+|[一二三四五六七八九十两]+)\s*分钟(?:内|以内|之内)|\bwithin a \d+[- ]minute walk\b", re.I)
@@ -510,6 +510,10 @@ def model_slots(intent):
             slots["loc"] = params["name"]
         if params.get("reference_place") and params["reference_place"] != params.get("name"):
             slots["near"] = params["reference_place"]
+    if params.get("reference_place") and code in SEARCH_INTENTS - PLACE_INTENTS:
+        slots.setdefault("near", params["reference_place"])
+    if params.get("reference_candidates") and code in SEARCH_INTENTS:
+        slots["candidates"] = params["reference_candidates"]
     fields = rule.fields if rule else ()
     if code == "traffic.query":
         fields = (*fields, "origin_source", "destination_source")
@@ -522,7 +526,7 @@ def model_slots(intent):
                 slots[slot] = params[key]
                 break
         source = params.get(field)
-        has_place = slot in slots or slot == "loc" and "near" in slots
+        has_place = slot in slots or slot == "loc" and ("near" in slots or "candidates" in slots)
         if source in (NAMED, HISTORY) and not has_place:
             slots[source_slot] = "fixed"
         elif source == NAMED and ref_kind(slots.get(slot) or slots.get("near")) != NAMED:
@@ -535,10 +539,19 @@ def model_slots(intent):
         level = params.get("requested_granularity")
         if isinstance(level, str) and level in SELF_GRANULARITY:
             slots["level"] = level
-    if code in SEARCH_INTENTS and params.get("location_source") == DEVICE:
+    if code in SEARCH_INTENTS:
         for field, slot in (("search_scope", "scope"), ("radius_m", "radius_m")):
             if field in params:
                 slots[slot] = params[field]
+    if params.get("search_target"):
+        slots["target"] = params["search_target"]
+    if params.get("place_mentions"):
+        fields = {compact(value) for key in ("loc", "near", "from", "to", "pickup") for value in items(slots.get(key)) if value}
+        mentions = [value for value in params["place_mentions"] if not any(value in field for field in fields)]
+        if mentions:
+            slots["places"] = mentions
+    if params.get("reference_status") in {"unresolved", "intent_mismatch"}:
+        slots["anchor"] = params["reference_status"]
     if code == "device.find" or code in SOCIAL_POST_INTENTS | GEO_CONTENT_INTENTS:
         operation = params.get("operation")
         allowed = (
@@ -551,6 +564,8 @@ def model_slots(intent):
         trigger = params.get("trigger_type")
         if trigger in (*GEOFENCE_TRIGGERS, *NON_LOCATION_TRIGGERS):
             slots["trigger"] = trigger
+        if code in SCENE_ENABLE_INTENTS and params.get("destination"):
+            slots["to"] = params["destination"]
     if code in ("fitness.start", "navigation.start") and params.get("tracking_mode") in ("route", "no_route"):
         slots["track"] = params["tracking_mode"]
     return slots
@@ -572,6 +587,7 @@ def policy_from_slots(code, slots):
     for slot, field in (
         ("scope", "search_scope"), ("radius_m", "radius_m"), ("level", "requested_granularity"),
         ("op", "operation"), ("trigger", "trigger_type"), ("track", "tracking_mode"),
+        ("anchor", "reference_status"),
     ):
         if slot in slots:
             params[field] = slots[slot]

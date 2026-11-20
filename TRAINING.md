@@ -1,6 +1,6 @@
 # 定位精度三分类实验
 
-读取 `model/train.jsonl`、`model/dev.jsonl` 和 `model/test.jsonl`。把 `intent + slots` 作为输入，`label` 作为目标。训练和推理使用同一套中文意图名称及位置槽位。训练文件仅包含单条输入样本。顶层对应文件保留 ID 和来源资料供追溯。SMP2019 的公开副本进入训练划分。
+读取 `model/train.jsonl`、`model/dev.jsonl` 和 `model/test.jsonl`。把 `intent + slots` 作为输入，`label` 作为目标。训练和推理使用同一套中文意图名称及位置槽位。训练文件按任务展开，兼有单条请求和多轮对话提取的任务。`dialogues/` 保存对话与任务的对应关系，供检查提取质量和按对话分组做评估。SMP2019 的公开副本进入训练划分。
 
 四套公开语料覆盖精确、区域级模糊、城市级模糊三档。 `augmentation/self-location-contrast.jsonl` 包含三档查询当前位置的合成规则验收样本。相同结构化输入的合成改写适用于验收同一条规则。
 

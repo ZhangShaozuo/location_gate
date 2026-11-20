@@ -9,10 +9,9 @@ import re
 PRECISION_CLASSES = ("精确", "区域级", "城市级")
 NOT_APPLICABLE = "不涉及"
 NEEDS_REVIEW = "待复核"
-DEFERRED_MULTI_TURN = "多轮暂缓"
 OUTSIDE_SCOPE = "超出范围"
 CLASSES = PRECISION_CLASSES + (NOT_APPLICABLE,)
-REPORTED_TIERS = CLASSES + (NEEDS_REVIEW, DEFERRED_MULTI_TURN, OUTSIDE_SCOPE)
+REPORTED_TIERS = CLASSES + (NEEDS_REVIEW, OUTSIDE_SCOPE)
 UNKNOWN = "unknown"
 DEVICE = "device_current"
 HISTORY = "previous_entity"
@@ -59,7 +58,7 @@ with Path(__file__).with_name("non_location_intents.json").open(encoding="utf-8"
     }
 
 
-POLICY_VERSION = "precision-weak-v10-three-classes"
+POLICY_VERSION = "precision-weak-v11-whole-dialogue"
 NO_POSITION = "none"
 TARGET_DEVICE = "target_device"
 STORED_TRACK = "stored_history"
@@ -71,7 +70,7 @@ SELF_GRANULARITY = {
 SOCIAL_POST_INTENTS = {"massive.social_post", "social.post"}
 SCENE_ENABLE_INTENTS = {"cmpa.使能智能情景", "scene.enable"}
 GEOFENCE_TRIGGERS = ("geofence", "enter_location", "leave_location")
-NON_LOCATION_TRIGGERS = ("manual", "schedule", "time", "bluetooth", "wifi", "activity")
+NON_LOCATION_TRIGGERS = ("manual", "schedule", "time", "bluetooth", "wifi", "activity", "driving")
 ROUTE_INTENTS = {"route.query", "route.estimate"}
 TICKET_INTENTS = {"transit.flight_ticket", "transit.rail_ticket", "transit.ticket", "transit.coach_query"}
 SEARCH_INTENTS = {
@@ -198,6 +197,11 @@ def precision_for(intent):
     """Label current-device location, independently of other positions a task uses."""
     code = intent["intent_id"]
     params = intent["parameters"]
+
+    if params.get("reference_status") == "unresolved":
+        return review("unresolved_task_reference")
+    if params.get("reference_status") == "intent_mismatch":
+        return review("source_intent_mismatch")
 
     if code == "device.find":
         operation = params.get("operation")
