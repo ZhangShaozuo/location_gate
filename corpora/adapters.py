@@ -121,7 +121,7 @@ RAIL_TICKET = re.compile(r"火车|高铁|列车")
 ROUTE = re.compile(r"怎么走|怎样走|指路|路线|导航|怎么回家")
 DISTANCE = re.compile(r"多久|多远|多长时间|多少时间|距离|要多长|几公里|耗时")
 DIRECT_NAV = re.compile(r"^(?:开始|现在|请|帮我|给我|步行|骑行|驾车)*导航(?:去|到|至|回)?")
-POINTING_CONTEXT = re.compile(r"这里|这儿|那里|那儿|他家|他们家|这个地方|这个景点|这家")
+POINTING_CONTEXT = re.compile(r"这里|这儿|那里|那儿|他家|他们家|这个地方|这个景点|这家|这些(?:景点|酒店|餐馆|地点)|上述|前面(?:的|提到的)")
 NEARBY_SLOTS = {"nearby_attractions", "nearby_restaurants", "nearby_hotels"}
 SGD_NAME_BREAK = re.compile(r"(?<!^)(?=[A-Z])")
 
@@ -263,7 +263,7 @@ def resolve_dialogue_intent(
         source_code = domain_kind(source_domain)
         if turn_references:
             named_reference = turn_references.get(source_code)
-        anchor = named_reference or subjects.get(source_code)
+        anchor = named_reference or subjects.get(source_code) or (named if source_code == code else None)
     if not anchor and named and (
         POINTING_CONTEXT.search(utterance) or NEARBY_SLOTS.intersection(requests)
     ):

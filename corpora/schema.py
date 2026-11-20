@@ -7,7 +7,8 @@ import unicodedata
 from .policy import (
     CLASSES, DEVICE, HISTORY, NAMED, NEEDS_REVIEW, NOT_APPLICABLE,
     POSITION_SOURCES, PRECISION_CLASSES, REPORTED_TIERS, SAVED, UNKNOWN,
-    GEOFENCE_TRIGGERS, RULES, SCENE_ENABLE_INTENTS, SELF_GRANULARITY, SOCIAL_POST_INTENTS,
+    FIXED, GEOFENCE_TRIGGERS, GEO_CONTENT_INTENTS, RULES, SCENE_ENABLE_INTENTS, SEARCH_INTENTS,
+    SELF_GRANULARITY, SOCIAL_POST_INTENTS,
     PolicyLabel, precision_for,
 )
 
@@ -142,6 +143,8 @@ PLACE_INTENTS = {
 }
 
 SLOT_ALIASES = {
+    "搜索范围": "search_scope", "搜索半径": "radius_m", "所需粒度": "requested_granularity",
+    "位置来源": "location_source", "上车点来源": "pickup_source", "地址来源": "address_source",
     "city": "location", "location": "location", "place_name": "location",
     "城市": "location", "地点": "location", "城市名称": "location",
     "区域": "area", "地区": "area", "行政区": "area", "所在区域": "area",
@@ -239,8 +242,45 @@ HERE = r"(?:这儿|这里|这边|此处|我这(?:儿|里|边)|我(?:的)?当前(
 ORIGIN_HERE = re.compile(r"(?:从|以)" + HERE)
 DESTINATION_HERE = re.compile(r"(?:到|去|至)\s*(?:我这(?:儿|里|边)|设备当前位置|手机当前位置|我(?:的)?当前位置)")
 PICKUP_HERE = re.compile(r"(?:到|在|去)" + HERE + r"(?:来)?接(?:上)?我|" + HERE + r"出发")
-DEVICE_NEARBY = re.compile(r"(?:我(?:的)?|这(?:里|儿|边))(?:附近|周边)|离我|\bnear me\b|\bclosest to me\b", re.I)
-LOCAL_WEATHER = re.compile(r"我(?:的)?这(?:里|儿|边)|我(?:的)?所在地区|我们这座城市|本地|当地")
+NEARBY = re.compile(r"附近|周边|周围|就近|\bnearby\b|\baround me\b|\bnear me\b", re.I)
+DEVICE_NEARBY = re.compile(
+    r"(?<!告诉)(?<!给)(?<!帮)(?<!为)我(?:们)?(?:的)?(?:附近|周边|周围)|"
+    r"(?:离|距)我(?!的?(?:家|公司|单位|学校|住处|办公室))|以我为中心|"
+    r"\bnear me\b|\baround me\b|\bclosest to me\b", re.I,
+)
+LOCAL_REGION = re.compile(r"我(?:的)?这(?:里|儿|边)|我(?:们)?(?:当前|现在)?所在(?:的)?(?:国家|城市|市|地区|区)|我们这座城市")
+NEAREST = re.compile(
+    r"离[^，。！？]{0,15}最近|距离[^，。！？]{0,15}最近|\b(?:nearest|closest)\b|"
+    r"(?:最近的|最近一家)(?=[^，。！？]{0,12}(?:店|医院|景点|车站|站点|路口|公园|酒店|宾馆|餐馆|餐厅|银行|商场|超市|厕所|停车场|咖啡馆))",
+    re.I,
+)
+WALKING_TIME = re.compile(r"(?:步行|走路)\s*(?:\d+|[一二三四五六七八九十两]+)\s*分钟(?:内|以内|之内)|\bwithin a \d+[- ]minute walk\b", re.I)
+EXACT_DISTANCE = re.compile(r"准确距离|精确距离|(?:离我|距我)[^，。！？]{0,12}(?:多远|多少米)|\bexact distance\b", re.I)
+RADIUS = re.compile(
+    r"(?:(?P<prefix><=?|≤|小于|不到|不超过|半径|within\s+)?\s*)"
+    r"(?P<number>\d+(?:\.\d+)?)\s*(?P<unit>公里|千米|km\b|米(?!饭|线)|m\b)"
+    r"\s*(?P<suffix>以内|之内|范围内|内|范围|左右)?", re.I,
+)
+ROUGH_RADIUS = re.compile(r"(?:大约|大概|约)\s*\d|(?:米|公里|千米|km\b|m\b)\s*左右", re.I)
+NEAREST_ANCHOR = re.compile(r"(?:离|距(?:离)?)([^，。！？]{1,18}?)最近")
+LANDMARK = r"(?:公园|博物馆|图书馆|车站|酒店|宾馆|公司|商场|小区|医院|大学|机场|餐厅|广场|饭店|学校|大厦|园区|校区|店|站|家|办公室)"
+ANCHOR_TEXT = re.compile(
+    r"(?:在|以|离|距|到|找)\s*[^，。！？、]{0,18}" + LANDMARK +
+    r"\s*(?:的)?(?:附近|旁边|周边|周围|为中心|最近)|"
+    r"[\u4e00-\u9fff]{0,12}" + LANDMARK +
+    r"\s*(?:的)?(?:附近|旁边|周边|周围)"
+)
+DEVICE_SCOPE_LEVELS = (
+    ("country", re.compile(r"我(?:们)?(?:当前|现在)?所在(?:的)?国家|我所在国")),
+    ("city", re.compile(r"我(?:们)?(?:当前|现在)?所在(?:的)?(?:城市|市)|我们这座城市")),
+    ("district", re.compile(r"我(?:们)?(?:当前|现在)?所在(?:的)?(?:行政区|区|片区)")),
+)
+NO_DEVICE_LOCATION = re.compile(r"(?:不用|不需要|不要|别用|不允许)(?:使用|读取|调用)?(?:本机|手机|我的|当前)?(?:定位|当前位置)")
+DELIVER_CURRENT = re.compile(r"(?:送到|配送到)(?:我这(?:里|儿|边)|我的?当前位置|手机当前位置)|使用(?:我的?|本机|手机)?当前位置(?:收货|配送)")
+DELIVER_SAVED = re.compile(r"(?:送到|配送到|用)(?:我(?:保存|常用|默认)的)?(?:收货地址|常用地址|默认地址)|(?:送到|配送到)(?:我家|家里|公司|办公室)")
+TRACKING_OFF = re.compile(r"室内|跑步机|不要记录轨迹|不记录轨迹|不使用GPS|模拟导航|导航预览", re.I)
+TRACKING_ROUTE = re.compile(r"户外|室外|记录(?:运动|骑行|跑步)?轨迹|跑步路线|骑行路线|GPS", re.I)
+ATTACH_LOCATION = re.compile(r"(?:附上|附带|加上|标注|记录|保存|使用)(?:我的?|本机|手机)?当前位置")
 ORDER_STATUS = re.compile(r"订单.{0,5}(?:状态|进度|怎么样|什么时候到|好了吗)|外卖现在什么状况")
 PRECISE_SELF = re.compile(r"具体位置|精确位[置址]|详细地址|经纬度|坐标|门牌号")
 COARSE_SELF = re.compile(r"大概|粗略|模糊|大致")
@@ -268,7 +308,9 @@ def ref_kind(value, *, anchor=None):
             candidates.add(atom)
         elif CURRENT.fullmatch(atom):
             candidates.add(DEVICE)
-        elif atom in {"附近", "本地", "当地", "nearby", "local"}:
+        elif DEVICE_NEARBY.search(atom):
+            candidates.add(DEVICE)
+        elif atom in {"附近", "本地", "当地", "nearby", "local"} or NEARBY.search(atom):
             candidates.add(UNKNOWN)
         elif PRONOUN.fullmatch(atom) or SYMBOLIC_REFERENCE.fullmatch(atom):
             candidates.add(HISTORY if anchor else UNKNOWN)
@@ -279,8 +321,57 @@ def ref_kind(value, *, anchor=None):
     return candidates.pop() if len(candidates) == 1 else UNKNOWN
 
 
+def radius_meters(value, text):
+    if isinstance(value, str) and value.isascii() and value.isdecimal():
+        return int(value) or None
+    for match in RADIUS.finditer(text):
+        if match["prefix"] or match["suffix"]:
+            multiplier = 1000 if match["unit"].casefold() in {"公里", "千米", "km"} else 1
+            radius = round(float(match["number"]) * multiplier)
+            if radius > 0:
+                return radius
+    return None
+
+
+def apply_search_scope(params, text, single_turn):
+    scope = params.get("search_scope")
+    if isinstance(scope, str):
+        scope = {"附近": "nearby", "最近": "nearest", "最近的": "nearest",
+                 "精确距离": "distance", "步行时间": "walking_time"}.get(scope, scope)
+    if scope not in ("nearby", "nearest", "distance", "walking_time", "rough_radius"):
+        scope = next((key for key, pattern in (
+            ("nearest", NEAREST), ("distance", EXACT_DISTANCE), ("walking_time", WALKING_TIME), ("nearby", NEARBY),
+        ) if pattern.search(text)), None)
+    radius = radius_meters(params.get("radius_m"), text)
+    source = params.get("location_source")
+    explicit_device = bool(DEVICE_NEARBY.search(text) or CURRENT.search(text) or LOCAL_REGION.search(text))
+    other_anchor = NEAREST_ANCHOR.search(text)
+    if explicit_device and source != "none":
+        source = DEVICE
+    elif source == UNKNOWN and (
+        ANCHOR_TEXT.search(text) or other_anchor and ref_kind(other_anchor[1]) in FIXED
+    ):
+        source = NAMED
+    if source == UNKNOWN and (explicit_device or single_turn and (scope or radius)):
+        source = DEVICE
+    params["location_source"] = source
+    params.pop("search_scope", None)
+    params.pop("radius_m", None)
+    if source == DEVICE:
+        if radius and scope in (None, "nearby") and ROUGH_RADIUS.search(text):
+            scope = "rough_radius"
+        if scope:
+            params["search_scope"] = scope
+        if radius:
+            params["radius_m"] = radius
+        level = next((level for level, cue in DEVICE_SCOPE_LEVELS if cue.search(text)), None)
+        if level:
+            params.setdefault("requested_granularity", level)
+
+
 def make_intent(code, pairs, *, text="", single_turn=False, anchor=None, label=None):
     params = normalize_slots(pairs)
+    text = compact(text)
     if "requested_slots" in params:
         params["requested_slots"] = items(params["requested_slots"])
     location = params.get("location") or params.get("area")
@@ -298,6 +389,10 @@ def make_intent(code, pairs, *, text="", single_turn=False, anchor=None, label=N
             params["pickup"] = params.pop("origin")
     if code == "delivery.order":
         params.pop("delivery_source", None)
+    if code == "location.address" or (
+        code in PLACE_INTENTS and not (DEVICE_NEARBY.search(text) or CURRENT.search(text) or LOCAL_REGION.search(text))
+    ):
+        location = location or params.get("name")
     role_values = {
         "origin_source": params.get("origin"),
         "destination_source": params.get("destination"),
@@ -311,7 +406,7 @@ def make_intent(code, pairs, *, text="", single_turn=False, anchor=None, label=N
             if field not in params:
                 value = role_values[field]
                 params[field] = ref_kind(value, anchor=anchor)
-                if field == "location_source" and anchor and not value:
+                if field == "location_source" and anchor and params[field] == UNKNOWN:
                     params[field] = HISTORY
         if single_turn:
             cues = {
@@ -323,13 +418,21 @@ def make_intent(code, pairs, *, text="", single_turn=False, anchor=None, label=N
                 if field in rule.fields and matched and params[field] == UNKNOWN:
                     params[field] = DEVICE
             if "location_source" in rule.fields and params["location_source"] == UNKNOWN:
-                local_weather = code.startswith("weather.") and LOCAL_WEATHER.search(text)
-                local_search = (
-                    (code.endswith(".search") or code in ("transit.bus_query", "traffic.query"))
-                    and DEVICE_NEARBY.search(text)
-                )
-                if local_weather or local_search or CURRENT.search(text):
+                if LOCAL_REGION.search(text) or DEVICE_NEARBY.search(text) or CURRENT.search(text):
                     params["location_source"] = DEVICE
+        if code in SEARCH_INTENTS:
+            apply_search_scope(params, text, single_turn)
+        if single_turn and code == "delivery.order" and params["address_source"] == UNKNOWN:
+            if DELIVER_SAVED.search(text):
+                params["address_source"] = SAVED
+            elif DELIVER_CURRENT.search(text):
+                params["address_source"] = DEVICE
+        if NO_DEVICE_LOCATION.search(text):
+            for field in rule.fields:
+                if params[field] in (DEVICE, UNKNOWN):
+                    params[field] = "none"
+            if code in ("navigation.start", "fitness.start"):
+                params["tracking_mode"] = "no_route"
     if code == "location.self":
         params.setdefault("location_source", DEVICE)
         if single_turn and "requested_granularity" not in params:
@@ -345,6 +448,20 @@ def make_intent(code, pairs, *, text="", single_turn=False, anchor=None, label=N
         operation = params.get("operation")
         if isinstance(operation, str):
             params["operation"] = SOCIAL_POST_OPERATIONS.get(operation, operation)
+    if code in GEO_CONTENT_INTENTS:
+        operation = params.get("operation")
+        if isinstance(operation, str):
+            params["operation"] = SOCIAL_POST_OPERATIONS.get(operation, operation)
+        if params.get("location_source") != "none" and (
+            ATTACH_LOCATION.search(text) or params.get("operation") == "share_current_location"
+        ):
+            params["operation"] = "share_current_location"
+            params["location_source"] = DEVICE
+    if code in ("navigation.start", "fitness.start"):
+        if TRACKING_OFF.search(text):
+            params["tracking_mode"] = "no_route"
+        elif code == "fitness.start" and TRACKING_ROUTE.search(text):
+            params.setdefault("tracking_mode", "route")
     if code in SCENE_ENABLE_INTENTS:
         trigger_type = params.get("trigger_type")
         if isinstance(trigger_type, str):
@@ -383,6 +500,11 @@ def model_slots(intent):
     params = intent["parameters"]
     rule = RULES.get(code)
     slots = {}
+    if code in PLACE_INTENTS:
+        if params.get("name"):
+            slots["loc"] = params["name"]
+        if params.get("reference_place") and params["reference_place"] != params.get("name"):
+            slots["near"] = params["reference_place"]
     for field in rule.fields if rule else ():
         slot, source_slot, keys = GEO_SLOT_FIELDS[field]
         for key in keys:
@@ -390,20 +512,22 @@ def model_slots(intent):
                 slots[slot] = params[key]
                 break
         source = params.get(field)
-        if isinstance(source, str) and source in POSITION_SOURCES - {UNKNOWN, NAMED}:
+        has_place = slot in slots or slot == "loc" and "near" in slots
+        if source in (NAMED, HISTORY) and not has_place:
+            slots[source_slot] = "fixed"
+        elif isinstance(source, str) and source in POSITION_SOURCES - {UNKNOWN, NAMED}:
             slots[source_slot] = source
     if code == "ride.order" and params.get("destination"):
         slots["to"] = params["destination"]
-    if code in PLACE_INTENTS:
-        if params.get("name") and "loc" not in slots:
-            slots["loc"] = params["name"]
-        if params.get("reference_place"):
-            slots["near"] = params["reference_place"]
-    if code == "location.self":
+    if code == "location.self" or code in SEARCH_INTENTS and params.get("location_source") == DEVICE:
         level = params.get("requested_granularity")
         if isinstance(level, str) and level in SELF_GRANULARITY:
             slots["level"] = level
-    if code == "device.find" or code in SOCIAL_POST_INTENTS:
+    if code in SEARCH_INTENTS and params.get("location_source") == DEVICE:
+        for field, slot in (("search_scope", "scope"), ("radius_m", "radius_m")):
+            if field in params:
+                slots[slot] = params[field]
+    if code == "device.find" or code in SOCIAL_POST_INTENTS | GEO_CONTENT_INTENTS:
         operation = params.get("operation")
         allowed = (
             ("query_target_location", "ring", "navigate_to_target")
@@ -411,10 +535,10 @@ def model_slots(intent):
         )
         if operation in allowed:
             slots["op"] = operation
-    if code in SCENE_ENABLE_INTENTS or code in {"alarm.set", "reminder.create", "calendar.set", "calendar.update"}:
+    if code in SCENE_ENABLE_INTENTS | GEO_CONTENT_INTENTS | {"alarm.set"}:
         trigger = params.get("trigger_type")
         if trigger in (*GEOFENCE_TRIGGERS, "manual", "schedule", "time"):
             slots["trigger"] = trigger
-    if code == "fitness.start" and params.get("tracking_mode") == "no_route":
-        slots["track"] = "no_route"
+    if code in ("fitness.start", "navigation.start") and params.get("tracking_mode") in ("route", "no_route"):
+        slots["track"] = params["tracking_mode"]
     return slots

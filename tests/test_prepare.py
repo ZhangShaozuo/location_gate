@@ -112,7 +112,7 @@ class DialogueTests(unittest.TestCase):
         a, b = adapt_sgd({"turns": turns}, 8)
         self.assertEqual(a.intent["parameters"]["confirmation"], "confirmed")
         self.assertEqual(precision_for(a.intent).tier, "精确")
-        self.assertEqual(precision_for(b.intent).tier, "城市级")
+        self.assertEqual(precision_for(b.intent).tier, NOT_APPLICABLE)
         self.assertEqual(a.turn, b.turn)
         ride["actions"] = [{"act": "NEGATE"}]
         self.assertEqual(precision_for(next(adapt_sgd({"turns": turns}, 8)).intent).tier, "精确")
@@ -122,7 +122,7 @@ class DialogueTests(unittest.TestCase):
         a = next(adapt_cmpa(row))
         self.assertEqual(a.intent["parameters"]["pickup_source"], "unknown")
         self.assertEqual(a.intent["parameters"]["destination"], "机场")
-        self.assertEqual(precision_for(a.intent).tier, "精确")
+        self.assertEqual(precision_for(a.intent).tier, NEEDS_REVIEW)
 
     def test_cmpa_keeps_colons_within_time_value(self):
         row = {"input": "明天早上七点开会", "output": "设置闹钟: [时间: 07:00, 事件: 开会]"}
@@ -133,7 +133,7 @@ class DialogueTests(unittest.TestCase):
         triggered = make_intent("alarm.set", [], text="到家以后提醒我", single_turn=True)
         after_email = make_intent("alarm.set", [], text="收到邮件后十五分钟定个闹钟", single_turn=True)
         self.assertEqual(precision_for(ordinary).record(), {"precision": NOT_APPLICABLE, "coarse_level": None})
-        self.assertEqual(precision_for(triggered).tier, NEEDS_REVIEW)
+        self.assertEqual(precision_for(triggered).tier, "精确")
         self.assertEqual(precision_for(after_email).tier, NOT_APPLICABLE)
 
     def test_country_is_reserved_for_device_country_request(self):
@@ -249,43 +249,45 @@ class LivePolicyTests(unittest.TestCase):
             ("weather.query", current, "城市级"),
             ("weather.alert", current, "城市级"),
             ("location.self", {}, "精确", {"notice": "prompt"}),
-            ("place.search", current, "精确", {"notice": "notify"}),
+            ("place.search", current, "区域级"),
+            ("place.search", {**current, "search_scope": "nearest"}, "精确", {"notice": "notify"}),
             ("ride.order", {"pickup_source": "device_current"}, "精确"),
             ("transit.flight_ticket", origin, "城市级"),
             ("transit.rail_ticket", origin, "城市级"),
             ("transit.flight_traffic", current, "城市级"),
-            ("transit.bus_query", current, "精确"),
+            ("transit.bus_query", current, "区域级"),
             ("transit.ride_code", current, "城市级"),
             ("device.find", {"operation": "query_target_location"}, NOT_APPLICABLE),
             ("device.find", {"operation": "navigate_to_target"}, "精确", {"mode": "continuous"}),
             ("fitness.start", current, "精确", {"notice": "notify", "mode": "continuous"}),
-            ("fitness.history", {"location_source": "stored_history"}, "区域级", {"mode": "route_overview"}),
+            ("fitness.history", {"location_source": "stored_history"}, NOT_APPLICABLE),
             ("package.ship", {"address_source": "device_current"}, "精确"),
             ("package.receive", {"address_source": "device_current"}, "精确"),
             ("local_service.search", current, "城市级"),
             ("travel.index", current, "城市级"),
             ("jobs.search", current, "城市级"),
+            ("delivery.order", {"address_source": "device_current"}, "精确"),
             ("delivery.order", {}, "精确"),
             ("restaurant.reserve", current, "城市级"),
-            ("calendar.update", current, "城市级"),
-            ("calendar.remove", current, "城市级"),
-            ("reminder.create", current, "城市级"),
-            ("note.create", current, "城市级"),
-            ("information.capture", current, "城市级"),
+            ("calendar.update", current, NOT_APPLICABLE),
+            ("calendar.remove", current, NOT_APPLICABLE),
+            ("reminder.create", current, NOT_APPLICABLE),
+            ("note.create", {**current, "operation": "share_current_location"}, "城市级"),
+            ("information.capture", current, NOT_APPLICABLE),
         ]
         for case in cases:
             with self.subTest(intent=case[0]):
                 self.check(*case)
 
-    def test_call_precision_is_independent_of_supplied_addresses(self):
+    def test_fixed_addresses_cover_roles_independently(self):
         fixed = {"origin_source": "named_place", "destination_source": "named_place"}
-        for params in (fixed, {}, {"origin_source": "named_place"}):
-            self.check("route.query", params, "精确")
-            self.check("transit.rail_ticket", params, "城市级")
-            self.check("transit.bus_query", params, "精确")
-        self.check("ride.order", {"destination_source": "device_current"}, "精确")
-        self.check("delivery.order", {"delivery_address": "公司"}, "精确")
-        self.check("weather.query", {"location_source": "named_place"}, "城市级")
+        for code in ("route.query", "transit.rail_ticket", "transit.bus_query"):
+            self.check(code, fixed, NOT_APPLICABLE)
+        self.check("route.query", {"origin_source": "named_place"}, NEEDS_REVIEW)
+        self.check("transit.rail_ticket", {"destination_source": "named_place"}, "城市级")
+        self.check("ride.order", {"destination_source": "device_current"}, NEEDS_REVIEW)
+        self.check("delivery.order", {"address_source": "saved_place"}, NOT_APPLICABLE)
+        self.check("weather.query", {"location_source": "named_place"}, NOT_APPLICABLE)
         self.check("weather.query", {}, "城市级")
         self.check("location.self", {"requested_granularity": "coarse_unspecified"}, "城市级", {"notice": "prompt"})
         self.check("device.find", {"location_source": "device_current"}, NEEDS_REVIEW)
@@ -295,8 +297,8 @@ class LivePolicyTests(unittest.TestCase):
         self.check("package.status", {}, NOT_APPLICABLE)
         self.check("fitness.activity_types", {}, NOT_APPLICABLE)
         self.check("fitness.start", {"tracking_mode": "no_route"}, NOT_APPLICABLE)
-        self.check("reminder.create", {"trigger_type": "geofence"}, "城市级")
-        self.check("calendar.update", {"time": "17:00"}, "城市级")
+        self.check("reminder.create", {"trigger_type": "geofence"}, "精确")
+        self.check("calendar.update", {"time": "17:00"}, NOT_APPLICABLE)
 
     def test_reviewed_fact_social_and_app_intents_do_not_use_location(self):
         codes = (
@@ -354,14 +356,14 @@ class LivePolicyTests(unittest.TestCase):
         cases = (
             ("map", "ROUTE", "从济源市到河南省电信分公司怎么走",
              {"startLoc_city": "济源市", "endLoc_poi": "电信分公司", "endLoc_province": "河南省"},
-             "查询路线", {"from": "济源市", "to": "河南省电信分公司"}, "精确"),
+             "查询路线", {"from": "济源市", "to": "河南省电信分公司"}, NOT_APPLICABLE),
             ("map", "POSITION", "河北在哪里", {"location_province": "河北"},
-             "查询地点地址", {"loc": "河北"}, "精确"),
+             "查询地点地址", {"loc": "河北"}, NOT_APPLICABLE),
             ("map", "POSITION", "我现在在哪个国家", {}, "查询当前位置", {"level": "country"}, "国家级模糊"),
             ("weather", "QUERY", "今天有雨吗", {"subfocus": "雨", "datetime_date": "今天"},
              "查询降雨", {}, "城市级模糊"),
             ("bus", "QUERY", "从无锡到阜阳的车", {"Src": "无锡", "Dest": "阜阳"},
-             "查询城际客车", {"from": "无锡", "to": "阜阳"}, "城市级模糊"),
+             "查询城际客车", {"from": "无锡", "to": "阜阳"}, NOT_APPLICABLE),
         )
         for domain, action, raw, slots, name, expected_slots, label in cases:
             with self.subTest(name=name):
@@ -383,9 +385,9 @@ class LivePolicyTests(unittest.TestCase):
     def test_named_poi_proximity_is_not_inferred_as_device_input(self):
         unbound = make_intent("place.search", [], text="图书馆附近的咖啡店", single_turn=True)
         bound = make_intent("place.search", [], text="我附近的咖啡店", single_turn=True)
-        self.assertEqual(unbound["parameters"]["location_source"], "unknown")
-        self.assertEqual(precision_for(unbound).tier, "精确")
-        self.assertEqual(precision_for(bound).tier, "精确")
+        self.assertEqual(unbound["parameters"]["location_source"], "named_place")
+        self.assertEqual(precision_for(unbound).tier, NOT_APPLICABLE)
+        self.assertEqual(precision_for(bound).tier, "区域级")
 
     def test_source_intent_wins_over_a_conflicting_reference_text(self):
         row = {
@@ -398,7 +400,7 @@ class LivePolicyTests(unittest.TestCase):
         self.assertEqual(precision_for(how_to.intent).tier, "精确")
 
     def test_delivery_order_omits_delivery_source_from_model_input(self):
-        raw = "点份披萨送到这里"
+        raw = "帮我点份披萨"
         for slots in ("食物: 披萨", "食物: 披萨, delivery_source: device_current"):
             with self.subTest(slots=slots):
                 candidate = next(adapt_cmpa({"input": raw, "output": f"点外卖: [{slots}]"}))
@@ -406,6 +408,10 @@ class LivePolicyTests(unittest.TestCase):
                 self.assertEqual(row["slots"], {})
                 self.assertEqual(row["ref"]["text"], raw)
                 self.assertEqual(tier, "精确")
+        current = next(adapt_cmpa({"input": "点份披萨送到我当前位置", "output": "点外卖: []"}))
+        row, tier = make_row(current, "cmpa", "train", "example", 0, False)
+        self.assertEqual(row["slots"], {"src": "device_current"})
+        self.assertEqual(tier, "精确")
 
     def test_named_rail_stations_are_normalized_to_their_roles(self):
         item = next(adapt_cmpa({
@@ -414,7 +420,52 @@ class LivePolicyTests(unittest.TestCase):
         }))
         params = item.intent["parameters"]
         self.assertEqual((params["origin"], params["destination"]), ("西安", "郑州"))
-        self.assertEqual(precision_for(item.intent).tier, "城市级")
+        self.assertEqual(precision_for(item.intent).tier, NOT_APPLICABLE)
+
+    def test_device_relative_searches_keep_only_the_accuracy_evidence(self):
+        cases = (
+            ("附近的药店", "区域级", {"src": "device_current", "scope": "nearby"}),
+            ("离我最近的图书馆", "精确", {"src": "device_current", "scope": "nearest"}),
+            ("找<500米的药店", "精确", {"src": "device_current", "radius_m": 500}),
+            ("找步行5分钟内的药店", "精确", {"src": "device_current", "scope": "walking_time"}),
+            ("找我所在城市的景点", "城市级", {"src": "device_current", "level": "city"}),
+            ("找我所在国家的旅游景点", "国家级", {"src": "device_current", "level": "country"}),
+            ("查图书馆附近500米以内的咖啡馆", NOT_APPLICABLE, {"src": "fixed"}),
+            ("找离我家最近的餐厅", NOT_APPLICABLE, {"src": "fixed"}),
+            ("找2公里以内的餐厅", NEEDS_REVIEW, {"src": "device_current", "radius_m": 2000}),
+            ("找2公里左右的餐厅", "区域级", {"src": "device_current", "scope": "rough_radius", "radius_m": 2000}),
+        )
+        for text, expected_tier, slots in cases:
+            with self.subTest(text=text):
+                candidate = next(adapt_cmpa({"input": text, "output": "查找地点: []"}))
+                row, tier = make_row(candidate, "cmpa", "train", "example", 0, False)
+                self.assertEqual(row["slots"], slots)
+                self.assertEqual(tier, expected_tier)
+
+    def test_crosswoz_followup_over_a_set_of_named_places_needs_no_device_location(self):
+        messages = [
+            {"role": "usr", "content": "查航空航天博物馆周围的景点", "dialog_act": [
+                ["Inform", "景点", "名称", "航空航天博物馆"], ["Request", "景点", "周边景点", ""],
+            ]},
+            {"role": "sys", "content": "周边有北京大学", "dialog_act": [
+                ["Inform", "景点", "周边景点", "北京大学"],
+            ]},
+            {"role": "usr", "content": "这些景点中有能玩2个小时的并且票价在100-150元之间的吗？", "dialog_act": [
+                ["Inform", "景点", "游玩时间", "2小时"], ["Inform", "景点", "门票", "100-150元"],
+                ["Select", "景点", "源领域", "景点"],
+            ]},
+        ]
+        candidate = list(adapt_crosswoz({"messages": messages}, 6))[-1]
+        row, tier = make_row(candidate, "crosswoz", "dev", "10860", 0, True)
+        self.assertEqual(row["intent"], "查找或推荐地点")
+        self.assertEqual(row["slots"], {"loc": "航空航天博物馆"})
+        self.assertEqual(tier, NOT_APPLICABLE)
+
+    def test_multi_turn_search_does_not_read_generic_nearby_or_local_taste_as_device(self):
+        anchored = make_intent("place.search", [], text="告诉我周边餐馆和酒店的信息", anchor="博物馆")
+        unbound = make_intent("restaurant.search", [], text="找家符合当地口味的餐馆")
+        self.assertEqual(precision_for(anchored).tier, NOT_APPLICABLE)
+        self.assertEqual(precision_for(unbound).tier, NEEDS_REVIEW)
 
     def test_device_contrasts_match_except_for_operation(self):
         with tempfile.TemporaryDirectory() as folder:

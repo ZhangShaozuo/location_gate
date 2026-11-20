@@ -22,7 +22,7 @@ from corpora.schema import (
 from corpora.sources import NAMES, SPLITS, TRAIN_ONLY_SOURCES, ensure_source, source_records
 
 
-SCHEMA_VERSION = "location-slots-v4"
+SCHEMA_VERSION = "location-device-slots-v5"
 LABEL_NAMES = {
     "精确": "精确", "区域级": "区域级模糊", "城市级": "城市级模糊", "国家级": "国家级模糊",
     NOT_APPLICABLE: NOT_APPLICABLE, NEEDS_REVIEW: NEEDS_REVIEW,
@@ -108,7 +108,7 @@ def ingest(conn, datasets, args):
                     row, tier = make_row(candidate, source, split, native_id, sequence, args.with_reference)
                     code = canonical_intent_code(candidate.intent)
                     fingerprint = stable_hash(canonical_json([
-                        compact(candidate.utterance).casefold(), code, row["slots"],
+                        compact(candidate.utterance).casefold(), code, candidate.intent["parameters"],
                     ]))
                     conn.execute("INSERT INTO candidates VALUES(?,?,?,?,?,?,?,?,?,?,?,?)", (
                         row["id"], source, split, split_priority[split], tier, total, fingerprint,
