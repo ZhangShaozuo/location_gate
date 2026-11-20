@@ -10,7 +10,7 @@
 git pull --ff-only origin main
 python3 prepare.py \
   --raw-dir ./raw \
-  --out-dir ./data-location-slots-v7 \
+  --out-dir ./data-location-slots-v7-zh \
   --datasets massive cmpa crosswoz smp2019
 ```
 
@@ -29,15 +29,15 @@ SMP2019 读取公开副本的 2,579 条训练样本，仅进入训练划分。�
 
 ## 意图和槽位
 
-`schema` 为 `location-slots-v3`。下例是一条实际 SMP2019 导出行。
+`schema` 为 `location-slots-v4`。导出使用统一中文意图名称，下例是一条 SMP2019 导出行。
 
 ```json
-{"id":"smp2019:train:200:0:0","intent":"route.query","slots":{"from":"济源市","to":"河南省电信分公司"},"label":"精确","ref":{"text":"从济源市到河南省电信分公司怎么走","native":"map.route"},"meta":{"review":true,"rule":"route.query"}}
+{"id":"smp2019:train:200:0:0","intent":"查询路线","slots":{"from":"济源市","to":"河南省电信分公司"},"label":"精确","ref":{"text":"从济源市到河南省电信分公司怎么走","native":"map.route"},"meta":{"review":true,"rule":"route.query"}}
 ```
 
 | 字段 | 含义 |
 |---|---|
-| `intent` | 统一的原子意图 ID。MASSIVE、CMPA-SLU 与 SMP2019 的查询天气均映射到 `weather.query`，查询降雨用 `weather.rain`。 |
+| `intent` | 统一的中文意图名称。MASSIVE、CMPA-SLU 与 SMP2019 的查询天气均导出为「查询天气」，查询降雨导出为「查询降雨」。 |
 | `slots` | 可为空的对象，只保留与位置有关的参数或条件。 |
 | `label` | `精确`、`区域级模糊`、`城市级模糊`、`国家级模糊`。旁路文件还使用 `不涉及` 和 `待复核`。 |
 | `id` | 包含来源、划分、原始记录或对话 ID、轮次和序号，供回查和按对话分组。 |
@@ -54,7 +54,7 @@ SMP2019 读取公开副本的 2,579 条训练样本，仅进入训练划分。�
 
 - 顶层 `train.jsonl`、`dev.jsonl`、`test.jsonl` 默认用于精度分类。按规范化原话、统一意图和槽位去重，跨划分重复时优先保留测试集，其次验证集。
 - `not_applicable/` 保存「不涉及」样本。加 `--include-not-applicable` 可以把这类样本同时纳入主文件。 `needs_review/` 保存暂未定档的样本。
-- `summary.json` 的 `stages` 按来源、划分、标签统计提取、去重及导出结果。 `label_names` 将历史统计简称映射到 JSONL 中的完整标签。 `sidecars` 记录两个旁路目录的分布。
+- `summary.json` 的 `stages` 按来源、划分、标签统计提取、去重及导出结果。 `label_names` 将历史统计简称映射到 JSONL 中的完整标签。 `exported_intent_distribution` 以内部意图 ID 为键，`label` 为导出的中文意图名称。 `sidecars` 记录两个旁路目录的分布。
 - `augmentation/` 提供两组规则验收文件。 `device-find-contrast.jsonl` 覆盖查询目标、响铃、导航。 `self-location-contrast.jsonl` 覆盖同一意图请求四档精度的四条合成记录。合成样本单独计数。
 - 精度来自 [现网规则](POLICY.md) 的弱标注。训练和评估方式见 [训练方案](TRAINING.md)。
 

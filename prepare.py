@@ -15,13 +15,14 @@ from zipfile import BadZipFile
 from corpora.adapters import Candidate, adapt
 from corpora.policy import POLICY_VERSION
 from corpora.schema import (
-    CLASSES, INTENTS, INTENT_ALIASES, NEEDS_REVIEW, NOT_APPLICABLE, PRECISION_CLASSES,
-    REPORTED_TIERS, canonical_json, compact, make_intent, model_slots, precision_for,
+    CLASSES, NEEDS_REVIEW, NOT_APPLICABLE, PRECISION_CLASSES, REPORTED_TIERS,
+    canonical_intent_code, canonical_json, chinese_intent_name, compact, make_intent,
+    model_slots, precision_for,
 )
 from corpora.sources import NAMES, SPLITS, TRAIN_ONLY_SOURCES, ensure_source, source_records
 
 
-SCHEMA_VERSION = "location-slots-v3"
+SCHEMA_VERSION = "location-slots-v4"
 LABEL_NAMES = {
     "精确": "精确", "区域级": "区域级模糊", "城市级": "城市级模糊", "国家级": "国家级模糊",
     NOT_APPLICABLE: NOT_APPLICABLE, NEEDS_REVIEW: NEEDS_REVIEW,
@@ -52,7 +53,7 @@ def make_row(candidate, source, split, native_id, sequence, with_reference):
     group = f"{source}:{split}:{native_id}"
     row = {
         "id": f"{group}:{candidate.turn}:{sequence}",
-        "intent": INTENT_ALIASES.get(intent["intent_id"], intent["intent_id"]),
+        "intent": chinese_intent_name(intent),
         "slots": model_slots(intent),
         "label": LABEL_NAMES[policy.tier],
     }
@@ -105,13 +106,14 @@ def ingest(conn, datasets, args):
                 converted = 0
                 for sequence, candidate in enumerate(adapt(source, raw, args.context_turns)):
                     row, tier = make_row(candidate, source, split, native_id, sequence, args.with_reference)
+                    code = canonical_intent_code(candidate.intent)
                     fingerprint = stable_hash(canonical_json([
-                        compact(candidate.utterance).casefold(), row["intent"], row["slots"],
+                        compact(candidate.utterance).casefold(), code, row["slots"],
                     ]))
                     conn.execute("INSERT INTO candidates VALUES(?,?,?,?,?,?,?,?,?,?,?,?)", (
                         row["id"], source, split, split_priority[split], tier, total, fingerprint,
                         stable_hash(f"{args.seed}:{row['id']}"),
-                        row["intent"], INTENTS.get(row["intent"], candidate.intent["label"]),
+                        code, row["intent"],
                         int(row.get("meta", {}).get("review", False)), canonical_json(row),
                     ))
                     total += 1

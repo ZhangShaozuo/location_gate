@@ -354,22 +354,31 @@ class LivePolicyTests(unittest.TestCase):
         cases = (
             ("map", "ROUTE", "从济源市到河南省电信分公司怎么走",
              {"startLoc_city": "济源市", "endLoc_poi": "电信分公司", "endLoc_province": "河南省"},
-             "route.query", {"from": "济源市", "to": "河南省电信分公司"}, "精确"),
+             "查询路线", {"from": "济源市", "to": "河南省电信分公司"}, "精确"),
             ("map", "POSITION", "河北在哪里", {"location_province": "河北"},
-             "location.address", {"loc": "河北"}, "精确"),
-            ("map", "POSITION", "我现在在哪个国家", {}, "location.self", {"level": "country"}, "国家级模糊"),
+             "查询地点地址", {"loc": "河北"}, "精确"),
+            ("map", "POSITION", "我现在在哪个国家", {}, "查询当前位置", {"level": "country"}, "国家级模糊"),
             ("weather", "QUERY", "今天有雨吗", {"subfocus": "雨", "datetime_date": "今天"},
-             "weather.rain", {}, "城市级模糊"),
+             "查询降雨", {}, "城市级模糊"),
             ("bus", "QUERY", "从无锡到阜阳的车", {"Src": "无锡", "Dest": "阜阳"},
-             "transit.coach_query", {"from": "无锡", "to": "阜阳"}, "城市级模糊"),
+             "查询城际客车", {"from": "无锡", "to": "阜阳"}, "城市级模糊"),
         )
-        for domain, action, raw, slots, code, expected_slots, label in cases:
-            with self.subTest(code=code):
+        for domain, action, raw, slots, name, expected_slots, label in cases:
+            with self.subTest(name=name):
                 candidate = next(adapt_smp2019({"text": raw, "domain": domain, "intent": action, "slots": slots}))
                 row, _ = make_row(candidate, "smp2019", "train", "example", 0, False)
-                self.assertEqual(row["intent"], code)
+                self.assertEqual(row["intent"], name)
                 self.assertEqual(row["slots"], expected_slots)
                 self.assertEqual(row["label"], label)
+
+    def test_chinese_names_match_for_shared_intents(self):
+        cmpa = next(adapt_cmpa({"input": "帮我查天气", "output": "查询天气: []"}))
+        massive = next(adapt_massive({
+            "utt": "今天天气如何", "intent": "weather_query", "annot_utt": "今天天气如何",
+        }))
+        for source, candidate in (("cmpa", cmpa), ("massive", massive)):
+            row, _ = make_row(candidate, source, "train", "example", 0, False)
+            self.assertEqual(row["intent"], "查询天气")
 
     def test_named_poi_proximity_is_not_inferred_as_device_input(self):
         unbound = make_intent("place.search", [], text="图书馆附近的咖啡店", single_turn=True)
@@ -424,7 +433,7 @@ class LivePolicyTests(unittest.TestCase):
             seen_operations = set()
             for row in group:
                 self.assertTrue(row["id"].startswith(f"synthetic:train:{kind}:"))
-                self.assertEqual(row["intent"], "device.find")
+                self.assertEqual(row["intent"], "查找设备")
                 operation = row["slots"]["op"]
                 self.assertEqual(row["slots"], {"op": operation})
                 self.assertEqual(row["label"], operations[operation])
@@ -437,7 +446,7 @@ class LivePolicyTests(unittest.TestCase):
             (root / "augmentation").mkdir()
             metadata = write_self_location_contrasts(root, False)
             rows = [json.loads(line) for line in (root / metadata["path"]).read_text().splitlines()]
-        self.assertEqual({r["intent"] for r in rows}, {"location.self"})
+        self.assertEqual({r["intent"] for r in rows}, {"查询当前位置"})
         self.assertEqual({r["slots"]["level"]: r["label"] for r in rows}, {
             "precise": "精确", "district": "区域级模糊", "city": "城市级模糊", "country": "国家级模糊",
         })

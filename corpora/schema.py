@@ -87,6 +87,48 @@ INTENT_ALIASES = {
     **dict.fromkeys(SCENE_ENABLE_INTENTS, "scene.enable"),
 }
 
+SMP2019_INTENT_NAMES = {
+    "app.download": "下载应用",
+    "app.query": "查询应用",
+    "cinemas.date_query": "查询影片上映日期",
+    "cinemas.query": "查询影院或影片",
+    "contacts.create": "新建联系人",
+    "contacts.query": "查询联系人",
+    "cookbook.query": "查询食谱",
+    "email.create": "撰写邮件",
+    "email.forward": "转发邮件",
+    "email.launch": "打开邮件应用",
+    "email.replay_all": "回复全部收件人",
+    "email.reply": "回复邮件",
+    "email.send": "发送邮件",
+    "epg.look_back": "回看电视节目",
+    "epg.query": "查询电视节目单",
+    "health.query": "查询健康信息",
+    "joke.query": "讲笑话",
+    "lottery.number_query": "查询彩票号码",
+    "lottery.query": "查询彩票信息",
+    "map.position_unknown": "查询位置（对象未明确）",
+    "match.query": "查询体育赛事",
+    "message.sendcontacts": "发送联系人信息",
+    "message.view": "查看消息",
+    "music.search": "搜索音乐",
+    "novel.query": "查询小说",
+    "poetry.default": "诗词请求（动作未明确）",
+    "poetry.query": "查询诗词",
+    "radio.launch": "打开广播",
+    "riddle.query": "猜谜语",
+    "stock.closeprice_query": "查询股票收盘价",
+    "stock.query": "查询股票",
+    "stock.riserate_query": "查询股票涨幅",
+    "story.query": "讲故事",
+    "telephone.dial": "拨打电话",
+    "telephone.query": "查询电话号码",
+    "translation.translation": "翻译",
+    "tvchannel.play": "播放电视频道",
+    "video.query": "查询视频",
+    "website.open": "打开网站",
+}
+
 GEO_SLOT_FIELDS = {
     "location_source": ("loc", "src", ("location", "area")),
     "origin_source": ("from", "from_src", ("origin",)),
@@ -315,6 +357,24 @@ def make_intent(code, pairs, *, text="", single_turn=False, anchor=None, label=N
 
 def canonical_json(obj):
     return json.dumps(obj, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
+
+def canonical_intent_code(intent):
+    code = intent["intent_id"]
+    return INTENT_ALIASES.get(code, code)
+
+
+def chinese_intent_name(intent):
+    code = canonical_intent_code(intent)
+    if code in INTENTS:
+        return INTENTS[code]
+    prefix, _, native = code.partition(".")
+    if prefix == "smp2019" and native in SMP2019_INTENT_NAMES:
+        return SMP2019_INTENT_NAMES[native]
+    name = intent["label"]
+    if re.search(r"[\u3400-\u9fff]", name):
+        return name
+    return f"待归一意图（{code}）"
 
 
 def model_slots(intent):
