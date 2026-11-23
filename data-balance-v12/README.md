@@ -8,6 +8,7 @@
 | `synthetic.jsonl` | 同一批场景的 JSONL 导出，按 `split` 筛选 |
 | `build.py` | 归并现有训练集、加入新语义组合、生成隔离的三分类评估集 |
 | `evaluate.py` | 用 CPU 训练加权逻辑回归，比较增强前后以及是否使用槽位 |
+| `fit_full.py` | 合并训练、验证和测试数据，用全部 166 条拟合并保存模型 |
 | `verification.json` | 实际运行的统计及评估结果 |
 
 ## 生成与训练
@@ -27,6 +28,27 @@ python3 data-balance-v12/evaluate.py --data-dir ./data-location-balance-v12
 生成目录中的 `model/train.jsonl` 为增强训练集，`model/train_base_dedup.jsonl` 为相同拆分下的去重基线。使用新 `model/dev.jsonl` 和 `model/test.jsonl` 比较模型。 `audit/` 保留原始槽位、原话、依据、规则复算结果及新增样本的纳入记录。所有源数据继续可从原输入目录取得。
 
 要训练其他模型，可直接读取 `model/train.jsonl`。归一化后还存在轻度类别不平衡，可用 `summary.json` 里的逆频率类别权重。如训练 CatBoost，可将每个槽位拓展为类别特征，将缺失填为统一值，保持 `intent` 为一个类别特征。线上输入应与训练使用相同的 `canonical` 归一化，原始槽位也应传给策略校验。首轮优先比较相同划分下的现有规则和小模型。
+
+## 用全部 166 条拟合模型
+
+如果已经运行过 `build.py`，可直接使用现有的 `data-location-balance-v12`。
+
+```bash
+python3 data-balance-v12/fit_full.py \
+  --data-dir ./data-location-balance-v12 \
+  --out ./location-v12-full
+```
+
+脚本读取 `model/train.jsonl`、`model/dev.jsonl` 和 `model/test.jsonl`，逐条检查三分类标签和语义组合是否重复，再用完整数据重新计算类别权重并拟合 CPU 逻辑回归。输出 `location-v12-full/train.jsonl`、`model.joblib` 和 `summary.json`。模型接收与 `evaluate.py` 的 `features(row, with_slots=True)` 相同的输入，`row` 使用归一化后的意图和槽位。
+
+| 精度标签 | 原训练 | 原验证 | 原测试 | 全量训练 |
+| --- | ---: | ---: | ---: | ---: |
+| 精确 | 49 | 4 | 9 | 62 |
+| 区域级模糊 | 33 | 5 | 9 | 47 |
+| 城市级模糊 | 44 | 5 | 8 | 57 |
+| **合计** | **126** | **14** | **26** | **166** |
+
+`evaluate.py` 仍用于复现原划分下的结果。原验证和测试样本已参加全量模型的训练。要评估这个模型，需要独立的新测试样本。
 
 ## 如何归并
 

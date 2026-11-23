@@ -16,6 +16,20 @@ def features(row, with_slots):
     return model_input
 
 
+def make_classifier():
+    try:
+        from sklearn.feature_extraction import DictVectorizer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.pipeline import make_pipeline
+    except ImportError as error:
+        raise SystemExit("请在当前 Python 环境安装 scikit-learn") from error
+
+    return make_pipeline(
+        DictVectorizer(),
+        LogisticRegression(class_weight="balanced", max_iter=1000),
+    )
+
+
 def metrics(actual, predicted):
     from sklearn.metrics import accuracy_score, confusion_matrix, f1_score
 
@@ -35,12 +49,6 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data-dir", required=True, type=Path, help="build.py 写出的数据目录")
     args = parser.parse_args()
-    try:
-        from sklearn.feature_extraction import DictVectorizer
-        from sklearn.linear_model import LogisticRegression
-        from sklearn.pipeline import make_pipeline
-    except ImportError:
-        parser.error("运行前请在训练环境安装 scikit-learn")
 
     model_dir = args.data_dir / "model"
     datasets = {split: read_jsonl(model_dir / f"{split}.jsonl")
@@ -51,10 +59,7 @@ def main():
         actual_train = [row["label"] for row in train]
         for use_slots in (False, True):
             name = f"{split}/{'intent+slots' if use_slots else 'intent-only'}"
-            estimator = make_pipeline(
-                DictVectorizer(),
-                LogisticRegression(class_weight="balanced", max_iter=1000),
-            )
+            estimator = make_classifier()
             estimator.fit([features(row, use_slots) for row in train], actual_train)
             results[name] = {}
             for evaluation in ("dev", "test"):
