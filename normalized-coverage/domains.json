@@ -1,0 +1,105 @@
+{
+  "导航": [
+    "navigation.start",
+    "navigation.stop",
+    "route.query",
+    "route.estimate"
+  ],
+  "天气": [
+    "weather.query",
+    "weather.rain",
+    "weather.alert",
+    "weather.environment"
+  ],
+  "通用": [
+    "location.self",
+    "information.capture"
+  ],
+  "地图": [
+    "location.address",
+    "place.search",
+    "place.details"
+  ],
+  "用车": [
+    "ride.order"
+  ],
+  "交通票务": [
+    "transit.ticket",
+    "transit.coach_query",
+    "transit.flight_ticket",
+    "transit.rail_ticket",
+    "transit.flight_traffic",
+    "transit.trip_status"
+  ],
+  "公交地铁": [
+    "transit.query",
+    "transit.bus_query",
+    "transit.ride_code"
+  ],
+  "安全": [
+    "device.find",
+    "device.find_menu"
+  ],
+  "运动": [
+    "fitness.start",
+    "fitness.history",
+    "fitness.activity_types"
+  ],
+  "快递": [
+    "package.ship",
+    "package.receive",
+    "package.status"
+  ],
+  "本地生活": [
+    "local_service.search"
+  ],
+  "旅游": [
+    "travel.index"
+  ],
+  "招聘": [
+    "jobs.search"
+  ],
+  "外卖": [
+    "delivery.order",
+    "delivery.search",
+    "delivery.status"
+  ],
+  "餐饮": [
+    "restaurant.search",
+    "restaurant.reserve",
+    "restaurant.details"
+  ],
+  "日历与提醒": [
+    "calendar.set",
+    "calendar.update",
+    "calendar.remove",
+    "calendar.query",
+    "reminder.create"
+  ],
+  "备忘": [
+    "note.create"
+  ],
+  "酒店": [
+    "hotel.search",
+    "hotel.reserve",
+    "hotel.details"
+  ],
+  "活动与影院": [
+    "event.search",
+    "cinema.query",
+    "cinema.release_date"
+  ],
+  "路况": [
+    "traffic.query"
+  ],
+  "社交": [
+    "social.post"
+  ],
+  "智能情景": [
+    "scene.enable"
+  ],
+  "新闻": [
+    "news.query",
+    "news.play"
+  ]
+}

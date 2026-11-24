@@ -8,7 +8,7 @@ import json
 from pathlib import Path
 
 from dataset import DISPLAY, build, case_id, dump, read, write
-from schema_v14 import EXACT, LABELS, NA, normalize, rule_label, semantic_key, semantic_slots
+from location_schema import EXACT, LABELS, NA, normalize, rule_label, semantic_key, semantic_slots
 
 
 def features(row):

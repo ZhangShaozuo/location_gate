@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 import random
 
-from schema_v14 import (
+from location_schema import (
     KEYS, LABELS, NA, VALUES, combination, intent_aliases,
     normalize, rule_label, semantic_key,
 )

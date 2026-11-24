@@ -1,6 +1,6 @@
 # 统一定位精度数据
 
-当前模型流程和数据集见 [本机定位精度 v14](data-robust-v14/README.md)。运行入口提供数据构建、CPU 训练、独立测试和 HTML 看板。以下为公开语料处理说明。
+默认训练数据为 [归一化组合数据](normalized-coverage/data/dataset_summary.json)，包含 356 个三分类组合。按 [运行说明](normalized-coverage/README.md) 在 CPU 上训练和复测。基线生成方式见 [模型与数据工具](precision/README.md)。以下为公开语料处理说明。
 `prepare.py` 将公开语料转成统一意图、位置槽位和精度标签。精度为精确、区域级模糊和城市级模糊。单条输入按任务提取，多轮对话先按整段合并任务，再给每项任务单独定档。当前核验的组合是 MASSIVE zh-CN、CMPA-SLU、CrossWOZ 和 SMP2019-ECDT。RiSAWOZ 和 Google Schema-Guided Dialogue（SGD）也可通过 `--datasets` 选择。
 
 ## Linux 运行
