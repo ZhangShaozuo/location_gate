@@ -2,19 +2,19 @@
   "full_model": {
     "model": "类别特征 + CPU 逻辑回归",
     "sklearn": "1.8.0",
-    "training_rows": 356,
-    "semantic_groups": 356,
+    "training_rows": 373,
+    "semantic_groups": 373,
     "groups_by_label": {
-      "精确": 167,
+      "精确": 181,
       "区域级模糊": 88,
-      "城市级模糊": 101
+      "城市级模糊": 104
     },
     "class_weights": {
-      "精确": 0.7105788423153693,
-      "区域级模糊": 1.3484848484848484,
-      "城市级模糊": 1.174917491749175
+      "精确": 0.6869244935543278,
+      "区域级模糊": 1.4128787878787878,
+      "城市级模糊": 1.1955128205128205
     },
-    "training_sha256": "d17ff526e15d28cfbdfad0b23f871906a77cc3bf928a42ce52585f73e1ad53ab",
+    "training_sha256": "ef4d35043d749e2476caabba003c1ba59ca5658e7141095a7239fae1c3160224",
     "source_splits": [
       "train",
       "dev",
@@ -22,8 +22,8 @@
     ]
   },
   "external_test": {
-    "training_rows": 356,
-    "training_semantic_groups": 356,
+    "training_rows": 373,
+    "training_semantic_groups": 373,
     "test_rows": 46,
     "new_semantics": {
       "rows": 30,
@@ -83,20 +83,20 @@
       "dev": {
         "rows": 38,
         "semantic_groups": 38,
-        "row_accuracy": 0.8947368421052632,
+        "row_accuracy": 0.9210526315789473,
         "variant_changed_vs_canonical": 0,
-        "groups_all_variants_correct": 34,
-        "macro_f1_by_group": 0.8915925101965146,
+        "groups_all_variants_correct": 35,
+        "macro_f1_by_group": 0.9145810159436412,
         "group_confusion": [
           [
-            13,
+            14,
             0,
-            2
+            1
           ],
           [
-            1,
+            2,
             7,
-            1
+            0
           ],
           [
             0,
@@ -105,17 +105,17 @@
           ]
         ],
         "coarse_overprecision_rows": {
-          "errors": 1,
+          "errors": 2,
           "total": 23
         },
         "coarse_overprecision_groups": {
-          "errors": 1,
+          "errors": 2,
           "total": 23
         },
         "by_variant": {
           "标准输入": {
             "rows": 38,
-            "correct": 34
+            "correct": 35
           }
         }
       },
@@ -160,10 +160,10 @@
       }
     },
     "controls": {
-      "rows": 233,
-      "semantic_groups": 233,
-      "rule_not_applicable": 233,
-      "model_alone_predicted_exact": 90
+      "rows": 235,
+      "semantic_groups": 235,
+      "rule_not_applicable": 235,
+      "model_alone_predicted_exact": 91
     }
   }
 }

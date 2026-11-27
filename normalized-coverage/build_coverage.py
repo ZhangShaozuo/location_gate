@@ -16,7 +16,7 @@ SPLITS = ("train", "dev", "test", "controls")
 
 def table(out, name, rows):
     with (out / name).open("w", encoding="utf-8-sig", newline="") as file:
-        writer = csv.DictWriter(file, fieldnames=list(rows[0]), delimiter="\t")
+        writer = csv.DictWriter(file, fieldnames=list(rows[0]), delimiter="\t", lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 

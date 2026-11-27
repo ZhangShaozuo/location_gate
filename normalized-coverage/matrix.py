@@ -19,10 +19,10 @@ ACTIONS = (
     ("交通票务", "查询和预订机票及查机场流量", ("transit.flight_ticket", "transit.flight_traffic"), None),
     ("交通票务", "查询和预订火车票", ("transit.rail_ticket",), None),
     ("公交地铁", "查公交和地铁", ("transit.bus_query", "transit.query"), None),
-    ("公交地铁", "查看乘车码", ("transit.ride_code",), "按本机城市选码与现网精确合标口径待确认"),
+    ("公交地铁", "查看乘车码", ("transit.ride_code",), "按本机所在城市选择乘车码，使用城市级位置"),
     ("安全", "查找设备", ("device.find", "device.find_menu"), None),
     ("运动", "开始运动", ("fitness.start",), None),
-    ("运动", "查询运动数据和查看运动类型", ("fitness.history", "fitness.activity_types"), "已存记录用对照，按本机城市筛记录待确认"),
+    ("运动", "查询运动数据和查看运动类型", ("fitness.history", "fitness.activity_types"), "区分本机城市筛选、指定城市筛选和直接读取历史记录"),
     ("快递", "寄快递", ("package.ship",), None),
     ("快递", "收快递及查询签收状态", ("package.receive", "package.status"), None),
     ("本地生活", "查家电维修、保洁和收纳", ("local_service.search",), None),
@@ -30,8 +30,8 @@ ACTIONS = (
     ("招聘", "查找招聘信息", ("jobs.search",), None),
     ("外卖", "下单外卖", ("delivery.order",), None),
     ("餐饮", "预订餐厅", ("restaurant.reserve",), None),
-    ("日历与提醒", "修改、取消和删除日程", ("calendar.update", "calendar.remove"), "按本机城市筛选后删除待确认"),
-    ("日历与提醒", "创建提醒", ("reminder.create",), "地理围栏触发的授权口径待确认"),
+    ("日历与提醒", "修改、取消和删除日程", ("calendar.update", "calendar.remove"), "删除前按本机城市筛选时使用城市级位置"),
+    ("日历与提醒", "创建提醒", ("reminder.create",), "到达或离开地理围栏触发需要精确位置"),
     ("备忘", "创建备忘", ("note.create",), None),
     ("通用", "记录信息", ("information.capture",), None),
 )
@@ -52,10 +52,9 @@ def cases():
             ({"level": "district", "scope": "nearby"}, AREA, "先限所在区，再查大致周边"),
             ({"scope": "nearby"}, AREA, "附近粗筛"),
             ({"radius_band": "up_to_policy_limit"}, EXACT, "小半径是硬性筛选条件"),
-            ({"radius_band": "above_policy_limit"}, "待复核", "较大硬半径的精度口径待确认"),
-            ({"scope": "nearest", "level": "city"}, "待复核", "按实际距离找最近与只提供市级位置冲突"),
+            ({"scope": "strict_radius", "radius_band": "above_policy_limit"}, EXACT, "即使半径大于阈值，也必须按实际距离筛除范围外的候选"),
         ):
-            yield code, {"src": CURRENT, **slots}, label, note, label == "待复核"
+            yield code, {"src": CURRENT, **slots}, label, note, False
         for band in ("up_to_policy_limit", "above_policy_limit"):
             yield code, {"src": CURRENT, "scope": "rough_radius", "radius_band": band}, AREA, "给定大致范围且允许放宽半径", False
             yield code, {"src": CURRENT, "scope": "rough_radius", "radius_band": band, "level": "district"}, AREA, "限制在所在区内，按可放宽半径粗筛", False
@@ -93,9 +92,11 @@ def cases():
         ("fitness.activity_types", {}, NA, "查询可用运动类型", False),
         ("package.status", {}, NA, "根据运单查待签收或已签收状态", False),
         ("calendar.remove", {}, NA, "删除已经选中的日程", False),
-        ("transit.ride_code", {"src": CURRENT}, "待复核", "按所在城市选码与现网默认精确口径待确认", True),
-        ("fitness.history", {"src": CURRENT, "op": "filter_by_current_city"}, CITY, "用本机城市筛已存运动记录，现有规则会忽略该操作", True),
-        ("calendar.remove", {"src": CURRENT, "op": "filter_by_current_city"}, CITY, "按本机城市筛选待删除日程，现有规则会忽略该操作", True),
-        ("reminder.create", {"trigger": "enter_location"}, "待复核", "地理围栏提醒的现网授权口径待确认", True),
-        ("reminder.create", {"trigger": "leave_location"}, "待复核", "离开围栏触发提醒的现网授权口径待确认", True),
+        ("transit.ride_code", {"src": CURRENT}, CITY, "按本机所在城市选择乘车码", False),
+        ("fitness.history", {"src": CURRENT, "op": "filter_by_city"}, CITY, "按本机所在城市筛历史运动轨迹", False),
+        ("fitness.history", {"src": "named_place", "op": "filter_by_city"}, NA, "按已指定城市筛历史运动轨迹", False),
+        ("calendar.remove", {"src": CURRENT, "op": "filter_by_city"}, CITY, "按本机所在城市筛选待删除日程", False),
+        ("calendar.remove", {"src": "named_place", "op": "filter_by_city"}, NA, "按已指定城市筛选待删除日程", False),
+        ("reminder.create", {"trigger": "enter_location"}, EXACT, "进入地理围栏时触发提醒", False),
+        ("reminder.create", {"trigger": "leave_location"}, EXACT, "离开地理围栏时触发提醒", False),
     )

@@ -14,42 +14,40 @@
   "reserved_external_new": 30,
   "reserved_external_controls": 10,
   "new_groups_by_label": {
-    "精确": 66,
+    "精确": 80,
     "区域级模糊": 29,
-    "城市级模糊": 5
+    "城市级模糊": 8
   },
   "enumeration_status": {
     "已有训练": 100,
     "保留在外部测试": 29,
-    "新增训练": 100,
+    "新增训练": 117,
     "保留在验证": 21,
-    "待确认": 29,
     "保留在内部测试": 33,
     "已有对照": 40,
-    "新增对照": 28
+    "新增对照": 30
   },
-  "matrix_rows": 656,
+  "matrix_rows": 646,
   "matrix_status": {
     "已有训练": 167,
     "保留在外部测试": 40,
-    "新增训练": 100,
+    "新增训练": 117,
     "保留在验证": 38,
-    "待确认": 29,
     "保留在内部测试": 51,
     "已有对照": 203,
-    "新增对照": 28
+    "新增对照": 30
   },
   "splits": {
     "train": {
-      "rows": 267,
-      "semantic_groups": 267,
+      "rows": 284,
+      "semantic_groups": 284,
       "labels": {
-        "精确": 132,
+        "精确": 146,
         "区域级模糊": 67,
-        "城市级模糊": 68
+        "城市级模糊": 71
       },
       "variant_counts": {
-        "canonical": 267
+        "canonical": 284
       }
     },
     "dev": {
@@ -77,13 +75,13 @@
       }
     },
     "controls": {
-      "rows": 233,
-      "semantic_groups": 233,
+      "rows": 235,
+      "semantic_groups": 235,
       "labels": {
-        "不涉及": 233
+        "不涉及": 235
       },
       "variant_counts": {
-        "canonical": 233
+        "canonical": 235
       }
     }
   }

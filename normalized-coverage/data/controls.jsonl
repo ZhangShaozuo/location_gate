@@ -231,3 +231,5 @@
 {"intent": "查询城际客车", "label": "不涉及", "scenario": "[\"查询城际客车\", {\"from_src\": \"saved_place\", \"to_src\": \"previous_entity\"}]", "slots": {"from_src": "saved_place", "to_src": "previous_entity"}, "variant": "canonical"}
 {"intent": "查询城际客车", "label": "不涉及", "scenario": "[\"查询城际客车\", {\"from_src\": \"previous_entity\", \"to_src\": \"named_place\"}]", "slots": {"from_src": "previous_entity", "to_src": "named_place"}, "variant": "canonical"}
 {"intent": "查询城际客车", "label": "不涉及", "scenario": "[\"查询城际客车\", {\"from_src\": \"previous_entity\", \"to_src\": \"previous_entity\"}]", "slots": {"from_src": "previous_entity", "to_src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查询运动轨迹", "label": "不涉及", "scenario": "[\"查询运动轨迹\", {\"op\": \"filter_by_city\", \"src\": \"named_place\"}]", "slots": {"op": "filter_by_city", "src": "named_place"}, "variant": "canonical"}
+{"intent": "删除日程", "label": "不涉及", "scenario": "[\"删除日程\", {\"op\": \"filter_by_city\", \"src\": \"named_place\"}]", "slots": {"op": "filter_by_city", "src": "named_place"}, "variant": "canonical"}

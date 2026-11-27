@@ -5,8 +5,9 @@ import unittest
 from corpora.adapters import utterance_candidate
 from corpora.policy import NEEDS_REVIEW, NOT_APPLICABLE
 from corpora.review import ground_single_turn_review, resolve_remaining_single_turn
-from corpora.schema import reviewed_label
+from corpora.schema import make_intent, model_slots, reviewed_label
 from prepare import LABEL_NAMES, make_row, model_record, validate_model_inputs
+from precision.location_schema import normalize, rule_label, semantic_slots
 
 
 class SingleTurnReviewTests(unittest.TestCase):
@@ -96,6 +97,40 @@ class SingleTurnReviewTests(unittest.TestCase):
         ):
             with self.subTest(text=text):
                 self.assertEqual(self.row(code, text)["label"], NEEDS_REVIEW)
+
+    def test_city_filters_preserve_operation_and_location_source(self):
+        for code in ("calendar.remove", "fitness.history"):
+            for location, source, tier in (
+                ("当前位置", "device_current", "城市级"),
+                ("杭州", "named_place", NOT_APPLICABLE),
+                (None, None, NEEDS_REVIEW),
+            ):
+                with self.subTest(code=code, location=location):
+                    pairs = [("operation", "filter_by_city")]
+                    if location is not None:
+                        pairs.append(("location", location))
+                    intent = make_intent(code, pairs)
+                    slots = model_slots(intent)
+                    self.assertEqual(slots["op"], "filter_by_city")
+                    self.assertEqual(reviewed_label(intent["label"], slots), tier)
+                    if location is not None:
+                        self.assertEqual(slots["loc"], location)
+                    row = normalize({"intent": intent["label"], "slots": slots})
+                    expected_slots = {"op": "filter_by_city"}
+                    if source is not None:
+                        expected_slots["src"] = source
+                    self.assertEqual(semantic_slots(row), expected_slots)
+                    self.assertEqual(rule_label(row), LABEL_NAMES[tier])
+
+    def test_large_radius_requires_explicit_strict_scope(self):
+        for scope, tier in (("严格半径", "精确"), ("可放宽的半径", "区域级模糊"), (None, NEEDS_REVIEW)):
+            with self.subTest(scope=scope):
+                slots = {"半径": "2 公里", "位置来源": "当前位置"}
+                if scope is not None:
+                    slots["搜索约束"] = scope
+                row = normalize({"intent": "查找或推荐地点", "slots": slots})
+                self.assertEqual(row["slots"]["radius_band"], "above_policy_limit")
+                self.assertEqual(rule_label(row), tier)
 
     def test_conflicting_labels_for_identical_model_input_fail_export(self):
         with sqlite3.connect(":memory:") as conn:

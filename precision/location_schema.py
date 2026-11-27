@@ -57,6 +57,7 @@ VALUES = {
     "scope": {
         "nearby": ("附近", "大致周边"), "nearest": ("最近", "距离最短"),
         "distance": ("准确距离", "实际路程距离"), "walking_time": ("步行耗时", "步行时长"),
+        "strict_radius": ("严格半径", "硬半径", "必须在半径内"),
         "rough_radius": ("约略半径", "可放宽的半径"),
     },
     "radius_band": {
@@ -75,6 +76,7 @@ VALUES = {
     "op": {
         "discover": ("浏览候选", "查找选项"), "rank_by_distance": ("按距离排序", "按远近排序"),
         "filter_by_radius": ("按半径筛选", "距离阈值过滤"),
+        "filter_by_city": ("按城市筛选", "按城市过滤"),
         "filter_by_travel_time": ("按步行耗时过滤", "按步行时长筛选"),
         "deliver_order": ("送餐下单", "安排配送"),
         "book_ticket": ("订票", "购买车票"), "search_options": ("查票", "搜索票务选项"),
@@ -89,7 +91,7 @@ for field in ("src", "from_src", "to_src", "pickup_src", "fence_src"):
     VALUES[field] = SOURCES
 LOCATION_FIELDS = {"src": ("loc", "near"), "from_src": ("from",), "to_src": ("to",), "pickup_src": ("pickup",)}
 IGNORED = {"target", "places", "candidates", "loc", "near", "from", "to", "pickup"}
-SEMANTIC_OPS = {"share_current_location", "navigate_to_target", "query_target_location", "ring"}
+SEMANTIC_OPS = {"share_current_location", "navigate_to_target", "query_target_location", "ring", "filter_by_city"}
 RADIUS_PATTERN = re.compile(r"(\d+(?:\.\d+)?)\s*(km|m|公里|千米|米)?", re.I)
 
 

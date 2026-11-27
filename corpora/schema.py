@@ -7,7 +7,7 @@ import unicodedata
 from .policy import (
     CLASSES, DEVICE, HISTORY, NAMED, NEEDS_REVIEW, NOT_APPLICABLE,
     POSITION_SOURCES, PRECISION_CLASSES, REPORTED_TIERS, SAVED, UNKNOWN,
-    FIXED, GEOFENCE_TRIGGERS, GEO_CONTENT_INTENTS, NON_LOCATION_TRIGGERS,
+    CITY_FILTER_INTENTS, FIXED, GEOFENCE_TRIGGERS, GEO_CONTENT_INTENTS, NON_LOCATION_TRIGGERS,
     RULES, SCENE_ENABLE_INTENTS, SEARCH_INTENTS,
     SELF_GRANULARITY, SOCIAL_POST_INTENTS,
     PolicyLabel, precision_for,
@@ -341,7 +341,7 @@ def apply_search_scope(params, text, single_turn):
     if isinstance(scope, str):
         scope = {"附近": "nearby", "最近": "nearest", "最近的": "nearest",
                  "精确距离": "distance", "步行时间": "walking_time"}.get(scope, scope)
-    if scope not in ("nearby", "nearest", "distance", "walking_time", "rough_radius"):
+    if scope not in ("nearby", "nearest", "distance", "walking_time", "rough_radius", "strict_radius"):
         scope = next((key for key, pattern in (
             ("nearest", NEAREST), ("distance", EXACT_DISTANCE), ("walking_time", WALKING_TIME), ("nearby", NEARBY),
         ) if pattern.search(text)), None)
@@ -462,6 +462,8 @@ def make_intent(code, pairs, *, text="", single_turn=False, anchor=None, label=N
         ):
             params["operation"] = "share_current_location"
             params["location_source"] = DEVICE
+    if code in CITY_FILTER_INTENTS and params.get("operation") == "filter_by_city":
+        params.setdefault("location_source", ref_kind(location, anchor=anchor))
     if code in ("navigation.start", "fitness.start"):
         if TRACKING_OFF.search(text):
             params["tracking_mode"] = "no_route"
@@ -517,6 +519,9 @@ def model_slots(intent):
     fields = rule.fields if rule else ()
     if code == "traffic.query":
         fields = (*fields, "origin_source", "destination_source")
+    if code in CITY_FILTER_INTENTS and params.get("operation") == "filter_by_city":
+        fields = ("location_source",)
+        slots["op"] = "filter_by_city"
     for field in fields:
         if code == "transit.query" and field == "location_source" and field not in params:
             continue
@@ -577,6 +582,8 @@ def policy_from_slots(code, slots):
     fields = rule.fields if rule else ()
     if code == "traffic.query":
         fields = (*fields, "origin_source", "destination_source")
+    if code in CITY_FILTER_INTENTS and slots.get("op") == "filter_by_city":
+        fields = ("location_source",)
     params = {}
     for field in fields:
         slot, source_slot, _ = GEO_SLOT_FIELDS[field]

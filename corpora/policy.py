@@ -82,6 +82,7 @@ GEO_CONTENT_INTENTS = {
     "calendar.set", "calendar.update", "calendar.remove",
     "reminder.create", "note.create", "information.capture",
 }
+CITY_FILTER_INTENTS = {"calendar.remove", "fitness.history"}
 LOCAL_DEFAULTS = TICKET_INTENTS | {
     "weather.query", "weather.rain", "weather.alert", "weather.environment",
     "transit.flight_traffic", "transit.ride_code", "travel.index",
@@ -176,7 +177,7 @@ def device_search_precision(code, params, rule):
     if level == "country":
         return PolicyLabel(OUTSIDE_SCOPE, "country_granularity_outside_scope")
     requested = SELF_GRANULARITY.get(level) if isinstance(level, str) else None
-    strict = scope in ("nearest", "distance", "walking_time") or (
+    strict = scope in ("nearest", "distance", "walking_time", "strict_radius") or (
         scope != "rough_radius" and isinstance(radius, int) and 0 < radius <= RADIUS_PRECISE_M
     )
     if strict and requested and requested != "精确":
@@ -219,6 +220,14 @@ def precision_for(intent):
             return PolicyLabel(OUTSIDE_SCOPE, "country_granularity_outside_scope")
         tier = SELF_GRANULARITY.get(requested, "精确") if isinstance(requested, str) else "精确"
         return PolicyLabel(tier, "self_location", tier == "精确", notice="prompt")
+
+    if code in CITY_FILTER_INTENTS and params.get("operation") == "filter_by_city":
+        source = params.get("location_source")
+        if source == DEVICE:
+            return PolicyLabel("城市级", "filter_by_device_city")
+        if source in (*FIXED, "fixed"):
+            return PolicyLabel(NOT_APPLICABLE, "filter_by_resolved_city")
+        return review("filter_city_source_unresolved")
 
     if code == "fitness.history":
         return PolicyLabel(NOT_APPLICABLE, "stored_workout_history")

@@ -81,7 +81,7 @@
 交通票务	查询机场航班流量	"{""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
 交通票务	查询机场航班流量	"{""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
 交通票务	查询机场航班流量	{}	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
-公交地铁	查看乘车码	"{""src"": ""device_current""}"	待复核	城市级模糊	待确认	按所在城市选码与现网默认精确口径待确认
+公交地铁	查看乘车码	"{""src"": ""device_current""}"	城市级模糊	城市级模糊	新增训练	按本机所在城市选择乘车码
 公交地铁	查看乘车码	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
 公交地铁	查询公交地铁	"{""from_src"": ""named_place"", ""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在外部测试	从已知枢纽找通往本机城市的线路概览
 公交地铁	查询公交地铁	"{""from_src"": ""named_place"", ""level"": ""district"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	从已知枢纽找通往本机所在区的线路概览
@@ -91,7 +91,6 @@
 公交地铁	查询公交地铁	"{""from_src"": ""saved_place"", ""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	新增训练	从已知枢纽找通往本机城市的线路概览
 公交地铁	查询公交地铁	"{""from_src"": ""saved_place"", ""level"": ""district"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	从已知枢纽找通往本机所在区的线路概览
 公交地铁	查询公交地铁	"{""level"": ""city"", ""scope"": ""nearby"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	周边检索明确以全市为限
-公交地铁	查询公交地铁	"{""level"": ""city"", ""scope"": ""nearest"", ""src"": ""device_current""}"	待复核	待复核	待确认	按实际距离找最近与只提供市级位置冲突
 公交地铁	查询公交地铁	"{""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在内部测试	城市范围内查找
 公交地铁	查询公交地铁	"{""level"": ""district"", ""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
 公交地铁	查询公交地铁	"{""level"": ""district"", ""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
@@ -100,8 +99,8 @@
 公交地铁	查询公交地铁	"{""radius_band"": ""above_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内输出实测距离
 公交地铁	查询公交地铁	"{""radius_band"": ""above_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内只取最近候选
 公交地铁	查询公交地铁	"{""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	给定大致范围且允许放宽半径
+公交地铁	查询公交地铁	"{""radius_band"": ""above_policy_limit"", ""scope"": ""strict_radius"", ""src"": ""device_current""}"	精确	精确	新增训练	即使半径大于阈值，也必须按实际距离筛除范围外的候选
 公交地铁	查询公交地铁	"{""radius_band"": ""above_policy_limit"", ""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内按步行耗时筛选
-公交地铁	查询公交地铁	"{""radius_band"": ""above_policy_limit"", ""src"": ""device_current""}"	待复核	待复核	待确认	较大硬半径的精度口径待确认
 公交地铁	查询公交地铁	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内输出实测距离
 公交地铁	查询公交地铁	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	保留在外部测试	硬性小半径内只取最近候选
 公交地铁	查询公交地铁	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在内部测试	给定大致范围且允许放宽半径
@@ -129,7 +128,6 @@
 公交地铁	查询公共交通	"{""from_src"": ""saved_place"", ""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	新增训练	从已知枢纽找通往本机城市的线路概览
 公交地铁	查询公共交通	"{""from_src"": ""saved_place"", ""level"": ""district"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	从已知枢纽找通往本机所在区的线路概览
 公交地铁	查询公共交通	"{""level"": ""city"", ""scope"": ""nearby"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	新增训练	周边检索明确以全市为限
-公交地铁	查询公共交通	"{""level"": ""city"", ""scope"": ""nearest"", ""src"": ""device_current""}"	待复核	待复核	待确认	按实际距离找最近与只提供市级位置冲突
 公交地铁	查询公共交通	"{""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	城市范围内查找
 公交地铁	查询公共交通	"{""level"": ""district"", ""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
 公交地铁	查询公共交通	"{""level"": ""district"", ""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
@@ -138,8 +136,8 @@
 公交地铁	查询公共交通	"{""radius_band"": ""above_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内输出实测距离
 公交地铁	查询公共交通	"{""radius_band"": ""above_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内只取最近候选
 公交地铁	查询公共交通	"{""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	给定大致范围且允许放宽半径
+公交地铁	查询公共交通	"{""radius_band"": ""above_policy_limit"", ""scope"": ""strict_radius"", ""src"": ""device_current""}"	精确	精确	新增训练	即使半径大于阈值，也必须按实际距离筛除范围外的候选
 公交地铁	查询公共交通	"{""radius_band"": ""above_policy_limit"", ""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内按步行耗时筛选
-公交地铁	查询公共交通	"{""radius_band"": ""above_policy_limit"", ""src"": ""device_current""}"	待复核	待复核	待确认	较大硬半径的精度口径待确认
 公交地铁	查询公共交通	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内输出实测距离
 公交地铁	查询公共交通	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内只取最近候选
 公交地铁	查询公共交通	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	给定大致范围且允许放宽半径
@@ -157,7 +155,6 @@
 公交地铁	查询公共交通	"{""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	已有训练	按步行耗时筛选
 公交地铁	查询公共交通	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
 地图	查找或推荐地点	"{""level"": ""city"", ""scope"": ""nearby"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	周边检索明确以全市为限
-地图	查找或推荐地点	"{""level"": ""city"", ""scope"": ""nearest"", ""src"": ""device_current""}"	待复核	待复核	待确认	按实际距离找最近与只提供市级位置冲突
 地图	查找或推荐地点	"{""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在验证	城市范围内查找
 地图	查找或推荐地点	"{""level"": ""district"", ""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
 地图	查找或推荐地点	"{""level"": ""district"", ""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在外部测试	限制在所在区内，按可放宽半径粗筛
@@ -166,8 +163,8 @@
 地图	查找或推荐地点	"{""radius_band"": ""above_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内输出实测距离
 地图	查找或推荐地点	"{""radius_band"": ""above_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内只取最近候选
 地图	查找或推荐地点	"{""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	给定大致范围且允许放宽半径
+地图	查找或推荐地点	"{""radius_band"": ""above_policy_limit"", ""scope"": ""strict_radius"", ""src"": ""device_current""}"	精确	精确	新增训练	即使半径大于阈值，也必须按实际距离筛除范围外的候选
 地图	查找或推荐地点	"{""radius_band"": ""above_policy_limit"", ""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内按步行耗时筛选
-地图	查找或推荐地点	"{""radius_band"": ""above_policy_limit"", ""src"": ""device_current""}"	待复核	待复核	待确认	较大硬半径的精度口径待确认
 地图	查找或推荐地点	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内输出实测距离
 地图	查找或推荐地点	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	保留在外部测试	硬性小半径内只取最近候选
 地图	查找或推荐地点	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	给定大致范围且允许放宽半径
@@ -200,7 +197,6 @@
 外卖	下单外卖	"{""src"": ""saved_place""}"	不涉及	不涉及	保留在外部测试	接送或交接点已明确
 外卖	下单外卖	{}	精确	精确	已有训练	原数据中的既有组合
 外卖	查找外卖	"{""level"": ""city"", ""scope"": ""nearby"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在外部测试	周边检索明确以全市为限
-外卖	查找外卖	"{""level"": ""city"", ""scope"": ""nearest"", ""src"": ""device_current""}"	待复核	待复核	待确认	按实际距离找最近与只提供市级位置冲突
 外卖	查找外卖	"{""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在验证	城市范围内查找
 外卖	查找外卖	"{""level"": ""district"", ""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
 外卖	查找外卖	"{""level"": ""district"", ""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
@@ -209,8 +205,8 @@
 外卖	查找外卖	"{""radius_band"": ""above_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内输出实测距离
 外卖	查找外卖	"{""radius_band"": ""above_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内只取最近候选
 外卖	查找外卖	"{""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在验证	给定大致范围且允许放宽半径
+外卖	查找外卖	"{""radius_band"": ""above_policy_limit"", ""scope"": ""strict_radius"", ""src"": ""device_current""}"	精确	精确	新增训练	即使半径大于阈值，也必须按实际距离筛除范围外的候选
 外卖	查找外卖	"{""radius_band"": ""above_policy_limit"", ""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内按步行耗时筛选
-外卖	查找外卖	"{""radius_band"": ""above_policy_limit"", ""src"": ""device_current""}"	待复核	待复核	待确认	较大硬半径的精度口径待确认
 外卖	查找外卖	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	保留在外部测试	硬性小半径内输出实测距离
 外卖	查找外卖	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内只取最近候选
 外卖	查找外卖	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	给定大致范围且允许放宽半径
@@ -329,7 +325,6 @@
 快递	收快递	"{""src"": ""saved_place""}"	不涉及	不涉及	已有对照	接送或交接点已明确
 快递	查询快递状态	{}	不涉及	不涉及	已有对照	根据运单查待签收或已签收状态
 招聘	查找招聘信息	"{""level"": ""city"", ""scope"": ""nearby"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	周边检索明确以全市为限
-招聘	查找招聘信息	"{""level"": ""city"", ""scope"": ""nearest"", ""src"": ""device_current""}"	待复核	待复核	待确认	按实际距离找最近与只提供市级位置冲突
 招聘	查找招聘信息	"{""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在验证	城市范围内查找
 招聘	查找招聘信息	"{""level"": ""district"", ""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在外部测试	限制在所在区内，按可放宽半径粗筛
 招聘	查找招聘信息	"{""level"": ""district"", ""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
@@ -338,7 +333,7 @@
 招聘	查找招聘信息	"{""radius_band"": ""above_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内输出实测距离
 招聘	查找招聘信息	"{""radius_band"": ""above_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内只取最近候选
 招聘	查找招聘信息	"{""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在内部测试	给定大致范围且允许放宽半径
-招聘	查找招聘信息	"{""radius_band"": ""above_policy_limit"", ""src"": ""device_current""}"	待复核	待复核	待确认	较大硬半径的精度口径待确认
+招聘	查找招聘信息	"{""radius_band"": ""above_policy_limit"", ""scope"": ""strict_radius"", ""src"": ""device_current""}"	精确	精确	新增训练	即使半径大于阈值，也必须按实际距离筛除范围外的候选
 招聘	查找招聘信息	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内输出实测距离
 招聘	查找招聘信息	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内只取最近候选
 招聘	查找招聘信息	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	给定大致范围且允许放宽半径
@@ -384,8 +379,8 @@
 日历与提醒	创建提醒	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
 日历与提醒	创建提醒	"{""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
 日历与提醒	创建提醒	"{""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
-日历与提醒	创建提醒	"{""trigger"": ""enter_location""}"	待复核	精确	待确认	地理围栏提醒的现网授权口径待确认
-日历与提醒	创建提醒	"{""trigger"": ""leave_location""}"	待复核	精确	待确认	离开围栏触发提醒的现网授权口径待确认
+日历与提醒	创建提醒	"{""trigger"": ""enter_location""}"	精确	精确	新增训练	进入地理围栏时触发提醒
+日历与提醒	创建提醒	"{""trigger"": ""leave_location""}"	精确	精确	新增训练	离开地理围栏时触发提醒
 日历与提醒	创建提醒	"{""trigger"": ""time""}"	不涉及	不涉及	已有对照	原数据中的既有组合
 日历与提醒	创建提醒	{}	不涉及	不涉及	已有对照	原数据中的既有组合
 日历与提醒	创建日程	"{""level"": ""city"", ""op"": ""share_current_location"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
@@ -398,7 +393,8 @@
 日历与提醒	创建日程	"{""trigger"": ""leave_location""}"	精确	精确	已有训练	原数据中的既有组合
 日历与提醒	创建日程	"{""trigger"": ""time""}"	不涉及	不涉及	已有对照	原数据中的既有组合
 日历与提醒	创建日程	{}	不涉及	不涉及	已有对照	原数据中的既有组合
-日历与提醒	删除日程	"{""src"": ""device_current""}"	城市级模糊	不涉及	待确认	按本机城市筛选待删除日程，现有规则会忽略该操作
+日历与提醒	删除日程	"{""op"": ""filter_by_city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	新增训练	按本机所在城市筛选待删除日程
+日历与提醒	删除日程	"{""op"": ""filter_by_city"", ""src"": ""named_place""}"	不涉及	不涉及	新增对照	按已指定城市筛选待删除日程
 日历与提醒	删除日程	{}	不涉及	不涉及	已有对照	删除已经选中的日程
 日历与提醒	查询日程	{}	不涉及	不涉及	已有对照	原数据中的既有组合
 智能情景	启动智能情景	"{""to_src"": ""named_place"", ""trigger"": ""enter_location""}"	精确	精确	已有训练	原数据中的既有组合
@@ -417,7 +413,6 @@
 智能情景	启动智能情景	"{""trigger"": ""time""}"	不涉及	不涉及	已有对照	原数据中的既有组合
 智能情景	启动智能情景	"{""trigger"": ""wifi""}"	不涉及	不涉及	已有对照	原数据中的既有组合
 本地生活	查找本地服务	"{""level"": ""city"", ""scope"": ""nearby"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在内部测试	周边检索明确以全市为限
-本地生活	查找本地服务	"{""level"": ""city"", ""scope"": ""nearest"", ""src"": ""device_current""}"	待复核	待复核	待确认	按实际距离找最近与只提供市级位置冲突
 本地生活	查找本地服务	"{""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	城市范围内查找
 本地生活	查找本地服务	"{""level"": ""district"", ""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
 本地生活	查找本地服务	"{""level"": ""district"", ""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
@@ -426,8 +421,8 @@
 本地生活	查找本地服务	"{""radius_band"": ""above_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内输出实测距离
 本地生活	查找本地服务	"{""radius_band"": ""above_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内只取最近候选
 本地生活	查找本地服务	"{""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	给定大致范围且允许放宽半径
+本地生活	查找本地服务	"{""radius_band"": ""above_policy_limit"", ""scope"": ""strict_radius"", ""src"": ""device_current""}"	精确	精确	新增训练	即使半径大于阈值，也必须按实际距离筛除范围外的候选
 本地生活	查找本地服务	"{""radius_band"": ""above_policy_limit"", ""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内按步行耗时筛选
-本地生活	查找本地服务	"{""radius_band"": ""above_policy_limit"", ""src"": ""device_current""}"	待复核	待复核	待确认	较大硬半径的精度口径待确认
 本地生活	查找本地服务	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内输出实测距离
 本地生活	查找本地服务	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	保留在外部测试	硬性小半径内只取最近候选
 本地生活	查找本地服务	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在内部测试	给定大致范围且允许放宽半径
@@ -445,7 +440,6 @@
 本地生活	查找本地服务	"{""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	保留在内部测试	按步行耗时筛选
 本地生活	查找本地服务	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
 活动与影院	查找或推荐活动	"{""level"": ""city"", ""scope"": ""nearby"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在外部测试	周边检索明确以全市为限
-活动与影院	查找或推荐活动	"{""level"": ""city"", ""scope"": ""nearest"", ""src"": ""device_current""}"	待复核	待复核	待确认	按实际距离找最近与只提供市级位置冲突
 活动与影院	查找或推荐活动	"{""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在内部测试	城市范围内查找
 活动与影院	查找或推荐活动	"{""level"": ""district"", ""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
 活动与影院	查找或推荐活动	"{""level"": ""district"", ""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
@@ -454,8 +448,8 @@
 活动与影院	查找或推荐活动	"{""radius_band"": ""above_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内输出实测距离
 活动与影院	查找或推荐活动	"{""radius_band"": ""above_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内只取最近候选
 活动与影院	查找或推荐活动	"{""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	给定大致范围且允许放宽半径
+活动与影院	查找或推荐活动	"{""radius_band"": ""above_policy_limit"", ""scope"": ""strict_radius"", ""src"": ""device_current""}"	精确	精确	新增训练	即使半径大于阈值，也必须按实际距离筛除范围外的候选
 活动与影院	查找或推荐活动	"{""radius_band"": ""above_policy_limit"", ""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内按步行耗时筛选
-活动与影院	查找或推荐活动	"{""radius_band"": ""above_policy_limit"", ""src"": ""device_current""}"	待复核	待复核	待确认	较大硬半径的精度口径待确认
 活动与影院	查找或推荐活动	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内输出实测距离
 活动与影院	查找或推荐活动	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	保留在外部测试	硬性小半径内只取最近候选
 活动与影院	查找或推荐活动	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在内部测试	给定大致范围且允许放宽半径
@@ -475,7 +469,6 @@
 活动与影院	查找或推荐活动	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
 活动与影院	查询影片上映日期	{}	不涉及	不涉及	已有对照	原数据中的既有组合
 活动与影院	查询影院或影片	"{""level"": ""city"", ""scope"": ""nearby"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在外部测试	周边检索明确以全市为限
-活动与影院	查询影院或影片	"{""level"": ""city"", ""scope"": ""nearest"", ""src"": ""device_current""}"	待复核	待复核	待确认	按实际距离找最近与只提供市级位置冲突
 活动与影院	查询影院或影片	"{""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在验证	城市范围内查找
 活动与影院	查询影院或影片	"{""level"": ""district"", ""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
 活动与影院	查询影院或影片	"{""level"": ""district"", ""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
@@ -484,8 +477,8 @@
 活动与影院	查询影院或影片	"{""radius_band"": ""above_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内输出实测距离
 活动与影院	查询影院或影片	"{""radius_band"": ""above_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内只取最近候选
 活动与影院	查询影院或影片	"{""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	给定大致范围且允许放宽半径
+活动与影院	查询影院或影片	"{""radius_band"": ""above_policy_limit"", ""scope"": ""strict_radius"", ""src"": ""device_current""}"	精确	精确	新增训练	即使半径大于阈值，也必须按实际距离筛除范围外的候选
 活动与影院	查询影院或影片	"{""radius_band"": ""above_policy_limit"", ""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内按步行耗时筛选
-活动与影院	查询影院或影片	"{""radius_band"": ""above_policy_limit"", ""src"": ""device_current""}"	待复核	待复核	待确认	较大硬半径的精度口径待确认
 活动与影院	查询影院或影片	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内输出实测距离
 活动与影院	查询影院或影片	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内只取最近候选
 活动与影院	查询影院或影片	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在验证	给定大致范围且允许放宽半径
@@ -520,7 +513,6 @@
 路况	查询路况	"{""from_src"": ""device_current"", ""to_src"": ""previous_entity""}"	精确	精确	保留在外部测试	按本机起点查询到已确认地点的沿途路况
 路况	查询路况	"{""from_src"": ""device_current"", ""to_src"": ""saved_place""}"	精确	精确	已有训练	原数据中的既有组合
 路况	查询路况	"{""level"": ""city"", ""scope"": ""nearby"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在外部测试	周边检索明确以全市为限
-路况	查询路况	"{""level"": ""city"", ""scope"": ""nearest"", ""src"": ""device_current""}"	待复核	待复核	待确认	按实际距离找最近与只提供市级位置冲突
 路况	查询路况	"{""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	城市范围内查找
 路况	查询路况	"{""level"": ""district"", ""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
 路况	查询路况	"{""level"": ""district"", ""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
@@ -529,7 +521,7 @@
 路况	查询路况	"{""radius_band"": ""above_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内输出实测距离
 路况	查询路况	"{""radius_band"": ""above_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内只取最近候选
 路况	查询路况	"{""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在内部测试	给定大致范围且允许放宽半径
-路况	查询路况	"{""radius_band"": ""above_policy_limit"", ""src"": ""device_current""}"	待复核	待复核	待确认	较大硬半径的精度口径待确认
+路况	查询路况	"{""radius_band"": ""above_policy_limit"", ""scope"": ""strict_radius"", ""src"": ""device_current""}"	精确	精确	新增训练	即使半径大于阈值，也必须按实际距离筛除范围外的候选
 路况	查询路况	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内输出实测距离
 路况	查询路况	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内只取最近候选
 路况	查询路况	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在内部测试	给定大致范围且允许放宽半径
@@ -550,7 +542,8 @@
 运动	开始运动	"{""track"": ""no_route""}"	不涉及	不涉及	已有对照	原数据中的既有组合
 运动	开始运动	"{""track"": ""route""}"	精确	精确	已有训练	原数据中的既有组合
 运动	查看运动类型	{}	不涉及	不涉及	已有对照	查询可用运动类型
-运动	查询运动轨迹	"{""src"": ""device_current""}"	城市级模糊	不涉及	待确认	用本机城市筛已存运动记录，现有规则会忽略该操作
+运动	查询运动轨迹	"{""op"": ""filter_by_city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	新增训练	按本机所在城市筛历史运动轨迹
+运动	查询运动轨迹	"{""op"": ""filter_by_city"", ""src"": ""named_place""}"	不涉及	不涉及	新增对照	按已指定城市筛历史运动轨迹
 运动	查询运动轨迹	"{""src"": ""stored_history""}"	不涉及	不涉及	已有对照	读取已存运动记录
 通用	查询当前位置	"{""level"": ""city""}"	城市级模糊	城市级模糊	保留在内部测试	原数据中的既有组合
 通用	查询当前位置	"{""level"": ""coarse_unspecified""}"	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
@@ -564,7 +557,6 @@
 通用	记录信息	"{""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
 通用	记录信息	{}	不涉及	不涉及	已有对照	原数据中的既有组合
 酒店	查找或推荐酒店	"{""level"": ""city"", ""scope"": ""nearby"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	周边检索明确以全市为限
-酒店	查找或推荐酒店	"{""level"": ""city"", ""scope"": ""nearest"", ""src"": ""device_current""}"	待复核	待复核	待确认	按实际距离找最近与只提供市级位置冲突
 酒店	查找或推荐酒店	"{""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	城市范围内查找
 酒店	查找或推荐酒店	"{""level"": ""district"", ""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在外部测试	限制在所在区内，按可放宽半径粗筛
 酒店	查找或推荐酒店	"{""level"": ""district"", ""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
@@ -573,8 +565,8 @@
 酒店	查找或推荐酒店	"{""radius_band"": ""above_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内输出实测距离
 酒店	查找或推荐酒店	"{""radius_band"": ""above_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内只取最近候选
 酒店	查找或推荐酒店	"{""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	给定大致范围且允许放宽半径
+酒店	查找或推荐酒店	"{""radius_band"": ""above_policy_limit"", ""scope"": ""strict_radius"", ""src"": ""device_current""}"	精确	精确	新增训练	即使半径大于阈值，也必须按实际距离筛除范围外的候选
 酒店	查找或推荐酒店	"{""radius_band"": ""above_policy_limit"", ""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内按步行耗时筛选
-酒店	查找或推荐酒店	"{""radius_band"": ""above_policy_limit"", ""src"": ""device_current""}"	待复核	待复核	待确认	较大硬半径的精度口径待确认
 酒店	查找或推荐酒店	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内输出实测距离
 酒店	查找或推荐酒店	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内只取最近候选
 酒店	查找或推荐酒店	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	给定大致范围且允许放宽半径
@@ -594,7 +586,6 @@
 酒店	查找或推荐酒店	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
 酒店	查询酒店详情	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
 酒店	预订酒店	"{""level"": ""city"", ""scope"": ""nearby"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在外部测试	周边检索明确以全市为限
-酒店	预订酒店	"{""level"": ""city"", ""scope"": ""nearest"", ""src"": ""device_current""}"	待复核	待复核	待确认	按实际距离找最近与只提供市级位置冲突
 酒店	预订酒店	"{""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	城市范围内查找
 酒店	预订酒店	"{""level"": ""district"", ""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
 酒店	预订酒店	"{""level"": ""district"", ""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
@@ -603,8 +594,8 @@
 酒店	预订酒店	"{""radius_band"": ""above_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内输出实测距离
 酒店	预订酒店	"{""radius_band"": ""above_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内只取最近候选
 酒店	预订酒店	"{""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	给定大致范围且允许放宽半径
+酒店	预订酒店	"{""radius_band"": ""above_policy_limit"", ""scope"": ""strict_radius"", ""src"": ""device_current""}"	精确	精确	新增训练	即使半径大于阈值，也必须按实际距离筛除范围外的候选
 酒店	预订酒店	"{""radius_band"": ""above_policy_limit"", ""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内按步行耗时筛选
-酒店	预订酒店	"{""radius_band"": ""above_policy_limit"", ""src"": ""device_current""}"	待复核	待复核	待确认	较大硬半径的精度口径待确认
 酒店	预订酒店	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内输出实测距离
 酒店	预订酒店	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内只取最近候选
 酒店	预订酒店	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	给定大致范围且允许放宽半径
@@ -622,7 +613,6 @@
 酒店	预订酒店	"{""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	保留在内部测试	按步行耗时筛选
 酒店	预订酒店	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
 餐饮	查找或推荐餐馆	"{""level"": ""city"", ""scope"": ""nearby"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在内部测试	周边检索明确以全市为限
-餐饮	查找或推荐餐馆	"{""level"": ""city"", ""scope"": ""nearest"", ""src"": ""device_current""}"	待复核	待复核	待确认	按实际距离找最近与只提供市级位置冲突
 餐饮	查找或推荐餐馆	"{""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	城市范围内查找
 餐饮	查找或推荐餐馆	"{""level"": ""district"", ""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
 餐饮	查找或推荐餐馆	"{""level"": ""district"", ""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
@@ -631,8 +621,8 @@
 餐饮	查找或推荐餐馆	"{""radius_band"": ""above_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内输出实测距离
 餐饮	查找或推荐餐馆	"{""radius_band"": ""above_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内只取最近候选
 餐饮	查找或推荐餐馆	"{""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	给定大致范围且允许放宽半径
+餐饮	查找或推荐餐馆	"{""radius_band"": ""above_policy_limit"", ""scope"": ""strict_radius"", ""src"": ""device_current""}"	精确	精确	新增训练	即使半径大于阈值，也必须按实际距离筛除范围外的候选
 餐饮	查找或推荐餐馆	"{""radius_band"": ""above_policy_limit"", ""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内按步行耗时筛选
-餐饮	查找或推荐餐馆	"{""radius_band"": ""above_policy_limit"", ""src"": ""device_current""}"	待复核	待复核	待确认	较大硬半径的精度口径待确认
 餐饮	查找或推荐餐馆	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内输出实测距离
 餐饮	查找或推荐餐馆	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内只取最近候选
 餐饮	查找或推荐餐馆	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在内部测试	给定大致范围且允许放宽半径
