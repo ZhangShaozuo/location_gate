@@ -1,0 +1,235 @@
+{"intent": "下单外卖", "label": "不涉及", "scenario": "[\"下单外卖\", {\"src\": \"named_place\"}]", "slots": {"src": "named_place"}, "variant": "canonical"}
+{"intent": "下单外卖", "label": "不涉及", "scenario": "[\"下单外卖\", {\"src\": \"previous_entity\"}]", "slots": {"src": "previous_entity"}, "variant": "canonical"}
+{"intent": "下单外卖", "label": "不涉及", "scenario": "[\"下单外卖\", {\"src\": \"saved_place\"}]", "slots": {"src": "saved_place"}, "variant": "canonical"}
+{"intent": "修改日程", "label": "不涉及", "scenario": "[\"修改日程\", {\"src\": \"named_place\"}]", "slots": {"src": "named_place"}, "variant": "canonical"}
+{"intent": "修改日程", "label": "不涉及", "scenario": "[\"修改日程\", {\"src\": \"previous_entity\"}]", "slots": {"src": "previous_entity"}, "variant": "canonical"}
+{"intent": "修改日程", "label": "不涉及", "scenario": "[\"修改日程\", {\"src\": \"saved_place\"}]", "slots": {"src": "saved_place"}, "variant": "canonical"}
+{"intent": "修改日程", "label": "不涉及", "scenario": "[\"修改日程\", {\"trigger\": \"time\"}]", "slots": {"trigger": "time"}, "variant": "canonical"}
+{"intent": "修改日程", "label": "不涉及", "scenario": "[\"修改日程\", {}]", "slots": {}, "variant": "canonical"}
+{"intent": "创建备忘", "label": "不涉及", "scenario": "[\"创建备忘\", {\"src\": \"named_place\"}]", "slots": {"src": "named_place"}, "variant": "canonical"}
+{"intent": "创建备忘", "label": "不涉及", "scenario": "[\"创建备忘\", {\"src\": \"previous_entity\"}]", "slots": {"src": "previous_entity"}, "variant": "canonical"}
+{"intent": "创建备忘", "label": "不涉及", "scenario": "[\"创建备忘\", {\"src\": \"saved_place\"}]", "slots": {"src": "saved_place"}, "variant": "canonical"}
+{"intent": "创建备忘", "label": "不涉及", "scenario": "[\"创建备忘\", {}]", "slots": {}, "variant": "canonical"}
+{"intent": "创建提醒", "label": "不涉及", "scenario": "[\"创建提醒\", {\"src\": \"named_place\"}]", "slots": {"src": "named_place"}, "variant": "canonical"}
+{"intent": "创建提醒", "label": "不涉及", "scenario": "[\"创建提醒\", {\"src\": \"previous_entity\"}]", "slots": {"src": "previous_entity"}, "variant": "canonical"}
+{"intent": "创建提醒", "label": "不涉及", "scenario": "[\"创建提醒\", {\"src\": \"saved_place\"}]", "slots": {"src": "saved_place"}, "variant": "canonical"}
+{"intent": "创建提醒", "label": "不涉及", "scenario": "[\"创建提醒\", {\"trigger\": \"time\"}]", "slots": {"trigger": "time"}, "variant": "canonical"}
+{"intent": "创建提醒", "label": "不涉及", "scenario": "[\"创建提醒\", {}]", "slots": {}, "variant": "canonical"}
+{"intent": "创建日程", "label": "不涉及", "scenario": "[\"创建日程\", {\"src\": \"named_place\"}]", "slots": {"src": "named_place"}, "variant": "canonical"}
+{"intent": "创建日程", "label": "不涉及", "scenario": "[\"创建日程\", {\"src\": \"previous_entity\"}]", "slots": {"src": "previous_entity"}, "variant": "canonical"}
+{"intent": "创建日程", "label": "不涉及", "scenario": "[\"创建日程\", {\"src\": \"saved_place\"}]", "slots": {"src": "saved_place"}, "variant": "canonical"}
+{"intent": "创建日程", "label": "不涉及", "scenario": "[\"创建日程\", {\"trigger\": \"time\"}]", "slots": {"trigger": "time"}, "variant": "canonical"}
+{"intent": "创建日程", "label": "不涉及", "scenario": "[\"创建日程\", {}]", "slots": {}, "variant": "canonical"}
+{"intent": "删除日程", "label": "不涉及", "scenario": "[\"删除日程\", {}]", "slots": {}, "variant": "canonical"}
+{"intent": "发布社交内容", "label": "不涉及", "scenario": "[\"发布社交内容\", {\"src\": \"named_place\"}]", "slots": {"src": "named_place"}, "variant": "canonical"}
+{"intent": "发布社交内容", "label": "不涉及", "scenario": "[\"发布社交内容\", {\"src\": \"previous_entity\"}]", "slots": {"src": "previous_entity"}, "variant": "canonical"}
+{"intent": "发布社交内容", "label": "不涉及", "scenario": "[\"发布社交内容\", {\"src\": \"saved_place\"}]", "slots": {"src": "saved_place"}, "variant": "canonical"}
+{"intent": "发布社交内容", "label": "不涉及", "scenario": "[\"发布社交内容\", {}]", "slots": {}, "variant": "canonical"}
+{"intent": "叫车", "label": "不涉及", "scenario": "[\"叫车\", {\"pickup_src\": \"named_place\"}]", "slots": {"pickup_src": "named_place"}, "variant": "canonical"}
+{"intent": "叫车", "label": "不涉及", "scenario": "[\"叫车\", {\"pickup_src\": \"previous_entity\"}]", "slots": {"pickup_src": "previous_entity"}, "variant": "canonical"}
+{"intent": "叫车", "label": "不涉及", "scenario": "[\"叫车\", {\"pickup_src\": \"saved_place\"}]", "slots": {"pickup_src": "saved_place"}, "variant": "canonical"}
+{"intent": "启动智能情景", "label": "不涉及", "scenario": "[\"启动智能情景\", {\"trigger\": \"bluetooth\"}]", "slots": {"trigger": "bluetooth"}, "variant": "canonical"}
+{"intent": "启动智能情景", "label": "不涉及", "scenario": "[\"启动智能情景\", {\"trigger\": \"driving\"}]", "slots": {"trigger": "driving"}, "variant": "canonical"}
+{"intent": "启动智能情景", "label": "不涉及", "scenario": "[\"启动智能情景\", {\"trigger\": \"manual\"}]", "slots": {"trigger": "manual"}, "variant": "canonical"}
+{"intent": "启动智能情景", "label": "不涉及", "scenario": "[\"启动智能情景\", {\"trigger\": \"time\"}]", "slots": {"trigger": "time"}, "variant": "canonical"}
+{"intent": "启动智能情景", "label": "不涉及", "scenario": "[\"启动智能情景\", {\"trigger\": \"wifi\"}]", "slots": {"trigger": "wifi"}, "variant": "canonical"}
+{"intent": "寄快递", "label": "不涉及", "scenario": "[\"寄快递\", {\"src\": \"named_place\"}]", "slots": {"src": "named_place"}, "variant": "canonical"}
+{"intent": "寄快递", "label": "不涉及", "scenario": "[\"寄快递\", {\"src\": \"previous_entity\"}]", "slots": {"src": "previous_entity"}, "variant": "canonical"}
+{"intent": "寄快递", "label": "不涉及", "scenario": "[\"寄快递\", {\"src\": \"saved_place\"}]", "slots": {"src": "saved_place"}, "variant": "canonical"}
+{"intent": "开始导航", "label": "不涉及", "scenario": "[\"开始导航\", {\"from_src\": \"device_current\", \"to_src\": \"named_place\", \"track\": \"no_route\"}]", "slots": {"from_src": "device_current", "to_src": "named_place", "track": "no_route"}, "variant": "canonical"}
+{"intent": "开始导航", "label": "不涉及", "scenario": "[\"开始导航\", {\"from_src\": \"device_current\", \"to_src\": \"previous_entity\", \"track\": \"no_route\"}]", "slots": {"from_src": "device_current", "to_src": "previous_entity", "track": "no_route"}, "variant": "canonical"}
+{"intent": "开始导航", "label": "不涉及", "scenario": "[\"开始导航\", {\"from_src\": \"device_current\", \"to_src\": \"saved_place\", \"track\": \"no_route\"}]", "slots": {"from_src": "device_current", "to_src": "saved_place", "track": "no_route"}, "variant": "canonical"}
+{"intent": "开始导航", "label": "不涉及", "scenario": "[\"开始导航\", {\"from_src\": \"device_current\", \"to_src\": \"target_device\", \"track\": \"no_route\"}]", "slots": {"from_src": "device_current", "to_src": "target_device", "track": "no_route"}, "variant": "canonical"}
+{"intent": "开始导航", "label": "不涉及", "scenario": "[\"开始导航\", {\"from_src\": \"device_current\", \"track\": \"no_route\"}]", "slots": {"from_src": "device_current", "track": "no_route"}, "variant": "canonical"}
+{"intent": "开始导航", "label": "不涉及", "scenario": "[\"开始导航\", {\"from_src\": \"named_place\", \"to_src\": \"named_place\", \"track\": \"no_route\"}]", "slots": {"from_src": "named_place", "to_src": "named_place", "track": "no_route"}, "variant": "canonical"}
+{"intent": "开始导航", "label": "不涉及", "scenario": "[\"开始导航\", {\"from_src\": \"named_place\", \"to_src\": \"saved_place\", \"track\": \"no_route\"}]", "slots": {"from_src": "named_place", "to_src": "saved_place", "track": "no_route"}, "variant": "canonical"}
+{"intent": "开始导航", "label": "不涉及", "scenario": "[\"开始导航\", {\"from_src\": \"previous_entity\", \"to_src\": \"named_place\", \"track\": \"no_route\"}]", "slots": {"from_src": "previous_entity", "to_src": "named_place", "track": "no_route"}, "variant": "canonical"}
+{"intent": "开始导航", "label": "不涉及", "scenario": "[\"开始导航\", {\"from_src\": \"previous_entity\", \"to_src\": \"saved_place\", \"track\": \"no_route\"}]", "slots": {"from_src": "previous_entity", "to_src": "saved_place", "track": "no_route"}, "variant": "canonical"}
+{"intent": "开始导航", "label": "不涉及", "scenario": "[\"开始导航\", {\"from_src\": \"saved_place\", \"to_src\": \"named_place\", \"track\": \"no_route\"}]", "slots": {"from_src": "saved_place", "to_src": "named_place", "track": "no_route"}, "variant": "canonical"}
+{"intent": "开始导航", "label": "不涉及", "scenario": "[\"开始导航\", {\"from_src\": \"saved_place\", \"to_src\": \"saved_place\", \"track\": \"no_route\"}]", "slots": {"from_src": "saved_place", "to_src": "saved_place", "track": "no_route"}, "variant": "canonical"}
+{"intent": "开始运动", "label": "不涉及", "scenario": "[\"开始运动\", {\"track\": \"no_route\"}]", "slots": {"track": "no_route"}, "variant": "canonical"}
+{"intent": "打开查找设备界面", "label": "不涉及", "scenario": "[\"打开查找设备界面\", {}]", "slots": {}, "variant": "canonical"}
+{"intent": "播报新闻", "label": "不涉及", "scenario": "[\"播报新闻\", {\"src\": \"named_place\"}]", "slots": {"src": "named_place"}, "variant": "canonical"}
+{"intent": "收快递", "label": "不涉及", "scenario": "[\"收快递\", {\"src\": \"named_place\"}]", "slots": {"src": "named_place"}, "variant": "canonical"}
+{"intent": "收快递", "label": "不涉及", "scenario": "[\"收快递\", {\"src\": \"previous_entity\"}]", "slots": {"src": "previous_entity"}, "variant": "canonical"}
+{"intent": "收快递", "label": "不涉及", "scenario": "[\"收快递\", {\"src\": \"saved_place\"}]", "slots": {"src": "saved_place"}, "variant": "canonical"}
+{"intent": "查找外卖", "label": "不涉及", "scenario": "[\"查找外卖\", {\"scope\": \"nearby\", \"src\": \"named_place\"}]", "slots": {"scope": "nearby", "src": "named_place"}, "variant": "canonical"}
+{"intent": "查找外卖", "label": "不涉及", "scenario": "[\"查找外卖\", {\"scope\": \"nearby\", \"src\": \"previous_entity\"}]", "slots": {"scope": "nearby", "src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查找外卖", "label": "不涉及", "scenario": "[\"查找外卖\", {\"scope\": \"nearby\", \"src\": \"saved_place\"}]", "slots": {"scope": "nearby", "src": "saved_place"}, "variant": "canonical"}
+{"intent": "查找外卖", "label": "不涉及", "scenario": "[\"查找外卖\", {\"scope\": \"nearest\", \"src\": \"named_place\"}]", "slots": {"scope": "nearest", "src": "named_place"}, "variant": "canonical"}
+{"intent": "查找外卖", "label": "不涉及", "scenario": "[\"查找外卖\", {\"scope\": \"nearest\", \"src\": \"previous_entity\"}]", "slots": {"scope": "nearest", "src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查找外卖", "label": "不涉及", "scenario": "[\"查找外卖\", {\"scope\": \"nearest\", \"src\": \"saved_place\"}]", "slots": {"scope": "nearest", "src": "saved_place"}, "variant": "canonical"}
+{"intent": "查找外卖", "label": "不涉及", "scenario": "[\"查找外卖\", {\"src\": \"named_place\"}]", "slots": {"src": "named_place"}, "variant": "canonical"}
+{"intent": "查找或推荐地点", "label": "不涉及", "scenario": "[\"查找或推荐地点\", {\"scope\": \"nearby\", \"src\": \"named_place\"}]", "slots": {"scope": "nearby", "src": "named_place"}, "variant": "canonical"}
+{"intent": "查找或推荐地点", "label": "不涉及", "scenario": "[\"查找或推荐地点\", {\"scope\": \"nearby\", \"src\": \"previous_entity\"}]", "slots": {"scope": "nearby", "src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查找或推荐地点", "label": "不涉及", "scenario": "[\"查找或推荐地点\", {\"scope\": \"nearby\", \"src\": \"saved_place\"}]", "slots": {"scope": "nearby", "src": "saved_place"}, "variant": "canonical"}
+{"intent": "查找或推荐地点", "label": "不涉及", "scenario": "[\"查找或推荐地点\", {\"scope\": \"nearest\", \"src\": \"named_place\"}]", "slots": {"scope": "nearest", "src": "named_place"}, "variant": "canonical"}
+{"intent": "查找或推荐地点", "label": "不涉及", "scenario": "[\"查找或推荐地点\", {\"scope\": \"nearest\", \"src\": \"previous_entity\"}]", "slots": {"scope": "nearest", "src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查找或推荐地点", "label": "不涉及", "scenario": "[\"查找或推荐地点\", {\"scope\": \"nearest\", \"src\": \"saved_place\"}]", "slots": {"scope": "nearest", "src": "saved_place"}, "variant": "canonical"}
+{"intent": "查找或推荐地点", "label": "不涉及", "scenario": "[\"查找或推荐地点\", {\"src\": \"named_place\"}]", "slots": {"src": "named_place"}, "variant": "canonical"}
+{"intent": "查找或推荐活动", "label": "不涉及", "scenario": "[\"查找或推荐活动\", {\"scope\": \"nearby\", \"src\": \"named_place\"}]", "slots": {"scope": "nearby", "src": "named_place"}, "variant": "canonical"}
+{"intent": "查找或推荐活动", "label": "不涉及", "scenario": "[\"查找或推荐活动\", {\"scope\": \"nearby\", \"src\": \"previous_entity\"}]", "slots": {"scope": "nearby", "src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查找或推荐活动", "label": "不涉及", "scenario": "[\"查找或推荐活动\", {\"scope\": \"nearby\", \"src\": \"saved_place\"}]", "slots": {"scope": "nearby", "src": "saved_place"}, "variant": "canonical"}
+{"intent": "查找或推荐活动", "label": "不涉及", "scenario": "[\"查找或推荐活动\", {\"scope\": \"nearest\", \"src\": \"named_place\"}]", "slots": {"scope": "nearest", "src": "named_place"}, "variant": "canonical"}
+{"intent": "查找或推荐活动", "label": "不涉及", "scenario": "[\"查找或推荐活动\", {\"scope\": \"nearest\", \"src\": \"previous_entity\"}]", "slots": {"scope": "nearest", "src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查找或推荐活动", "label": "不涉及", "scenario": "[\"查找或推荐活动\", {\"scope\": \"nearest\", \"src\": \"saved_place\"}]", "slots": {"scope": "nearest", "src": "saved_place"}, "variant": "canonical"}
+{"intent": "查找或推荐活动", "label": "不涉及", "scenario": "[\"查找或推荐活动\", {\"src\": \"named_place\"}]", "slots": {"src": "named_place"}, "variant": "canonical"}
+{"intent": "查找或推荐酒店", "label": "不涉及", "scenario": "[\"查找或推荐酒店\", {\"scope\": \"nearby\", \"src\": \"named_place\"}]", "slots": {"scope": "nearby", "src": "named_place"}, "variant": "canonical"}
+{"intent": "查找或推荐酒店", "label": "不涉及", "scenario": "[\"查找或推荐酒店\", {\"scope\": \"nearby\", \"src\": \"previous_entity\"}]", "slots": {"scope": "nearby", "src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查找或推荐酒店", "label": "不涉及", "scenario": "[\"查找或推荐酒店\", {\"scope\": \"nearby\", \"src\": \"saved_place\"}]", "slots": {"scope": "nearby", "src": "saved_place"}, "variant": "canonical"}
+{"intent": "查找或推荐酒店", "label": "不涉及", "scenario": "[\"查找或推荐酒店\", {\"scope\": \"nearest\", \"src\": \"named_place\"}]", "slots": {"scope": "nearest", "src": "named_place"}, "variant": "canonical"}
+{"intent": "查找或推荐酒店", "label": "不涉及", "scenario": "[\"查找或推荐酒店\", {\"scope\": \"nearest\", \"src\": \"previous_entity\"}]", "slots": {"scope": "nearest", "src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查找或推荐酒店", "label": "不涉及", "scenario": "[\"查找或推荐酒店\", {\"scope\": \"nearest\", \"src\": \"saved_place\"}]", "slots": {"scope": "nearest", "src": "saved_place"}, "variant": "canonical"}
+{"intent": "查找或推荐酒店", "label": "不涉及", "scenario": "[\"查找或推荐酒店\", {\"src\": \"named_place\"}]", "slots": {"src": "named_place"}, "variant": "canonical"}
+{"intent": "查找或推荐餐馆", "label": "不涉及", "scenario": "[\"查找或推荐餐馆\", {\"scope\": \"nearby\", \"src\": \"named_place\"}]", "slots": {"scope": "nearby", "src": "named_place"}, "variant": "canonical"}
+{"intent": "查找或推荐餐馆", "label": "不涉及", "scenario": "[\"查找或推荐餐馆\", {\"scope\": \"nearby\", \"src\": \"previous_entity\"}]", "slots": {"scope": "nearby", "src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查找或推荐餐馆", "label": "不涉及", "scenario": "[\"查找或推荐餐馆\", {\"scope\": \"nearby\", \"src\": \"saved_place\"}]", "slots": {"scope": "nearby", "src": "saved_place"}, "variant": "canonical"}
+{"intent": "查找或推荐餐馆", "label": "不涉及", "scenario": "[\"查找或推荐餐馆\", {\"scope\": \"nearest\", \"src\": \"named_place\"}]", "slots": {"scope": "nearest", "src": "named_place"}, "variant": "canonical"}
+{"intent": "查找或推荐餐馆", "label": "不涉及", "scenario": "[\"查找或推荐餐馆\", {\"scope\": \"nearest\", \"src\": \"previous_entity\"}]", "slots": {"scope": "nearest", "src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查找或推荐餐馆", "label": "不涉及", "scenario": "[\"查找或推荐餐馆\", {\"scope\": \"nearest\", \"src\": \"saved_place\"}]", "slots": {"scope": "nearest", "src": "saved_place"}, "variant": "canonical"}
+{"intent": "查找或推荐餐馆", "label": "不涉及", "scenario": "[\"查找或推荐餐馆\", {\"src\": \"named_place\"}]", "slots": {"src": "named_place"}, "variant": "canonical"}
+{"intent": "查找招聘信息", "label": "不涉及", "scenario": "[\"查找招聘信息\", {\"scope\": \"nearby\", \"src\": \"named_place\"}]", "slots": {"scope": "nearby", "src": "named_place"}, "variant": "canonical"}
+{"intent": "查找招聘信息", "label": "不涉及", "scenario": "[\"查找招聘信息\", {\"scope\": \"nearby\", \"src\": \"previous_entity\"}]", "slots": {"scope": "nearby", "src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查找招聘信息", "label": "不涉及", "scenario": "[\"查找招聘信息\", {\"scope\": \"nearby\", \"src\": \"saved_place\"}]", "slots": {"scope": "nearby", "src": "saved_place"}, "variant": "canonical"}
+{"intent": "查找招聘信息", "label": "不涉及", "scenario": "[\"查找招聘信息\", {\"scope\": \"nearest\", \"src\": \"named_place\"}]", "slots": {"scope": "nearest", "src": "named_place"}, "variant": "canonical"}
+{"intent": "查找招聘信息", "label": "不涉及", "scenario": "[\"查找招聘信息\", {\"scope\": \"nearest\", \"src\": \"previous_entity\"}]", "slots": {"scope": "nearest", "src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查找招聘信息", "label": "不涉及", "scenario": "[\"查找招聘信息\", {\"scope\": \"nearest\", \"src\": \"saved_place\"}]", "slots": {"scope": "nearest", "src": "saved_place"}, "variant": "canonical"}
+{"intent": "查找招聘信息", "label": "不涉及", "scenario": "[\"查找招聘信息\", {\"src\": \"named_place\"}]", "slots": {"src": "named_place"}, "variant": "canonical"}
+{"intent": "查找本地服务", "label": "不涉及", "scenario": "[\"查找本地服务\", {\"scope\": \"nearby\", \"src\": \"named_place\"}]", "slots": {"scope": "nearby", "src": "named_place"}, "variant": "canonical"}
+{"intent": "查找本地服务", "label": "不涉及", "scenario": "[\"查找本地服务\", {\"scope\": \"nearby\", \"src\": \"previous_entity\"}]", "slots": {"scope": "nearby", "src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查找本地服务", "label": "不涉及", "scenario": "[\"查找本地服务\", {\"scope\": \"nearby\", \"src\": \"saved_place\"}]", "slots": {"scope": "nearby", "src": "saved_place"}, "variant": "canonical"}
+{"intent": "查找本地服务", "label": "不涉及", "scenario": "[\"查找本地服务\", {\"scope\": \"nearest\", \"src\": \"named_place\"}]", "slots": {"scope": "nearest", "src": "named_place"}, "variant": "canonical"}
+{"intent": "查找本地服务", "label": "不涉及", "scenario": "[\"查找本地服务\", {\"scope\": \"nearest\", \"src\": \"previous_entity\"}]", "slots": {"scope": "nearest", "src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查找本地服务", "label": "不涉及", "scenario": "[\"查找本地服务\", {\"scope\": \"nearest\", \"src\": \"saved_place\"}]", "slots": {"scope": "nearest", "src": "saved_place"}, "variant": "canonical"}
+{"intent": "查找本地服务", "label": "不涉及", "scenario": "[\"查找本地服务\", {\"src\": \"named_place\"}]", "slots": {"src": "named_place"}, "variant": "canonical"}
+{"intent": "查找设备", "label": "不涉及", "scenario": "[\"查找设备\", {\"op\": \"query_target_location\"}]", "slots": {"op": "query_target_location"}, "variant": "canonical"}
+{"intent": "查找设备", "label": "不涉及", "scenario": "[\"查找设备\", {\"op\": \"ring\"}]", "slots": {"op": "ring"}, "variant": "canonical"}
+{"intent": "查看乘车码", "label": "不涉及", "scenario": "[\"查看乘车码\", {\"src\": \"named_place\"}]", "slots": {"src": "named_place"}, "variant": "canonical"}
+{"intent": "查看运动类型", "label": "不涉及", "scenario": "[\"查看运动类型\", {}]", "slots": {}, "variant": "canonical"}
+{"intent": "查询公交地铁", "label": "不涉及", "scenario": "[\"查询公交地铁\", {\"scope\": \"nearby\", \"src\": \"named_place\"}]", "slots": {"scope": "nearby", "src": "named_place"}, "variant": "canonical"}
+{"intent": "查询公交地铁", "label": "不涉及", "scenario": "[\"查询公交地铁\", {\"scope\": \"nearby\", \"src\": \"previous_entity\"}]", "slots": {"scope": "nearby", "src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查询公交地铁", "label": "不涉及", "scenario": "[\"查询公交地铁\", {\"scope\": \"nearby\", \"src\": \"saved_place\"}]", "slots": {"scope": "nearby", "src": "saved_place"}, "variant": "canonical"}
+{"intent": "查询公交地铁", "label": "不涉及", "scenario": "[\"查询公交地铁\", {\"scope\": \"nearest\", \"src\": \"named_place\"}]", "slots": {"scope": "nearest", "src": "named_place"}, "variant": "canonical"}
+{"intent": "查询公交地铁", "label": "不涉及", "scenario": "[\"查询公交地铁\", {\"scope\": \"nearest\", \"src\": \"previous_entity\"}]", "slots": {"scope": "nearest", "src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查询公交地铁", "label": "不涉及", "scenario": "[\"查询公交地铁\", {\"scope\": \"nearest\", \"src\": \"saved_place\"}]", "slots": {"scope": "nearest", "src": "saved_place"}, "variant": "canonical"}
+{"intent": "查询公交地铁", "label": "不涉及", "scenario": "[\"查询公交地铁\", {\"src\": \"named_place\"}]", "slots": {"src": "named_place"}, "variant": "canonical"}
+{"intent": "查询公共交通", "label": "不涉及", "scenario": "[\"查询公共交通\", {\"scope\": \"nearby\", \"src\": \"named_place\"}]", "slots": {"scope": "nearby", "src": "named_place"}, "variant": "canonical"}
+{"intent": "查询公共交通", "label": "不涉及", "scenario": "[\"查询公共交通\", {\"scope\": \"nearby\", \"src\": \"previous_entity\"}]", "slots": {"scope": "nearby", "src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查询公共交通", "label": "不涉及", "scenario": "[\"查询公共交通\", {\"scope\": \"nearby\", \"src\": \"saved_place\"}]", "slots": {"scope": "nearby", "src": "saved_place"}, "variant": "canonical"}
+{"intent": "查询公共交通", "label": "不涉及", "scenario": "[\"查询公共交通\", {\"scope\": \"nearest\", \"src\": \"named_place\"}]", "slots": {"scope": "nearest", "src": "named_place"}, "variant": "canonical"}
+{"intent": "查询公共交通", "label": "不涉及", "scenario": "[\"查询公共交通\", {\"scope\": \"nearest\", \"src\": \"previous_entity\"}]", "slots": {"scope": "nearest", "src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查询公共交通", "label": "不涉及", "scenario": "[\"查询公共交通\", {\"scope\": \"nearest\", \"src\": \"saved_place\"}]", "slots": {"scope": "nearest", "src": "saved_place"}, "variant": "canonical"}
+{"intent": "查询公共交通", "label": "不涉及", "scenario": "[\"查询公共交通\", {\"src\": \"named_place\"}]", "slots": {"src": "named_place"}, "variant": "canonical"}
+{"intent": "查询地点地址", "label": "不涉及", "scenario": "[\"查询地点地址\", {\"src\": \"named_place\"}]", "slots": {"src": "named_place"}, "variant": "canonical"}
+{"intent": "查询地点地址", "label": "不涉及", "scenario": "[\"查询地点地址\", {\"src\": \"previous_entity\"}]", "slots": {"src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查询地点详情", "label": "不涉及", "scenario": "[\"查询地点详情\", {\"src\": \"named_place\"}]", "slots": {"src": "named_place"}, "variant": "canonical"}
+{"intent": "查询城际客车", "label": "不涉及", "scenario": "[\"查询城际客车\", {\"from_src\": \"named_place\", \"to_src\": \"named_place\"}]", "slots": {"from_src": "named_place", "to_src": "named_place"}, "variant": "canonical"}
+{"intent": "查询城际客车", "label": "不涉及", "scenario": "[\"查询城际客车\", {\"from_src\": \"named_place\", \"to_src\": \"previous_entity\"}]", "slots": {"from_src": "named_place", "to_src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查询城际客车", "label": "不涉及", "scenario": "[\"查询城际客车\", {\"from_src\": \"previous_entity\", \"to_src\": \"saved_place\"}]", "slots": {"from_src": "previous_entity", "to_src": "saved_place"}, "variant": "canonical"}
+{"intent": "查询城际客车", "label": "不涉及", "scenario": "[\"查询城际客车\", {\"from_src\": \"saved_place\", \"to_src\": \"named_place\"}]", "slots": {"from_src": "saved_place", "to_src": "named_place"}, "variant": "canonical"}
+{"intent": "查询外卖订单状态", "label": "不涉及", "scenario": "[\"查询外卖订单状态\", {}]", "slots": {}, "variant": "canonical"}
+{"intent": "查询天气", "label": "不涉及", "scenario": "[\"查询天气\", {\"src\": \"named_place\"}]", "slots": {"src": "named_place"}, "variant": "canonical"}
+{"intent": "查询天气", "label": "不涉及", "scenario": "[\"查询天气\", {\"src\": \"previous_entity\"}]", "slots": {"src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查询天气", "label": "不涉及", "scenario": "[\"查询天气\", {\"src\": \"saved_place\"}]", "slots": {"src": "saved_place"}, "variant": "canonical"}
+{"intent": "查询天气预警", "label": "不涉及", "scenario": "[\"查询天气预警\", {\"src\": \"named_place\"}]", "slots": {"src": "named_place"}, "variant": "canonical"}
+{"intent": "查询天气预警", "label": "不涉及", "scenario": "[\"查询天气预警\", {\"src\": \"previous_entity\"}]", "slots": {"src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查询天气预警", "label": "不涉及", "scenario": "[\"查询天气预警\", {\"src\": \"saved_place\"}]", "slots": {"src": "saved_place"}, "variant": "canonical"}
+{"intent": "查询已订行程", "label": "不涉及", "scenario": "[\"查询已订行程\", {}]", "slots": {}, "variant": "canonical"}
+{"intent": "查询影片上映日期", "label": "不涉及", "scenario": "[\"查询影片上映日期\", {}]", "slots": {}, "variant": "canonical"}
+{"intent": "查询影院或影片", "label": "不涉及", "scenario": "[\"查询影院或影片\", {\"scope\": \"nearby\", \"src\": \"named_place\"}]", "slots": {"scope": "nearby", "src": "named_place"}, "variant": "canonical"}
+{"intent": "查询影院或影片", "label": "不涉及", "scenario": "[\"查询影院或影片\", {\"scope\": \"nearby\", \"src\": \"previous_entity\"}]", "slots": {"scope": "nearby", "src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查询影院或影片", "label": "不涉及", "scenario": "[\"查询影院或影片\", {\"scope\": \"nearby\", \"src\": \"saved_place\"}]", "slots": {"scope": "nearby", "src": "saved_place"}, "variant": "canonical"}
+{"intent": "查询影院或影片", "label": "不涉及", "scenario": "[\"查询影院或影片\", {\"scope\": \"nearest\", \"src\": \"named_place\"}]", "slots": {"scope": "nearest", "src": "named_place"}, "variant": "canonical"}
+{"intent": "查询影院或影片", "label": "不涉及", "scenario": "[\"查询影院或影片\", {\"scope\": \"nearest\", \"src\": \"previous_entity\"}]", "slots": {"scope": "nearest", "src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查询影院或影片", "label": "不涉及", "scenario": "[\"查询影院或影片\", {\"scope\": \"nearest\", \"src\": \"saved_place\"}]", "slots": {"scope": "nearest", "src": "saved_place"}, "variant": "canonical"}
+{"intent": "查询影院或影片", "label": "不涉及", "scenario": "[\"查询影院或影片\", {\"src\": \"named_place\"}]", "slots": {"src": "named_place"}, "variant": "canonical"}
+{"intent": "查询快递状态", "label": "不涉及", "scenario": "[\"查询快递状态\", {}]", "slots": {}, "variant": "canonical"}
+{"intent": "查询或办理交通票务", "label": "不涉及", "scenario": "[\"查询或办理交通票务\", {\"from_src\": \"named_place\", \"to_src\": \"named_place\"}]", "slots": {"from_src": "named_place", "to_src": "named_place"}, "variant": "canonical"}
+{"intent": "查询或办理交通票务", "label": "不涉及", "scenario": "[\"查询或办理交通票务\", {\"from_src\": \"named_place\", \"to_src\": \"previous_entity\"}]", "slots": {"from_src": "named_place", "to_src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查询或办理交通票务", "label": "不涉及", "scenario": "[\"查询或办理交通票务\", {\"from_src\": \"previous_entity\", \"to_src\": \"saved_place\"}]", "slots": {"from_src": "previous_entity", "to_src": "saved_place"}, "variant": "canonical"}
+{"intent": "查询或办理交通票务", "label": "不涉及", "scenario": "[\"查询或办理交通票务\", {\"from_src\": \"saved_place\", \"to_src\": \"named_place\"}]", "slots": {"from_src": "saved_place", "to_src": "named_place"}, "variant": "canonical"}
+{"intent": "查询或预订机票", "label": "不涉及", "scenario": "[\"查询或预订机票\", {\"from_src\": \"named_place\", \"to_src\": \"named_place\"}]", "slots": {"from_src": "named_place", "to_src": "named_place"}, "variant": "canonical"}
+{"intent": "查询或预订机票", "label": "不涉及", "scenario": "[\"查询或预订机票\", {\"from_src\": \"named_place\", \"to_src\": \"previous_entity\"}]", "slots": {"from_src": "named_place", "to_src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查询或预订机票", "label": "不涉及", "scenario": "[\"查询或预订机票\", {\"from_src\": \"previous_entity\", \"to_src\": \"saved_place\"}]", "slots": {"from_src": "previous_entity", "to_src": "saved_place"}, "variant": "canonical"}
+{"intent": "查询或预订机票", "label": "不涉及", "scenario": "[\"查询或预订机票\", {\"from_src\": \"saved_place\", \"to_src\": \"named_place\"}]", "slots": {"from_src": "saved_place", "to_src": "named_place"}, "variant": "canonical"}
+{"intent": "查询或预订火车票", "label": "不涉及", "scenario": "[\"查询或预订火车票\", {\"from_src\": \"named_place\", \"to_src\": \"named_place\"}]", "slots": {"from_src": "named_place", "to_src": "named_place"}, "variant": "canonical"}
+{"intent": "查询或预订火车票", "label": "不涉及", "scenario": "[\"查询或预订火车票\", {\"from_src\": \"named_place\", \"to_src\": \"previous_entity\"}]", "slots": {"from_src": "named_place", "to_src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查询或预订火车票", "label": "不涉及", "scenario": "[\"查询或预订火车票\", {\"from_src\": \"previous_entity\", \"to_src\": \"saved_place\"}]", "slots": {"from_src": "previous_entity", "to_src": "saved_place"}, "variant": "canonical"}
+{"intent": "查询或预订火车票", "label": "不涉及", "scenario": "[\"查询或预订火车票\", {\"from_src\": \"saved_place\", \"to_src\": \"named_place\"}]", "slots": {"from_src": "saved_place", "to_src": "named_place"}, "variant": "canonical"}
+{"intent": "查询新闻", "label": "不涉及", "scenario": "[\"查询新闻\", {\"src\": \"named_place\"}]", "slots": {"src": "named_place"}, "variant": "canonical"}
+{"intent": "查询新闻", "label": "不涉及", "scenario": "[\"查询新闻\", {}]", "slots": {}, "variant": "canonical"}
+{"intent": "查询旅游指数", "label": "不涉及", "scenario": "[\"查询旅游指数\", {\"src\": \"named_place\"}]", "slots": {"src": "named_place"}, "variant": "canonical"}
+{"intent": "查询旅游指数", "label": "不涉及", "scenario": "[\"查询旅游指数\", {\"src\": \"previous_entity\"}]", "slots": {"src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查询旅游指数", "label": "不涉及", "scenario": "[\"查询旅游指数\", {\"src\": \"saved_place\"}]", "slots": {"src": "saved_place"}, "variant": "canonical"}
+{"intent": "查询日程", "label": "不涉及", "scenario": "[\"查询日程\", {}]", "slots": {}, "variant": "canonical"}
+{"intent": "查询机场航班流量", "label": "不涉及", "scenario": "[\"查询机场航班流量\", {\"src\": \"named_place\"}]", "slots": {"src": "named_place"}, "variant": "canonical"}
+{"intent": "查询机场航班流量", "label": "不涉及", "scenario": "[\"查询机场航班流量\", {\"src\": \"previous_entity\"}]", "slots": {"src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查询机场航班流量", "label": "不涉及", "scenario": "[\"查询机场航班流量\", {\"src\": \"saved_place\"}]", "slots": {"src": "saved_place"}, "variant": "canonical"}
+{"intent": "查询环境或生活指数", "label": "不涉及", "scenario": "[\"查询环境或生活指数\", {\"src\": \"named_place\"}]", "slots": {"src": "named_place"}, "variant": "canonical"}
+{"intent": "查询环境或生活指数", "label": "不涉及", "scenario": "[\"查询环境或生活指数\", {\"src\": \"previous_entity\"}]", "slots": {"src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查询环境或生活指数", "label": "不涉及", "scenario": "[\"查询环境或生活指数\", {\"src\": \"saved_place\"}]", "slots": {"src": "saved_place"}, "variant": "canonical"}
+{"intent": "查询路况", "label": "不涉及", "scenario": "[\"查询路况\", {\"scope\": \"nearby\", \"src\": \"named_place\"}]", "slots": {"scope": "nearby", "src": "named_place"}, "variant": "canonical"}
+{"intent": "查询路况", "label": "不涉及", "scenario": "[\"查询路况\", {\"scope\": \"nearby\", \"src\": \"previous_entity\"}]", "slots": {"scope": "nearby", "src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查询路况", "label": "不涉及", "scenario": "[\"查询路况\", {\"scope\": \"nearby\", \"src\": \"saved_place\"}]", "slots": {"scope": "nearby", "src": "saved_place"}, "variant": "canonical"}
+{"intent": "查询路况", "label": "不涉及", "scenario": "[\"查询路况\", {\"scope\": \"nearest\", \"src\": \"named_place\"}]", "slots": {"scope": "nearest", "src": "named_place"}, "variant": "canonical"}
+{"intent": "查询路况", "label": "不涉及", "scenario": "[\"查询路况\", {\"scope\": \"nearest\", \"src\": \"previous_entity\"}]", "slots": {"scope": "nearest", "src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查询路况", "label": "不涉及", "scenario": "[\"查询路况\", {\"scope\": \"nearest\", \"src\": \"saved_place\"}]", "slots": {"scope": "nearest", "src": "saved_place"}, "variant": "canonical"}
+{"intent": "查询路况", "label": "不涉及", "scenario": "[\"查询路况\", {\"src\": \"named_place\"}]", "slots": {"src": "named_place"}, "variant": "canonical"}
+{"intent": "查询路线", "label": "不涉及", "scenario": "[\"查询路线\", {\"from_src\": \"named_place\", \"to_src\": \"named_place\"}]", "slots": {"from_src": "named_place", "to_src": "named_place"}, "variant": "canonical"}
+{"intent": "查询路线", "label": "不涉及", "scenario": "[\"查询路线\", {\"from_src\": \"named_place\", \"to_src\": \"previous_entity\"}]", "slots": {"from_src": "named_place", "to_src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查询路线", "label": "不涉及", "scenario": "[\"查询路线\", {\"from_src\": \"previous_entity\", \"to_src\": \"saved_place\"}]", "slots": {"from_src": "previous_entity", "to_src": "saved_place"}, "variant": "canonical"}
+{"intent": "查询路线", "label": "不涉及", "scenario": "[\"查询路线\", {\"from_src\": \"saved_place\", \"to_src\": \"named_place\"}]", "slots": {"from_src": "saved_place", "to_src": "named_place"}, "variant": "canonical"}
+{"intent": "查询路线距离或耗时", "label": "不涉及", "scenario": "[\"查询路线距离或耗时\", {\"from_src\": \"named_place\", \"to_src\": \"named_place\"}]", "slots": {"from_src": "named_place", "to_src": "named_place"}, "variant": "canonical"}
+{"intent": "查询路线距离或耗时", "label": "不涉及", "scenario": "[\"查询路线距离或耗时\", {\"from_src\": \"named_place\", \"to_src\": \"previous_entity\"}]", "slots": {"from_src": "named_place", "to_src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查询路线距离或耗时", "label": "不涉及", "scenario": "[\"查询路线距离或耗时\", {\"from_src\": \"previous_entity\", \"to_src\": \"saved_place\"}]", "slots": {"from_src": "previous_entity", "to_src": "saved_place"}, "variant": "canonical"}
+{"intent": "查询路线距离或耗时", "label": "不涉及", "scenario": "[\"查询路线距离或耗时\", {\"from_src\": \"saved_place\", \"to_src\": \"named_place\"}]", "slots": {"from_src": "saved_place", "to_src": "named_place"}, "variant": "canonical"}
+{"intent": "查询运动轨迹", "label": "不涉及", "scenario": "[\"查询运动轨迹\", {\"src\": \"stored_history\"}]", "slots": {"src": "stored_history"}, "variant": "canonical"}
+{"intent": "查询酒店详情", "label": "不涉及", "scenario": "[\"查询酒店详情\", {\"src\": \"named_place\"}]", "slots": {"src": "named_place"}, "variant": "canonical"}
+{"intent": "查询降雨", "label": "不涉及", "scenario": "[\"查询降雨\", {\"src\": \"named_place\"}]", "slots": {"src": "named_place"}, "variant": "canonical"}
+{"intent": "查询降雨", "label": "不涉及", "scenario": "[\"查询降雨\", {\"src\": \"previous_entity\"}]", "slots": {"src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查询降雨", "label": "不涉及", "scenario": "[\"查询降雨\", {\"src\": \"saved_place\"}]", "slots": {"src": "saved_place"}, "variant": "canonical"}
+{"intent": "查询餐馆详情", "label": "不涉及", "scenario": "[\"查询餐馆详情\", {\"src\": \"named_place\"}]", "slots": {"src": "named_place"}, "variant": "canonical"}
+{"intent": "结束导航", "label": "不涉及", "scenario": "[\"结束导航\", {}]", "slots": {}, "variant": "canonical"}
+{"intent": "记录信息", "label": "不涉及", "scenario": "[\"记录信息\", {\"src\": \"named_place\"}]", "slots": {"src": "named_place"}, "variant": "canonical"}
+{"intent": "记录信息", "label": "不涉及", "scenario": "[\"记录信息\", {\"src\": \"previous_entity\"}]", "slots": {"src": "previous_entity"}, "variant": "canonical"}
+{"intent": "记录信息", "label": "不涉及", "scenario": "[\"记录信息\", {\"src\": \"saved_place\"}]", "slots": {"src": "saved_place"}, "variant": "canonical"}
+{"intent": "记录信息", "label": "不涉及", "scenario": "[\"记录信息\", {}]", "slots": {}, "variant": "canonical"}
+{"intent": "预订酒店", "label": "不涉及", "scenario": "[\"预订酒店\", {\"scope\": \"nearby\", \"src\": \"named_place\"}]", "slots": {"scope": "nearby", "src": "named_place"}, "variant": "canonical"}
+{"intent": "预订酒店", "label": "不涉及", "scenario": "[\"预订酒店\", {\"scope\": \"nearby\", \"src\": \"previous_entity\"}]", "slots": {"scope": "nearby", "src": "previous_entity"}, "variant": "canonical"}
+{"intent": "预订酒店", "label": "不涉及", "scenario": "[\"预订酒店\", {\"scope\": \"nearby\", \"src\": \"saved_place\"}]", "slots": {"scope": "nearby", "src": "saved_place"}, "variant": "canonical"}
+{"intent": "预订酒店", "label": "不涉及", "scenario": "[\"预订酒店\", {\"scope\": \"nearest\", \"src\": \"named_place\"}]", "slots": {"scope": "nearest", "src": "named_place"}, "variant": "canonical"}
+{"intent": "预订酒店", "label": "不涉及", "scenario": "[\"预订酒店\", {\"scope\": \"nearest\", \"src\": \"previous_entity\"}]", "slots": {"scope": "nearest", "src": "previous_entity"}, "variant": "canonical"}
+{"intent": "预订酒店", "label": "不涉及", "scenario": "[\"预订酒店\", {\"scope\": \"nearest\", \"src\": \"saved_place\"}]", "slots": {"scope": "nearest", "src": "saved_place"}, "variant": "canonical"}
+{"intent": "预订酒店", "label": "不涉及", "scenario": "[\"预订酒店\", {\"src\": \"named_place\"}]", "slots": {"src": "named_place"}, "variant": "canonical"}
+{"intent": "预订餐馆", "label": "不涉及", "scenario": "[\"预订餐馆\", {\"src\": \"named_place\"}]", "slots": {"src": "named_place"}, "variant": "canonical"}
+{"intent": "预订餐馆", "label": "不涉及", "scenario": "[\"预订餐馆\", {\"src\": \"previous_entity\"}]", "slots": {"src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查询路线", "label": "不涉及", "scenario": "[\"查询路线\", {\"from_src\": \"saved_place\", \"to_src\": \"saved_place\"}]", "slots": {"from_src": "saved_place", "to_src": "saved_place"}, "variant": "canonical"}
+{"intent": "查询路线", "label": "不涉及", "scenario": "[\"查询路线\", {\"from_src\": \"saved_place\", \"to_src\": \"previous_entity\"}]", "slots": {"from_src": "saved_place", "to_src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查询路线", "label": "不涉及", "scenario": "[\"查询路线\", {\"from_src\": \"previous_entity\", \"to_src\": \"named_place\"}]", "slots": {"from_src": "previous_entity", "to_src": "named_place"}, "variant": "canonical"}
+{"intent": "查询路线", "label": "不涉及", "scenario": "[\"查询路线\", {\"from_src\": \"previous_entity\", \"to_src\": \"previous_entity\"}]", "slots": {"from_src": "previous_entity", "to_src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查询路线距离或耗时", "label": "不涉及", "scenario": "[\"查询路线距离或耗时\", {\"from_src\": \"named_place\", \"to_src\": \"saved_place\"}]", "slots": {"from_src": "named_place", "to_src": "saved_place"}, "variant": "canonical"}
+{"intent": "查询路线距离或耗时", "label": "不涉及", "scenario": "[\"查询路线距离或耗时\", {\"from_src\": \"saved_place\", \"to_src\": \"saved_place\"}]", "slots": {"from_src": "saved_place", "to_src": "saved_place"}, "variant": "canonical"}
+{"intent": "查询路线距离或耗时", "label": "不涉及", "scenario": "[\"查询路线距离或耗时\", {\"from_src\": \"saved_place\", \"to_src\": \"previous_entity\"}]", "slots": {"from_src": "saved_place", "to_src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查询路线距离或耗时", "label": "不涉及", "scenario": "[\"查询路线距离或耗时\", {\"from_src\": \"previous_entity\", \"to_src\": \"named_place\"}]", "slots": {"from_src": "previous_entity", "to_src": "named_place"}, "variant": "canonical"}
+{"intent": "查询路线距离或耗时", "label": "不涉及", "scenario": "[\"查询路线距离或耗时\", {\"from_src\": \"previous_entity\", \"to_src\": \"previous_entity\"}]", "slots": {"from_src": "previous_entity", "to_src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查询或预订机票", "label": "不涉及", "scenario": "[\"查询或预订机票\", {\"from_src\": \"named_place\", \"to_src\": \"saved_place\"}]", "slots": {"from_src": "named_place", "to_src": "saved_place"}, "variant": "canonical"}
+{"intent": "查询或预订机票", "label": "不涉及", "scenario": "[\"查询或预订机票\", {\"from_src\": \"saved_place\", \"to_src\": \"saved_place\"}]", "slots": {"from_src": "saved_place", "to_src": "saved_place"}, "variant": "canonical"}
+{"intent": "查询或预订机票", "label": "不涉及", "scenario": "[\"查询或预订机票\", {\"from_src\": \"saved_place\", \"to_src\": \"previous_entity\"}]", "slots": {"from_src": "saved_place", "to_src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查询或预订机票", "label": "不涉及", "scenario": "[\"查询或预订机票\", {\"from_src\": \"previous_entity\", \"to_src\": \"named_place\"}]", "slots": {"from_src": "previous_entity", "to_src": "named_place"}, "variant": "canonical"}
+{"intent": "查询或预订机票", "label": "不涉及", "scenario": "[\"查询或预订机票\", {\"from_src\": \"previous_entity\", \"to_src\": \"previous_entity\"}]", "slots": {"from_src": "previous_entity", "to_src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查询或预订火车票", "label": "不涉及", "scenario": "[\"查询或预订火车票\", {\"from_src\": \"named_place\", \"to_src\": \"saved_place\"}]", "slots": {"from_src": "named_place", "to_src": "saved_place"}, "variant": "canonical"}
+{"intent": "查询或预订火车票", "label": "不涉及", "scenario": "[\"查询或预订火车票\", {\"from_src\": \"saved_place\", \"to_src\": \"saved_place\"}]", "slots": {"from_src": "saved_place", "to_src": "saved_place"}, "variant": "canonical"}
+{"intent": "查询或预订火车票", "label": "不涉及", "scenario": "[\"查询或预订火车票\", {\"from_src\": \"previous_entity\", \"to_src\": \"named_place\"}]", "slots": {"from_src": "previous_entity", "to_src": "named_place"}, "variant": "canonical"}
+{"intent": "查询或预订火车票", "label": "不涉及", "scenario": "[\"查询或预订火车票\", {\"from_src\": \"previous_entity\", \"to_src\": \"previous_entity\"}]", "slots": {"from_src": "previous_entity", "to_src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查询或办理交通票务", "label": "不涉及", "scenario": "[\"查询或办理交通票务\", {\"from_src\": \"named_place\", \"to_src\": \"saved_place\"}]", "slots": {"from_src": "named_place", "to_src": "saved_place"}, "variant": "canonical"}
+{"intent": "查询或办理交通票务", "label": "不涉及", "scenario": "[\"查询或办理交通票务\", {\"from_src\": \"saved_place\", \"to_src\": \"saved_place\"}]", "slots": {"from_src": "saved_place", "to_src": "saved_place"}, "variant": "canonical"}
+{"intent": "查询或办理交通票务", "label": "不涉及", "scenario": "[\"查询或办理交通票务\", {\"from_src\": \"saved_place\", \"to_src\": \"previous_entity\"}]", "slots": {"from_src": "saved_place", "to_src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查询或办理交通票务", "label": "不涉及", "scenario": "[\"查询或办理交通票务\", {\"from_src\": \"previous_entity\", \"to_src\": \"named_place\"}]", "slots": {"from_src": "previous_entity", "to_src": "named_place"}, "variant": "canonical"}
+{"intent": "查询或办理交通票务", "label": "不涉及", "scenario": "[\"查询或办理交通票务\", {\"from_src\": \"previous_entity\", \"to_src\": \"previous_entity\"}]", "slots": {"from_src": "previous_entity", "to_src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查询城际客车", "label": "不涉及", "scenario": "[\"查询城际客车\", {\"from_src\": \"named_place\", \"to_src\": \"saved_place\"}]", "slots": {"from_src": "named_place", "to_src": "saved_place"}, "variant": "canonical"}
+{"intent": "查询城际客车", "label": "不涉及", "scenario": "[\"查询城际客车\", {\"from_src\": \"saved_place\", \"to_src\": \"saved_place\"}]", "slots": {"from_src": "saved_place", "to_src": "saved_place"}, "variant": "canonical"}
+{"intent": "查询城际客车", "label": "不涉及", "scenario": "[\"查询城际客车\", {\"from_src\": \"saved_place\", \"to_src\": \"previous_entity\"}]", "slots": {"from_src": "saved_place", "to_src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查询城际客车", "label": "不涉及", "scenario": "[\"查询城际客车\", {\"from_src\": \"previous_entity\", \"to_src\": \"named_place\"}]", "slots": {"from_src": "previous_entity", "to_src": "named_place"}, "variant": "canonical"}
+{"intent": "查询城际客车", "label": "不涉及", "scenario": "[\"查询城际客车\", {\"from_src\": \"previous_entity\", \"to_src\": \"previous_entity\"}]", "slots": {"from_src": "previous_entity", "to_src": "previous_entity"}, "variant": "canonical"}
+{"intent": "查询运动轨迹", "label": "不涉及", "scenario": "[\"查询运动轨迹\", {\"op\": \"filter_by_city\", \"src\": \"named_place\"}]", "slots": {"op": "filter_by_city", "src": "named_place"}, "variant": "canonical"}
+{"intent": "删除日程", "label": "不涉及", "scenario": "[\"删除日程\", {\"op\": \"filter_by_city\", \"src\": \"named_place\"}]", "slots": {"op": "filter_by_city", "src": "named_place"}, "variant": "canonical"}

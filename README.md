@@ -1,6 +1,10 @@
 # 统一定位精度数据
 
+默认训练数据为 [归一化组合数据](normalized-coverage/data/dataset_summary.json)，包含 373 个三分类组合。按 [运行说明](normalized-coverage/README.md) 在 CPU 上训练和复测。基线生成方式见 [模型与数据工具](precision/README.md)。
+
 `prepare.py` 将公开语料转成统一意图、位置槽位和精度标签。精度为精确、区域级模糊和城市级模糊。单条输入按任务提取，多轮对话先按整段合并任务，再给每项任务单独定档。当前核验的组合是 MASSIVE zh-CN、CMPA-SLU、CrossWOZ 和 SMP2019-ECDT。RiSAWOZ 和 Google Schema-Guided Dialogue（SGD）也可通过 `--datasets` 选择。
+
+接入鸿蒙意图框架时，可以查阅 [HarmonyOS 公开标准意图目录](harmonyos-intents/README.md) 中的意图名和参数。
 
 [定位精度实验台](location-precision-lab/README.md) 可在浏览器运行意图与槽位判定，比较 Android 传统网格和 S2 网格的模糊化结果。
 

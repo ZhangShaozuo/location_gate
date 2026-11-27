@@ -1,0 +1,401 @@
+{"intent": "查找或推荐酒店", "label": "城市级模糊", "slots": {"level": "city", "src": "device_current"}}
+{"intent": "查找或推荐餐馆", "label": "区域级模糊", "slots": {"scope": "nearby", "src": "device_current"}}
+{"intent": "查找或推荐地点", "label": "城市级模糊", "slots": {"level": "city", "src": "device_current"}}
+{"intent": "下单外卖", "label": "精确", "slots": {}}
+{"intent": "查找或推荐活动", "label": "区域级模糊", "slots": {"scope": "nearby", "src": "device_current"}}
+{"intent": "查询天气", "label": "城市级模糊", "slots": {}}
+{"intent": "查询或预订火车票", "label": "城市级模糊", "slots": {}}
+{"intent": "查找或推荐地点", "label": "区域级模糊", "slots": {"scope": "nearby", "src": "device_current"}}
+{"intent": "查找或推荐酒店", "label": "区域级模糊", "slots": {"scope": "nearby", "src": "device_current"}}
+{"intent": "查询路线", "label": "精确", "slots": {"from_src": "device_current", "to_src": "named_place"}}
+{"intent": "开始导航", "label": "精确", "slots": {"from_src": "named_place", "to_src": "named_place"}}
+{"intent": "查询当前位置", "label": "精确", "slots": {}}
+{"intent": "查找外卖", "label": "区域级模糊", "slots": {"scope": "nearby", "src": "device_current"}}
+{"intent": "查询或预订机票", "label": "城市级模糊", "slots": {"to_src": "named_place"}}
+{"intent": "查找或推荐地点", "label": "城市级模糊", "slots": {"level": "city", "scope": "nearby", "src": "device_current"}}
+{"intent": "查询或预订火车票", "label": "城市级模糊", "slots": {"to_src": "named_place"}}
+{"intent": "查询路况", "label": "区域级模糊", "slots": {"src": "device_current"}}
+{"intent": "查询环境或生活指数", "label": "城市级模糊", "slots": {}}
+{"intent": "查询天气", "label": "城市级模糊", "slots": {"src": "device_current"}}
+{"intent": "查询路线距离或耗时", "label": "精确", "slots": {"from_src": "device_current", "to_src": "named_place"}}
+{"intent": "查询当前位置", "label": "精确", "slots": {"level": "precise"}}
+{"intent": "叫车", "label": "精确", "slots": {"pickup_src": "device_current", "to_src": "named_place"}}
+{"intent": "查找或推荐餐馆", "label": "精确", "slots": {"scope": "nearest", "src": "device_current"}}
+{"intent": "查询降雨", "label": "城市级模糊", "slots": {}}
+{"intent": "叫车", "label": "精确", "slots": {"pickup_src": "device_current"}}
+{"intent": "查询影院或影片", "label": "区域级模糊", "slots": {"scope": "nearby", "src": "device_current"}}
+{"intent": "查询影院或影片", "label": "精确", "slots": {"scope": "nearest", "src": "device_current"}}
+{"intent": "查找或推荐酒店", "label": "区域级模糊", "slots": {"src": "device_current"}}
+{"intent": "查询公共交通", "label": "精确", "slots": {"scope": "nearest", "src": "device_current"}}
+{"intent": "查找或推荐活动", "label": "区域级模糊", "slots": {"src": "device_current"}}
+{"intent": "查询公共交通", "label": "区域级模糊", "slots": {"from_src": "device_current", "to_src": "named_place"}}
+{"intent": "查询或办理交通票务", "label": "城市级模糊", "slots": {}}
+{"intent": "查找或推荐地点", "label": "精确", "slots": {"scope": "nearest", "src": "device_current"}}
+{"intent": "查询或预订机票", "label": "城市级模糊", "slots": {}}
+{"intent": "查询路况", "label": "城市级模糊", "slots": {"level": "city", "src": "device_current"}}
+{"intent": "查找或推荐活动", "label": "城市级模糊", "slots": {"level": "city", "src": "device_current"}}
+{"intent": "查询降雨", "label": "城市级模糊", "slots": {"src": "device_current"}}
+{"intent": "查询或办理交通票务", "label": "城市级模糊", "slots": {"to_src": "named_place"}}
+{"intent": "查询公共交通", "label": "城市级模糊", "slots": {"from_src": "device_current", "level": "city", "src": "device_current"}}
+{"intent": "预订酒店", "label": "区域级模糊", "slots": {"scope": "nearby", "src": "device_current"}}
+{"intent": "查找或推荐地点", "label": "区域级模糊", "slots": {"level": "district", "src": "device_current"}}
+{"intent": "查询路况", "label": "区域级模糊", "slots": {"scope": "nearby", "src": "device_current"}}
+{"intent": "查询影院或影片", "label": "城市级模糊", "slots": {"level": "city", "src": "device_current"}}
+{"intent": "查询公共交通", "label": "区域级模糊", "slots": {"from_src": "device_current"}}
+{"intent": "查找外卖", "label": "精确", "slots": {"scope": "nearest", "src": "device_current"}}
+{"intent": "查询或预订火车票", "label": "城市级模糊", "slots": {"from_src": "device_current", "to_src": "named_place"}}
+{"intent": "查询公交地铁", "label": "区域级模糊", "slots": {"from_src": "named_place", "scope": "nearby", "src": "device_current", "to_src": "named_place"}}
+{"intent": "开始导航", "label": "精确", "slots": {"from_src": "saved_place", "to_src": "named_place"}}
+{"intent": "叫车", "label": "精确", "slots": {"pickup_src": "device_current", "to_src": "saved_place"}}
+{"intent": "查询城际客车", "label": "城市级模糊", "slots": {"to_src": "named_place"}}
+{"intent": "开始导航", "label": "精确", "slots": {"from_src": "device_current", "to_src": "named_place", "track": "route"}}
+{"intent": "查询天气预警", "label": "城市级模糊", "slots": {"src": "device_current"}}
+{"intent": "查询机场航班流量", "label": "城市级模糊", "slots": {"src": "device_current"}}
+{"intent": "查询公交地铁", "label": "精确", "slots": {"scope": "nearest", "src": "device_current"}}
+{"intent": "查询公交地铁", "label": "精确", "slots": {"radius_band": "up_to_policy_limit", "src": "device_current"}}
+{"intent": "查询公交地铁", "label": "精确", "slots": {"scope": "walking_time", "src": "device_current"}}
+{"intent": "查询公交地铁", "label": "区域级模糊", "slots": {"scope": "nearby", "src": "device_current"}}
+{"intent": "查找设备", "label": "精确", "slots": {"op": "navigate_to_target"}}
+{"intent": "开始运动", "label": "精确", "slots": {"src": "device_current", "track": "route"}}
+{"intent": "寄快递", "label": "精确", "slots": {"src": "device_current"}}
+{"intent": "收快递", "label": "精确", "slots": {"src": "device_current"}}
+{"intent": "查找本地服务", "label": "城市级模糊", "slots": {"level": "city", "src": "device_current"}}
+{"intent": "查询旅游指数", "label": "城市级模糊", "slots": {"src": "device_current"}}
+{"intent": "查找招聘信息", "label": "城市级模糊", "slots": {"src": "device_current"}}
+{"intent": "预订餐馆", "label": "城市级模糊", "slots": {"src": "device_current"}}
+{"intent": "修改日程", "label": "城市级模糊", "slots": {"op": "share_current_location", "src": "device_current"}}
+{"intent": "创建提醒", "label": "城市级模糊", "slots": {"op": "share_current_location", "src": "device_current"}}
+{"intent": "创建备忘", "label": "城市级模糊", "slots": {"op": "share_current_location", "src": "device_current"}}
+{"intent": "记录信息", "label": "城市级模糊", "slots": {"op": "share_current_location", "src": "device_current"}}
+{"intent": "下单外卖", "label": "精确", "slots": {"src": "device_current"}}
+{"intent": "查找外卖", "label": "城市级模糊", "slots": {"level": "city", "src": "device_current"}}
+{"intent": "查找外卖", "label": "区域级模糊", "slots": {"level": "district", "src": "device_current"}}
+{"intent": "查找外卖", "label": "精确", "slots": {"scope": "walking_time", "src": "device_current"}}
+{"intent": "查找或推荐地点", "label": "精确", "slots": {"scope": "distance", "src": "device_current"}}
+{"intent": "查找或推荐地点", "label": "精确", "slots": {"radius_band": "up_to_policy_limit", "src": "device_current"}}
+{"intent": "查找或推荐地点", "label": "区域级模糊", "slots": {"radius_band": "above_policy_limit", "scope": "rough_radius", "src": "device_current"}}
+{"intent": "查找或推荐餐馆", "label": "精确", "slots": {"scope": "distance", "src": "device_current"}}
+{"intent": "查找或推荐餐馆", "label": "精确", "slots": {"radius_band": "up_to_policy_limit", "src": "device_current"}}
+{"intent": "查找或推荐餐馆", "label": "区域级模糊", "slots": {"level": "district", "src": "device_current"}}
+{"intent": "查找或推荐餐馆", "label": "区域级模糊", "slots": {"radius_band": "above_policy_limit", "scope": "rough_radius", "src": "device_current"}}
+{"intent": "查找或推荐餐馆", "label": "城市级模糊", "slots": {"level": "city", "src": "device_current"}}
+{"intent": "查找或推荐酒店", "label": "区域级模糊", "slots": {"level": "district", "src": "device_current"}}
+{"intent": "查找或推荐酒店", "label": "精确", "slots": {"scope": "nearest", "src": "device_current"}}
+{"intent": "查找或推荐酒店", "label": "精确", "slots": {"scope": "walking_time", "src": "device_current"}}
+{"intent": "预订酒店", "label": "区域级模糊", "slots": {"level": "district", "src": "device_current"}}
+{"intent": "预订酒店", "label": "城市级模糊", "slots": {"level": "city", "src": "device_current"}}
+{"intent": "查询公交地铁", "label": "城市级模糊", "slots": {"level": "city", "src": "device_current"}}
+{"intent": "查询公交地铁", "label": "区域级模糊", "slots": {"level": "district", "src": "device_current"}}
+{"intent": "查询公交地铁", "label": "精确", "slots": {"scope": "distance", "src": "device_current"}}
+{"intent": "查询公共交通", "label": "区域级模糊", "slots": {"level": "district", "src": "device_current"}}
+{"intent": "查询公共交通", "label": "精确", "slots": {"radius_band": "up_to_policy_limit", "src": "device_current"}}
+{"intent": "查询环境或生活指数", "label": "城市级模糊", "slots": {"src": "device_current"}}
+{"intent": "查询或预订机票", "label": "城市级模糊", "slots": {"from_src": "device_current"}}
+{"intent": "查询或预订火车票", "label": "城市级模糊", "slots": {"from_src": "device_current"}}
+{"intent": "查询城际客车", "label": "城市级模糊", "slots": {"from_src": "device_current", "to_src": "named_place"}}
+{"intent": "查询或办理交通票务", "label": "城市级模糊", "slots": {"from_src": "device_current", "to_src": "named_place"}}
+{"intent": "开始导航", "label": "精确", "slots": {"from_src": "device_current", "track": "route"}}
+{"intent": "查询路线", "label": "精确", "slots": {"from_src": "named_place", "to_src": "device_current"}}
+{"intent": "查询路线距离或耗时", "label": "精确", "slots": {"from_src": "named_place", "to_src": "device_current"}}
+{"intent": "开始运动", "label": "精确", "slots": {"track": "route"}}
+{"intent": "开始运动", "label": "精确", "slots": {"src": "device_current"}}
+{"intent": "查询当前位置", "label": "区域级模糊", "slots": {"level": "district"}}
+{"intent": "查询当前位置", "label": "城市级模糊", "slots": {"level": "city"}}
+{"intent": "查找本地服务", "label": "区域级模糊", "slots": {"level": "district", "src": "device_current"}}
+{"intent": "查找本地服务", "label": "区域级模糊", "slots": {"scope": "nearby", "src": "device_current"}}
+{"intent": "查找本地服务", "label": "精确", "slots": {"scope": "nearest", "src": "device_current"}}
+{"intent": "查找招聘信息", "label": "城市级模糊", "slots": {"level": "city", "src": "device_current"}}
+{"intent": "查找招聘信息", "label": "区域级模糊", "slots": {"level": "district", "src": "device_current"}}
+{"intent": "查找招聘信息", "label": "区域级模糊", "slots": {"scope": "nearby", "src": "device_current"}}
+{"intent": "查找或推荐活动", "label": "区域级模糊", "slots": {"level": "district", "src": "device_current"}}
+{"intent": "查找或推荐活动", "label": "精确", "slots": {"scope": "nearest", "src": "device_current"}}
+{"intent": "查询影院或影片", "label": "精确", "slots": {"scope": "walking_time", "src": "device_current"}}
+{"intent": "创建日程", "label": "城市级模糊", "slots": {"op": "share_current_location", "src": "device_current"}}
+{"intent": "修改日程", "label": "精确", "slots": {"src": "named_place", "trigger": "enter_location"}}
+{"intent": "发布社交内容", "label": "城市级模糊", "slots": {"op": "share_current_location"}}
+{"intent": "启动智能情景", "label": "精确", "slots": {"to_src": "named_place", "trigger": "enter_location"}}
+{"intent": "启动智能情景", "label": "精确", "slots": {"to_src": "named_place", "trigger": "leave_location"}}
+{"intent": "查询路况", "label": "精确", "slots": {"from_src": "device_current", "to_src": "named_place"}}
+{"intent": "查询路况", "label": "区域级模糊", "slots": {"level": "district", "src": "device_current"}}
+{"intent": "查找外卖", "label": "精确", "slots": {"scope": "distance", "src": "device_current"}}
+{"intent": "查找或推荐酒店", "label": "精确", "slots": {"scope": "distance", "src": "device_current"}}
+{"intent": "查询公交地铁", "label": "城市级模糊", "slots": {"level": "city", "scope": "nearby", "src": "device_current"}}
+{"intent": "查找本地服务", "label": "精确", "slots": {"radius_band": "up_to_policy_limit", "src": "device_current"}}
+{"intent": "查找招聘信息", "label": "精确", "slots": {"scope": "distance", "src": "device_current"}}
+{"intent": "查询公交地铁", "label": "区域级模糊", "slots": {"radius_band": "up_to_policy_limit", "scope": "rough_radius", "src": "device_current"}}
+{"intent": "查询公共交通", "label": "区域级模糊", "slots": {"radius_band": "above_policy_limit", "scope": "rough_radius", "src": "device_current"}}
+{"intent": "查询公共交通", "label": "精确", "slots": {"scope": "walking_time", "src": "device_current"}}
+{"intent": "预订酒店", "label": "精确", "slots": {"scope": "nearest", "src": "device_current"}}
+{"intent": "查询影院或影片", "label": "精确", "slots": {"radius_band": "up_to_policy_limit", "src": "device_current"}}
+{"intent": "查找或推荐活动", "label": "精确", "slots": {"scope": "distance", "src": "device_current"}}
+{"intent": "查询公交地铁", "label": "区域级模糊", "slots": {"radius_band": "above_policy_limit", "scope": "rough_radius", "src": "device_current"}}
+{"intent": "预订酒店", "label": "区域级模糊", "slots": {"radius_band": "above_policy_limit", "scope": "rough_radius", "src": "device_current"}}
+{"intent": "查询影院或影片", "label": "区域级模糊", "slots": {"level": "district", "src": "device_current"}}
+{"intent": "查找或推荐活动", "label": "区域级模糊", "slots": {"radius_band": "above_policy_limit", "scope": "rough_radius", "src": "device_current"}}
+{"intent": "查询公交地铁", "label": "区域级模糊", "slots": {"from_src": "named_place", "level": "district", "src": "device_current"}}
+{"intent": "查询或预订机票", "label": "城市级模糊", "slots": {"from_src": "device_current", "to_src": "named_place"}}
+{"intent": "查询旅游指数", "label": "城市级模糊", "slots": {}}
+{"intent": "查询公共交通", "label": "城市级模糊", "slots": {"level": "city", "src": "device_current"}}
+{"intent": "查找或推荐酒店", "label": "城市级模糊", "slots": {"level": "city", "scope": "nearby", "src": "device_current"}}
+{"intent": "查询天气", "label": "城市级模糊", "slots": {"level": "city", "src": "device_current"}}
+{"intent": "查找本地服务", "label": "精确", "slots": {"scope": "walking_time", "src": "device_current"}}
+{"intent": "查询路线", "label": "精确", "slots": {"from_src": "device_current"}}
+{"intent": "查询路线距离或耗时", "label": "精确", "slots": {"to_src": "device_current"}}
+{"intent": "查找或推荐酒店", "label": "精确", "slots": {"radius_band": "up_to_policy_limit", "src": "device_current"}}
+{"intent": "查找招聘信息", "label": "精确", "slots": {"scope": "nearest", "src": "device_current"}}
+{"intent": "查找外卖", "label": "精确", "slots": {"radius_band": "up_to_policy_limit", "src": "device_current"}}
+{"intent": "查询公共交通", "label": "精确", "slots": {"scope": "distance", "src": "device_current"}}
+{"intent": "创建日程", "label": "精确", "slots": {"src": "named_place", "trigger": "leave_location"}}
+{"intent": "查询影院或影片", "label": "精确", "slots": {"scope": "distance", "src": "device_current"}}
+{"intent": "查找本地服务", "label": "区域级模糊", "slots": {"radius_band": "above_policy_limit", "scope": "rough_radius", "src": "device_current"}}
+{"intent": "查找外卖", "label": "区域级模糊", "slots": {"radius_band": "above_policy_limit", "scope": "rough_radius", "src": "device_current"}}
+{"intent": "查找或推荐餐馆", "label": "区域级模糊", "slots": {"level": "district", "scope": "nearby", "src": "device_current"}}
+{"intent": "查找或推荐地点", "label": "区域级模糊", "slots": {"radius_band": "up_to_policy_limit", "scope": "rough_radius", "src": "device_current"}}
+{"intent": "查询公共交通", "label": "区域级模糊", "slots": {"level": "district", "scope": "nearby", "src": "device_current"}}
+{"intent": "查找或推荐酒店", "label": "区域级模糊", "slots": {"radius_band": "above_policy_limit", "scope": "rough_radius", "src": "device_current"}}
+{"intent": "查找招聘信息", "label": "区域级模糊", "slots": {"level": "district", "scope": "nearby", "src": "device_current"}}
+{"intent": "查询路况", "label": "区域级模糊", "slots": {"radius_band": "above_policy_limit", "scope": "rough_radius", "src": "device_current"}}
+{"intent": "查询影院或影片", "label": "区域级模糊", "slots": {"radius_band": "above_policy_limit", "scope": "rough_radius", "src": "device_current"}}
+{"intent": "查找招聘信息", "label": "城市级模糊", "slots": {"level": "city", "scope": "nearby", "src": "device_current"}}
+{"intent": "查找或推荐餐馆", "label": "城市级模糊", "slots": {"level": "city", "scope": "nearby", "src": "device_current"}}
+{"intent": "查找本地服务", "label": "城市级模糊", "slots": {"level": "city", "scope": "nearby", "src": "device_current"}}
+{"intent": "查询机场航班流量", "label": "城市级模糊", "slots": {}}
+{"intent": "查询或预订火车票", "label": "城市级模糊", "slots": {"from_src": "named_place", "to_src": "device_current"}}
+{"intent": "查询城际客车", "label": "城市级模糊", "slots": {"from_src": "named_place", "to_src": "device_current"}}
+{"intent": "查询天气预警", "label": "城市级模糊", "slots": {"level": "city", "src": "device_current"}}
+{"intent": "查询降雨", "label": "城市级模糊", "slots": {"level": "city", "src": "device_current"}}
+{"intent": "查找或推荐地点", "label": "精确", "slots": {"scope": "walking_time", "src": "device_current"}}
+{"intent": "查找或推荐餐馆", "label": "区域级模糊", "slots": {"radius_band": "up_to_policy_limit", "scope": "rough_radius", "src": "device_current"}}
+{"intent": "查找或推荐餐馆", "label": "精确", "slots": {"scope": "walking_time", "src": "device_current"}}
+{"intent": "查找或推荐酒店", "label": "区域级模糊", "slots": {"radius_band": "up_to_policy_limit", "scope": "rough_radius", "src": "device_current"}}
+{"intent": "预订酒店", "label": "区域级模糊", "slots": {"radius_band": "up_to_policy_limit", "scope": "rough_radius", "src": "device_current"}}
+{"intent": "预订酒店", "label": "精确", "slots": {"scope": "distance", "src": "device_current"}}
+{"intent": "预订酒店", "label": "精确", "slots": {"scope": "walking_time", "src": "device_current"}}
+{"intent": "预订酒店", "label": "精确", "slots": {"radius_band": "up_to_policy_limit", "src": "device_current"}}
+{"intent": "查找外卖", "label": "区域级模糊", "slots": {"radius_band": "up_to_policy_limit", "scope": "rough_radius", "src": "device_current"}}
+{"intent": "查找或推荐活动", "label": "区域级模糊", "slots": {"radius_band": "up_to_policy_limit", "scope": "rough_radius", "src": "device_current"}}
+{"intent": "查找或推荐活动", "label": "精确", "slots": {"scope": "walking_time", "src": "device_current"}}
+{"intent": "查找或推荐活动", "label": "精确", "slots": {"radius_band": "up_to_policy_limit", "src": "device_current"}}
+{"intent": "查找本地服务", "label": "区域级模糊", "slots": {"radius_band": "up_to_policy_limit", "scope": "rough_radius", "src": "device_current"}}
+{"intent": "查找本地服务", "label": "精确", "slots": {"scope": "distance", "src": "device_current"}}
+{"intent": "查找招聘信息", "label": "区域级模糊", "slots": {"radius_band": "up_to_policy_limit", "scope": "rough_radius", "src": "device_current"}}
+{"intent": "查找招聘信息", "label": "区域级模糊", "slots": {"radius_band": "above_policy_limit", "scope": "rough_radius", "src": "device_current"}}
+{"intent": "查找招聘信息", "label": "精确", "slots": {"radius_band": "up_to_policy_limit", "src": "device_current"}}
+{"intent": "查询公共交通", "label": "区域级模糊", "slots": {"scope": "nearby", "src": "device_current"}}
+{"intent": "查询公共交通", "label": "区域级模糊", "slots": {"radius_band": "up_to_policy_limit", "scope": "rough_radius", "src": "device_current"}}
+{"intent": "查询路况", "label": "区域级模糊", "slots": {"radius_band": "up_to_policy_limit", "scope": "rough_radius", "src": "device_current"}}
+{"intent": "查询路况", "label": "精确", "slots": {"scope": "nearest", "src": "device_current"}}
+{"intent": "查询路况", "label": "精确", "slots": {"scope": "distance", "src": "device_current"}}
+{"intent": "查询路况", "label": "精确", "slots": {"radius_band": "up_to_policy_limit", "src": "device_current"}}
+{"intent": "查询影院或影片", "label": "区域级模糊", "slots": {"radius_band": "up_to_policy_limit", "scope": "rough_radius", "src": "device_current"}}
+{"intent": "查找或推荐地点", "label": "城市级模糊", "slots": {"level": "city", "op": "discover", "src": "device_current"}}
+{"intent": "查找或推荐地点", "label": "区域级模糊", "slots": {"level": "district", "op": "discover", "src": "device_current"}}
+{"intent": "查找或推荐地点", "label": "区域级模糊", "slots": {"op": "discover", "scope": "nearby", "src": "device_current"}}
+{"intent": "查找或推荐地点", "label": "精确", "slots": {"op": "rank_by_distance", "scope": "nearest", "src": "device_current"}}
+{"intent": "查找或推荐地点", "label": "精确", "slots": {"op": "rank_by_distance", "scope": "distance", "src": "device_current"}}
+{"intent": "查找或推荐地点", "label": "精确", "slots": {"op": "filter_by_travel_time", "scope": "walking_time", "src": "device_current"}}
+{"intent": "查找或推荐地点", "label": "区域级模糊", "slots": {"op": "filter_by_radius", "radius_band": "up_to_policy_limit", "scope": "rough_radius", "src": "device_current"}}
+{"intent": "查找或推荐地点", "label": "区域级模糊", "slots": {"op": "filter_by_radius", "radius_band": "above_policy_limit", "scope": "rough_radius", "src": "device_current"}}
+{"intent": "查找或推荐地点", "label": "精确", "slots": {"op": "filter_by_radius", "radius_band": "up_to_policy_limit", "src": "device_current"}}
+{"intent": "查找或推荐餐馆", "label": "城市级模糊", "slots": {"level": "city", "op": "discover", "src": "device_current"}}
+{"intent": "查找或推荐餐馆", "label": "区域级模糊", "slots": {"level": "district", "op": "discover", "src": "device_current"}}
+{"intent": "查找或推荐餐馆", "label": "区域级模糊", "slots": {"op": "discover", "scope": "nearby", "src": "device_current"}}
+{"intent": "查找或推荐餐馆", "label": "精确", "slots": {"op": "rank_by_distance", "scope": "nearest", "src": "device_current"}}
+{"intent": "查找或推荐餐馆", "label": "精确", "slots": {"op": "rank_by_distance", "scope": "distance", "src": "device_current"}}
+{"intent": "查找或推荐餐馆", "label": "精确", "slots": {"op": "filter_by_travel_time", "scope": "walking_time", "src": "device_current"}}
+{"intent": "查找或推荐餐馆", "label": "区域级模糊", "slots": {"op": "filter_by_radius", "radius_band": "up_to_policy_limit", "scope": "rough_radius", "src": "device_current"}}
+{"intent": "查找或推荐餐馆", "label": "区域级模糊", "slots": {"op": "filter_by_radius", "radius_band": "above_policy_limit", "scope": "rough_radius", "src": "device_current"}}
+{"intent": "查找或推荐餐馆", "label": "精确", "slots": {"op": "filter_by_radius", "radius_band": "up_to_policy_limit", "src": "device_current"}}
+{"intent": "查找或推荐酒店", "label": "城市级模糊", "slots": {"level": "city", "op": "discover", "src": "device_current"}}
+{"intent": "查找或推荐酒店", "label": "区域级模糊", "slots": {"level": "district", "op": "discover", "src": "device_current"}}
+{"intent": "查找或推荐酒店", "label": "区域级模糊", "slots": {"op": "discover", "scope": "nearby", "src": "device_current"}}
+{"intent": "查找或推荐酒店", "label": "精确", "slots": {"op": "rank_by_distance", "scope": "nearest", "src": "device_current"}}
+{"intent": "查找或推荐酒店", "label": "精确", "slots": {"op": "rank_by_distance", "scope": "distance", "src": "device_current"}}
+{"intent": "查找或推荐酒店", "label": "精确", "slots": {"op": "filter_by_travel_time", "scope": "walking_time", "src": "device_current"}}
+{"intent": "查找或推荐酒店", "label": "区域级模糊", "slots": {"op": "filter_by_radius", "radius_band": "up_to_policy_limit", "scope": "rough_radius", "src": "device_current"}}
+{"intent": "查找或推荐酒店", "label": "区域级模糊", "slots": {"op": "filter_by_radius", "radius_band": "above_policy_limit", "scope": "rough_radius", "src": "device_current"}}
+{"intent": "查找或推荐酒店", "label": "精确", "slots": {"op": "filter_by_radius", "radius_band": "up_to_policy_limit", "src": "device_current"}}
+{"intent": "预订酒店", "label": "城市级模糊", "slots": {"level": "city", "op": "check_availability", "src": "device_current"}}
+{"intent": "预订酒店", "label": "区域级模糊", "slots": {"level": "district", "op": "check_availability", "src": "device_current"}}
+{"intent": "预订酒店", "label": "区域级模糊", "slots": {"op": "check_availability", "scope": "nearby", "src": "device_current"}}
+{"intent": "预订酒店", "label": "城市级模糊", "slots": {"level": "city", "op": "select_and_reserve", "src": "device_current"}}
+{"intent": "预订酒店", "label": "区域级模糊", "slots": {"level": "district", "op": "select_and_reserve", "src": "device_current"}}
+{"intent": "预订酒店", "label": "区域级模糊", "slots": {"op": "select_and_reserve", "scope": "nearby", "src": "device_current"}}
+{"intent": "预订酒店", "label": "精确", "slots": {"op": "select_and_reserve", "scope": "nearest", "src": "device_current"}}
+{"intent": "预订酒店", "label": "精确", "slots": {"op": "select_and_reserve", "scope": "walking_time", "src": "device_current"}}
+{"intent": "预订酒店", "label": "精确", "slots": {"op": "select_and_reserve", "radius_band": "up_to_policy_limit", "src": "device_current"}}
+{"intent": "查找外卖", "label": "城市级模糊", "slots": {"level": "city", "op": "browse_merchants", "src": "device_current"}}
+{"intent": "查找外卖", "label": "区域级模糊", "slots": {"level": "district", "op": "browse_merchants", "src": "device_current"}}
+{"intent": "查找外卖", "label": "区域级模糊", "slots": {"op": "browse_merchants", "scope": "nearby", "src": "device_current"}}
+{"intent": "查找外卖", "label": "精确", "slots": {"op": "compare_pickup_distance", "scope": "nearest", "src": "device_current"}}
+{"intent": "查找外卖", "label": "精确", "slots": {"op": "compare_pickup_distance", "scope": "distance", "src": "device_current"}}
+{"intent": "查找外卖", "label": "精确", "slots": {"op": "compare_pickup_distance", "scope": "walking_time", "src": "device_current"}}
+{"intent": "查找外卖", "label": "精确", "slots": {"op": "compare_pickup_distance", "radius_band": "up_to_policy_limit", "src": "device_current"}}
+{"intent": "查找或推荐活动", "label": "城市级模糊", "slots": {"level": "city", "op": "discover", "src": "device_current"}}
+{"intent": "查找或推荐活动", "label": "区域级模糊", "slots": {"level": "district", "op": "discover", "src": "device_current"}}
+{"intent": "查找或推荐活动", "label": "区域级模糊", "slots": {"op": "discover", "scope": "nearby", "src": "device_current"}}
+{"intent": "查找或推荐活动", "label": "精确", "slots": {"op": "rank_by_distance", "scope": "nearest", "src": "device_current"}}
+{"intent": "查找或推荐活动", "label": "精确", "slots": {"op": "rank_by_distance", "scope": "distance", "src": "device_current"}}
+{"intent": "查找或推荐活动", "label": "精确", "slots": {"op": "filter_by_travel_time", "scope": "walking_time", "src": "device_current"}}
+{"intent": "查找或推荐活动", "label": "区域级模糊", "slots": {"op": "filter_by_radius", "radius_band": "up_to_policy_limit", "scope": "rough_radius", "src": "device_current"}}
+{"intent": "查找或推荐活动", "label": "区域级模糊", "slots": {"op": "filter_by_radius", "radius_band": "above_policy_limit", "scope": "rough_radius", "src": "device_current"}}
+{"intent": "查找或推荐活动", "label": "精确", "slots": {"op": "filter_by_radius", "radius_band": "up_to_policy_limit", "src": "device_current"}}
+{"intent": "查找本地服务", "label": "城市级模糊", "slots": {"level": "city", "op": "check_service_coverage", "src": "device_current"}}
+{"intent": "查找本地服务", "label": "区域级模糊", "slots": {"level": "district", "op": "check_service_coverage", "src": "device_current"}}
+{"intent": "查找本地服务", "label": "区域级模糊", "slots": {"op": "check_service_coverage", "scope": "nearby", "src": "device_current"}}
+{"intent": "查找本地服务", "label": "区域级模糊", "slots": {"level": "district", "op": "locate_service_office", "src": "device_current"}}
+{"intent": "查找本地服务", "label": "区域级模糊", "slots": {"op": "locate_service_office", "scope": "nearby", "src": "device_current"}}
+{"intent": "查找本地服务", "label": "精确", "slots": {"op": "locate_service_office", "scope": "nearest", "src": "device_current"}}
+{"intent": "查找本地服务", "label": "精确", "slots": {"op": "locate_service_office", "scope": "distance", "src": "device_current"}}
+{"intent": "查找本地服务", "label": "精确", "slots": {"op": "locate_service_office", "scope": "walking_time", "src": "device_current"}}
+{"intent": "查找本地服务", "label": "精确", "slots": {"op": "locate_service_office", "radius_band": "up_to_policy_limit", "src": "device_current"}}
+{"intent": "查找招聘信息", "label": "城市级模糊", "slots": {"level": "city", "op": "browse_vacancies", "src": "device_current"}}
+{"intent": "查找招聘信息", "label": "区域级模糊", "slots": {"level": "district", "op": "browse_vacancies", "src": "device_current"}}
+{"intent": "查找招聘信息", "label": "区域级模糊", "slots": {"op": "browse_vacancies", "scope": "nearby", "src": "device_current"}}
+{"intent": "查找招聘信息", "label": "精确", "slots": {"op": "compare_worksite_distance", "scope": "nearest", "src": "device_current"}}
+{"intent": "查找招聘信息", "label": "精确", "slots": {"op": "compare_worksite_distance", "scope": "distance", "src": "device_current"}}
+{"intent": "查找招聘信息", "label": "精确", "slots": {"op": "compare_worksite_distance", "radius_band": "up_to_policy_limit", "src": "device_current"}}
+{"intent": "查询公交地铁", "label": "城市级模糊", "slots": {"level": "city", "op": "browse_lines", "src": "device_current"}}
+{"intent": "查询公交地铁", "label": "区域级模糊", "slots": {"level": "district", "op": "browse_lines", "src": "device_current"}}
+{"intent": "查询公交地铁", "label": "区域级模糊", "slots": {"op": "browse_lines", "scope": "nearby", "src": "device_current"}}
+{"intent": "查询公交地铁", "label": "区域级模糊", "slots": {"op": "find_station", "scope": "nearby", "src": "device_current"}}
+{"intent": "查询公交地铁", "label": "精确", "slots": {"op": "find_station", "scope": "nearest", "src": "device_current"}}
+{"intent": "查询公交地铁", "label": "精确", "slots": {"op": "find_station", "scope": "distance", "src": "device_current"}}
+{"intent": "查询公交地铁", "label": "精确", "slots": {"op": "find_station", "scope": "walking_time", "src": "device_current"}}
+{"intent": "查询公交地铁", "label": "精确", "slots": {"op": "find_station", "radius_band": "up_to_policy_limit", "src": "device_current"}}
+{"intent": "查询公交地铁", "label": "城市级模糊", "slots": {"level": "city", "op": "check_service_alerts", "src": "device_current"}}
+{"intent": "查询公交地铁", "label": "区域级模糊", "slots": {"level": "district", "op": "check_service_alerts", "src": "device_current"}}
+{"intent": "查询公共交通", "label": "城市级模糊", "slots": {"level": "city", "op": "browse_lines", "src": "device_current"}}
+{"intent": "查询公共交通", "label": "区域级模糊", "slots": {"level": "district", "op": "browse_lines", "src": "device_current"}}
+{"intent": "查询公共交通", "label": "区域级模糊", "slots": {"op": "browse_lines", "scope": "nearby", "src": "device_current"}}
+{"intent": "查询公共交通", "label": "区域级模糊", "slots": {"op": "find_transfer_point", "scope": "nearby", "src": "device_current"}}
+{"intent": "查询公共交通", "label": "精确", "slots": {"op": "find_transfer_point", "scope": "nearest", "src": "device_current"}}
+{"intent": "查询公共交通", "label": "精确", "slots": {"op": "find_transfer_point", "scope": "distance", "src": "device_current"}}
+{"intent": "查询公共交通", "label": "精确", "slots": {"op": "find_transfer_point", "scope": "walking_time", "src": "device_current"}}
+{"intent": "查询公共交通", "label": "精确", "slots": {"op": "find_transfer_point", "radius_band": "up_to_policy_limit", "src": "device_current"}}
+{"intent": "查询公共交通", "label": "城市级模糊", "slots": {"level": "city", "op": "check_service_alerts", "src": "device_current"}}
+{"intent": "查询公共交通", "label": "区域级模糊", "slots": {"level": "district", "op": "check_service_alerts", "src": "device_current"}}
+{"intent": "查询路况", "label": "城市级模糊", "slots": {"level": "city", "op": "traffic_overview", "src": "device_current"}}
+{"intent": "查询路况", "label": "区域级模糊", "slots": {"level": "district", "op": "traffic_overview", "src": "device_current"}}
+{"intent": "查询路况", "label": "区域级模糊", "slots": {"op": "traffic_overview", "scope": "nearby", "src": "device_current"}}
+{"intent": "查询路况", "label": "精确", "slots": {"op": "locate_nearest_incident", "scope": "nearest", "src": "device_current"}}
+{"intent": "查询路况", "label": "精确", "slots": {"op": "locate_nearest_incident", "scope": "distance", "src": "device_current"}}
+{"intent": "查询路况", "label": "精确", "slots": {"op": "locate_nearest_incident", "radius_band": "up_to_policy_limit", "src": "device_current"}}
+{"intent": "查询影院或影片", "label": "城市级模糊", "slots": {"level": "city", "op": "browse_showtimes", "src": "device_current"}}
+{"intent": "查询影院或影片", "label": "区域级模糊", "slots": {"level": "district", "op": "browse_showtimes", "src": "device_current"}}
+{"intent": "查询影院或影片", "label": "区域级模糊", "slots": {"op": "browse_showtimes", "scope": "nearby", "src": "device_current"}}
+{"intent": "查询影院或影片", "label": "区域级模糊", "slots": {"op": "locate_cinema", "scope": "nearby", "src": "device_current"}}
+{"intent": "查询影院或影片", "label": "精确", "slots": {"op": "locate_cinema", "scope": "nearest", "src": "device_current"}}
+{"intent": "查询影院或影片", "label": "精确", "slots": {"op": "locate_cinema", "scope": "distance", "src": "device_current"}}
+{"intent": "查询影院或影片", "label": "精确", "slots": {"op": "locate_cinema", "scope": "walking_time", "src": "device_current"}}
+{"intent": "查询影院或影片", "label": "精确", "slots": {"op": "locate_cinema", "radius_band": "up_to_policy_limit", "src": "device_current"}}
+{"intent": "查询天气预警", "label": "城市级模糊", "slots": {}}
+{"intent": "查询环境或生活指数", "label": "城市级模糊", "slots": {"level": "city", "src": "device_current"}}
+{"intent": "查询机场航班流量", "label": "城市级模糊", "slots": {"level": "city", "src": "device_current"}}
+{"intent": "查询旅游指数", "label": "城市级模糊", "slots": {"level": "city", "src": "device_current"}}
+{"intent": "查询路线", "label": "精确", "slots": {"from_src": "device_current", "to_src": "saved_place"}}
+{"intent": "查询路线", "label": "精确", "slots": {"from_src": "device_current", "to_src": "previous_entity"}}
+{"intent": "查询路线", "label": "精确", "slots": {"to_src": "device_current"}}
+{"intent": "查询路线", "label": "精确", "slots": {"from_src": "saved_place", "to_src": "device_current"}}
+{"intent": "查询路线", "label": "精确", "slots": {"from_src": "previous_entity", "to_src": "device_current"}}
+{"intent": "查询路线距离或耗时", "label": "精确", "slots": {"from_src": "device_current"}}
+{"intent": "查询路线距离或耗时", "label": "精确", "slots": {"from_src": "device_current", "to_src": "saved_place"}}
+{"intent": "查询路线距离或耗时", "label": "精确", "slots": {"from_src": "device_current", "to_src": "previous_entity"}}
+{"intent": "查询路线距离或耗时", "label": "精确", "slots": {"from_src": "saved_place", "to_src": "device_current"}}
+{"intent": "查询路线距离或耗时", "label": "精确", "slots": {"from_src": "previous_entity", "to_src": "device_current"}}
+{"intent": "查询或办理交通票务", "label": "城市级模糊", "slots": {"from_src": "device_current"}}
+{"intent": "查询或办理交通票务", "label": "城市级模糊", "slots": {"from_src": "device_current", "to_src": "saved_place"}}
+{"intent": "查询或办理交通票务", "label": "城市级模糊", "slots": {"from_src": "device_current", "to_src": "previous_entity"}}
+{"intent": "查询或办理交通票务", "label": "城市级模糊", "slots": {"to_src": "device_current"}}
+{"intent": "查询或办理交通票务", "label": "城市级模糊", "slots": {"from_src": "named_place", "to_src": "device_current"}}
+{"intent": "查询或办理交通票务", "label": "城市级模糊", "slots": {"from_src": "saved_place", "to_src": "device_current"}}
+{"intent": "查询或办理交通票务", "label": "城市级模糊", "slots": {"from_src": "previous_entity", "to_src": "device_current"}}
+{"intent": "查询或预订机票", "label": "城市级模糊", "slots": {"from_src": "device_current", "to_src": "saved_place"}}
+{"intent": "查询或预订机票", "label": "城市级模糊", "slots": {"from_src": "device_current", "to_src": "previous_entity"}}
+{"intent": "查询或预订机票", "label": "城市级模糊", "slots": {"to_src": "device_current"}}
+{"intent": "查询或预订机票", "label": "城市级模糊", "slots": {"from_src": "named_place", "to_src": "device_current"}}
+{"intent": "查询或预订机票", "label": "城市级模糊", "slots": {"from_src": "saved_place", "to_src": "device_current"}}
+{"intent": "查询或预订机票", "label": "城市级模糊", "slots": {"from_src": "previous_entity", "to_src": "device_current"}}
+{"intent": "查询或预订火车票", "label": "城市级模糊", "slots": {"from_src": "device_current", "to_src": "saved_place"}}
+{"intent": "查询或预订火车票", "label": "城市级模糊", "slots": {"from_src": "device_current", "to_src": "previous_entity"}}
+{"intent": "查询或预订火车票", "label": "城市级模糊", "slots": {"to_src": "device_current"}}
+{"intent": "查询或预订火车票", "label": "城市级模糊", "slots": {"from_src": "saved_place", "to_src": "device_current"}}
+{"intent": "查询或预订火车票", "label": "城市级模糊", "slots": {"from_src": "previous_entity", "to_src": "device_current"}}
+{"intent": "查询城际客车", "label": "城市级模糊", "slots": {"from_src": "device_current"}}
+{"intent": "查询城际客车", "label": "城市级模糊", "slots": {"from_src": "device_current", "to_src": "saved_place"}}
+{"intent": "查询城际客车", "label": "城市级模糊", "slots": {"from_src": "device_current", "to_src": "previous_entity"}}
+{"intent": "查询城际客车", "label": "城市级模糊", "slots": {"to_src": "device_current"}}
+{"intent": "查询城际客车", "label": "城市级模糊", "slots": {"from_src": "saved_place", "to_src": "device_current"}}
+{"intent": "查询城际客车", "label": "城市级模糊", "slots": {"from_src": "previous_entity", "to_src": "device_current"}}
+{"intent": "查询或办理交通票务", "label": "城市级模糊", "slots": {"from_src": "device_current", "op": "search_options", "to_src": "named_place"}}
+{"intent": "查询或办理交通票务", "label": "城市级模糊", "slots": {"from_src": "named_place", "op": "search_options", "to_src": "device_current"}}
+{"intent": "查询或办理交通票务", "label": "城市级模糊", "slots": {"from_src": "device_current", "op": "book_ticket", "to_src": "named_place"}}
+{"intent": "查询或办理交通票务", "label": "城市级模糊", "slots": {"from_src": "named_place", "op": "book_ticket", "to_src": "device_current"}}
+{"intent": "查询或预订机票", "label": "城市级模糊", "slots": {"from_src": "device_current", "op": "search_options", "to_src": "named_place"}}
+{"intent": "查询或预订机票", "label": "城市级模糊", "slots": {"from_src": "named_place", "op": "search_options", "to_src": "device_current"}}
+{"intent": "查询或预订机票", "label": "城市级模糊", "slots": {"from_src": "device_current", "op": "book_ticket", "to_src": "named_place"}}
+{"intent": "查询或预订机票", "label": "城市级模糊", "slots": {"from_src": "named_place", "op": "book_ticket", "to_src": "device_current"}}
+{"intent": "查询或预订火车票", "label": "城市级模糊", "slots": {"from_src": "device_current", "op": "search_options", "to_src": "named_place"}}
+{"intent": "查询或预订火车票", "label": "城市级模糊", "slots": {"from_src": "named_place", "op": "search_options", "to_src": "device_current"}}
+{"intent": "查询或预订火车票", "label": "城市级模糊", "slots": {"from_src": "device_current", "op": "book_ticket", "to_src": "named_place"}}
+{"intent": "查询或预订火车票", "label": "城市级模糊", "slots": {"from_src": "named_place", "op": "book_ticket", "to_src": "device_current"}}
+{"intent": "查询城际客车", "label": "城市级模糊", "slots": {"from_src": "device_current", "op": "search_options", "to_src": "named_place"}}
+{"intent": "查询城际客车", "label": "城市级模糊", "slots": {"from_src": "named_place", "op": "search_options", "to_src": "device_current"}}
+{"intent": "开始导航", "label": "精确", "slots": {"from_src": "device_current"}}
+{"intent": "开始导航", "label": "精确", "slots": {"from_src": "device_current", "to_src": "named_place"}}
+{"intent": "开始导航", "label": "精确", "slots": {"from_src": "device_current", "to_src": "saved_place"}}
+{"intent": "开始导航", "label": "精确", "slots": {"from_src": "device_current", "to_src": "saved_place", "track": "route"}}
+{"intent": "开始导航", "label": "精确", "slots": {"from_src": "device_current", "to_src": "previous_entity"}}
+{"intent": "开始导航", "label": "精确", "slots": {"from_src": "device_current", "to_src": "previous_entity", "track": "route"}}
+{"intent": "开始导航", "label": "精确", "slots": {"from_src": "device_current", "to_src": "target_device"}}
+{"intent": "开始导航", "label": "精确", "slots": {"from_src": "device_current", "to_src": "target_device", "track": "route"}}
+{"intent": "启动智能情景", "label": "精确", "slots": {"trigger": "enter_location"}}
+{"intent": "启动智能情景", "label": "精确", "slots": {"trigger": "leave_location"}}
+{"intent": "启动智能情景", "label": "精确", "slots": {"fence_src": "named_place", "trigger": "enter_location"}}
+{"intent": "启动智能情景", "label": "精确", "slots": {"fence_src": "named_place", "trigger": "leave_location"}}
+{"intent": "启动智能情景", "label": "精确", "slots": {"fence_src": "saved_place", "trigger": "enter_location"}}
+{"intent": "启动智能情景", "label": "精确", "slots": {"fence_src": "saved_place", "trigger": "leave_location"}}
+{"intent": "启动智能情景", "label": "精确", "slots": {"fence_src": "previous_entity", "trigger": "enter_location"}}
+{"intent": "启动智能情景", "label": "精确", "slots": {"fence_src": "previous_entity", "trigger": "leave_location"}}
+{"intent": "创建日程", "label": "精确", "slots": {"trigger": "enter_location"}}
+{"intent": "创建日程", "label": "精确", "slots": {"trigger": "leave_location"}}
+{"intent": "创建日程", "label": "精确", "slots": {"fence_src": "named_place", "trigger": "enter_location"}}
+{"intent": "创建日程", "label": "精确", "slots": {"fence_src": "named_place", "trigger": "leave_location"}}
+{"intent": "创建日程", "label": "精确", "slots": {"fence_src": "saved_place", "trigger": "enter_location"}}
+{"intent": "创建日程", "label": "精确", "slots": {"fence_src": "saved_place", "trigger": "leave_location"}}
+{"intent": "创建日程", "label": "精确", "slots": {"fence_src": "previous_entity", "trigger": "enter_location"}}
+{"intent": "创建日程", "label": "精确", "slots": {"fence_src": "previous_entity", "trigger": "leave_location"}}
+{"intent": "修改日程", "label": "精确", "slots": {"trigger": "enter_location"}}
+{"intent": "修改日程", "label": "精确", "slots": {"trigger": "leave_location"}}
+{"intent": "修改日程", "label": "精确", "slots": {"fence_src": "named_place", "trigger": "enter_location"}}
+{"intent": "修改日程", "label": "精确", "slots": {"fence_src": "named_place", "trigger": "leave_location"}}
+{"intent": "修改日程", "label": "精确", "slots": {"fence_src": "saved_place", "trigger": "enter_location"}}
+{"intent": "修改日程", "label": "精确", "slots": {"fence_src": "saved_place", "trigger": "leave_location"}}
+{"intent": "修改日程", "label": "精确", "slots": {"fence_src": "previous_entity", "trigger": "enter_location"}}
+{"intent": "修改日程", "label": "精确", "slots": {"fence_src": "previous_entity", "trigger": "leave_location"}}
+{"intent": "创建日程", "label": "城市级模糊", "slots": {"level": "city", "op": "share_current_location", "src": "device_current"}}
+{"intent": "修改日程", "label": "城市级模糊", "slots": {"level": "city", "op": "share_current_location", "src": "device_current"}}
+{"intent": "创建提醒", "label": "城市级模糊", "slots": {"level": "city", "op": "share_current_location", "src": "device_current"}}
+{"intent": "创建备忘", "label": "城市级模糊", "slots": {"level": "city", "op": "share_current_location", "src": "device_current"}}
+{"intent": "记录信息", "label": "城市级模糊", "slots": {"level": "city", "op": "share_current_location", "src": "device_current"}}
+{"intent": "发布社交内容", "label": "城市级模糊", "slots": {"op": "share_current_location", "src": "device_current"}}
+{"intent": "发布社交内容", "label": "城市级模糊", "slots": {"level": "city", "op": "share_current_location", "src": "device_current"}}
+{"intent": "下单外卖", "label": "精确", "slots": {"op": "deliver_order", "src": "device_current"}}
+{"intent": "叫车", "label": "精确", "slots": {"op": "request_pickup", "pickup_src": "device_current"}}
+{"intent": "叫车", "label": "精确", "slots": {"op": "schedule_pickup", "pickup_src": "device_current"}}
+{"intent": "寄快递", "label": "精确", "slots": {"op": "request_pickup", "src": "device_current"}}
+{"intent": "寄快递", "label": "精确", "slots": {"op": "schedule_pickup", "src": "device_current"}}
+{"intent": "收快递", "label": "精确", "slots": {"op": "request_handoff", "src": "device_current"}}
+{"intent": "查询天气", "label": "城市级模糊", "slots": {"op": "hourly_city_forecast", "src": "device_current"}}
+{"intent": "查询天气", "label": "城市级模糊", "slots": {"op": "daily_city_forecast", "src": "device_current"}}
+{"intent": "查询天气预警", "label": "城市级模糊", "slots": {"op": "active_city_warnings", "src": "device_current"}}
+{"intent": "查询新闻", "label": "城市级模糊", "slots": {"src": "device_current"}}
+{"intent": "播报新闻", "label": "城市级模糊", "slots": {"src": "device_current"}}
+{"intent": "查询当前位置", "label": "城市级模糊", "slots": {"level": "coarse_unspecified"}}
+{"intent": "查询地点地址", "label": "精确", "slots": {"src": "device_current"}}
+{"intent": "查找设备", "label": "精确", "slots": {"from_src": "device_current", "op": "navigate_to_target", "to_src": "target_device"}}
+{"intent": "开始运动", "label": "精确", "slots": {"op": "record_outdoor_track", "track": "route"}}
+{"intent": "开始运动", "label": "精确", "slots": {"op": "measure_outdoor_pace", "src": "device_current", "track": "route"}}
+{"intent": "预订餐馆", "label": "城市级模糊", "slots": {"level": "city", "src": "device_current"}}
+{"intent": "查询路况", "label": "精确", "slots": {"from_src": "device_current", "op": "route_congestion", "to_src": "saved_place"}}
+{"intent": "查询路况", "label": "精确", "slots": {"from_src": "device_current", "op": "route_congestion", "to_src": "named_place"}}

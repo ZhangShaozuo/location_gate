@@ -1,0 +1,647 @@
+﻿领域	标准意图	归一化槽位	业务预期	当前规则	状态	场景
+交通票务	查询城际客车	"{""from_src"": ""device_current"", ""to_src"": ""named_place""}"	城市级模糊	城市级模糊	已有训练	一端使用本机位置，另一端有独立来源
+交通票务	查询城际客车	"{""from_src"": ""device_current"", ""to_src"": ""previous_entity""}"	城市级模糊	城市级模糊	已有训练	一端使用本机位置，另一端有独立来源
+交通票务	查询城际客车	"{""from_src"": ""device_current"", ""to_src"": ""saved_place""}"	城市级模糊	城市级模糊	已有训练	一端使用本机位置，另一端有独立来源
+交通票务	查询城际客车	"{""from_src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
+交通票务	查询城际客车	"{""from_src"": ""named_place"", ""to_src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	一端使用本机位置，另一端有独立来源
+交通票务	查询城际客车	"{""from_src"": ""named_place"", ""to_src"": ""named_place""}"	不涉及	不涉及	已有对照	起终点均有独立位置来源
+交通票务	查询城际客车	"{""from_src"": ""named_place"", ""to_src"": ""previous_entity""}"	不涉及	不涉及	已有对照	起终点均有独立位置来源
+交通票务	查询城际客车	"{""from_src"": ""named_place"", ""to_src"": ""saved_place""}"	不涉及	不涉及	新增对照	起终点均有独立位置来源
+交通票务	查询城际客车	"{""from_src"": ""previous_entity"", ""to_src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	一端使用本机位置，另一端有独立来源
+交通票务	查询城际客车	"{""from_src"": ""previous_entity"", ""to_src"": ""named_place""}"	不涉及	不涉及	新增对照	起终点均有独立位置来源
+交通票务	查询城际客车	"{""from_src"": ""previous_entity"", ""to_src"": ""previous_entity""}"	不涉及	不涉及	新增对照	起终点均有独立位置来源
+交通票务	查询城际客车	"{""from_src"": ""previous_entity"", ""to_src"": ""saved_place""}"	不涉及	不涉及	已有对照	起终点均有独立位置来源
+交通票务	查询城际客车	"{""from_src"": ""saved_place"", ""to_src"": ""device_current""}"	城市级模糊	城市级模糊	保留在内部测试	一端使用本机位置，另一端有独立来源
+交通票务	查询城际客车	"{""from_src"": ""saved_place"", ""to_src"": ""named_place""}"	不涉及	不涉及	已有对照	起终点均有独立位置来源
+交通票务	查询城际客车	"{""from_src"": ""saved_place"", ""to_src"": ""previous_entity""}"	不涉及	不涉及	新增对照	起终点均有独立位置来源
+交通票务	查询城际客车	"{""from_src"": ""saved_place"", ""to_src"": ""saved_place""}"	不涉及	不涉及	新增对照	起终点均有独立位置来源
+交通票务	查询城际客车	"{""to_src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
+交通票务	查询城际客车	"{""to_src"": ""named_place""}"	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
+交通票务	查询已订行程	{}	不涉及	不涉及	已有对照	原数据中的既有组合
+交通票务	查询或办理交通票务	"{""from_src"": ""device_current"", ""to_src"": ""named_place""}"	城市级模糊	城市级模糊	已有训练	一端使用本机位置，另一端有独立来源
+交通票务	查询或办理交通票务	"{""from_src"": ""device_current"", ""to_src"": ""previous_entity""}"	城市级模糊	城市级模糊	已有训练	一端使用本机位置，另一端有独立来源
+交通票务	查询或办理交通票务	"{""from_src"": ""device_current"", ""to_src"": ""saved_place""}"	城市级模糊	城市级模糊	已有训练	一端使用本机位置，另一端有独立来源
+交通票务	查询或办理交通票务	"{""from_src"": ""device_current""}"	城市级模糊	城市级模糊	保留在验证	原数据中的既有组合
+交通票务	查询或办理交通票务	"{""from_src"": ""named_place"", ""to_src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	一端使用本机位置，另一端有独立来源
+交通票务	查询或办理交通票务	"{""from_src"": ""named_place"", ""to_src"": ""named_place""}"	不涉及	不涉及	已有对照	起终点均有独立位置来源
+交通票务	查询或办理交通票务	"{""from_src"": ""named_place"", ""to_src"": ""previous_entity""}"	不涉及	不涉及	已有对照	起终点均有独立位置来源
+交通票务	查询或办理交通票务	"{""from_src"": ""named_place"", ""to_src"": ""saved_place""}"	不涉及	不涉及	新增对照	起终点均有独立位置来源
+交通票务	查询或办理交通票务	"{""from_src"": ""previous_entity"", ""to_src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	一端使用本机位置，另一端有独立来源
+交通票务	查询或办理交通票务	"{""from_src"": ""previous_entity"", ""to_src"": ""named_place""}"	不涉及	不涉及	新增对照	起终点均有独立位置来源
+交通票务	查询或办理交通票务	"{""from_src"": ""previous_entity"", ""to_src"": ""previous_entity""}"	不涉及	不涉及	新增对照	起终点均有独立位置来源
+交通票务	查询或办理交通票务	"{""from_src"": ""previous_entity"", ""to_src"": ""saved_place""}"	不涉及	不涉及	已有对照	起终点均有独立位置来源
+交通票务	查询或办理交通票务	"{""from_src"": ""saved_place"", ""to_src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	一端使用本机位置，另一端有独立来源
+交通票务	查询或办理交通票务	"{""from_src"": ""saved_place"", ""to_src"": ""named_place""}"	不涉及	不涉及	已有对照	起终点均有独立位置来源
+交通票务	查询或办理交通票务	"{""from_src"": ""saved_place"", ""to_src"": ""previous_entity""}"	不涉及	不涉及	新增对照	起终点均有独立位置来源
+交通票务	查询或办理交通票务	"{""from_src"": ""saved_place"", ""to_src"": ""saved_place""}"	不涉及	不涉及	新增对照	起终点均有独立位置来源
+交通票务	查询或办理交通票务	"{""to_src"": ""device_current""}"	城市级模糊	城市级模糊	保留在内部测试	原数据中的既有组合
+交通票务	查询或办理交通票务	"{""to_src"": ""named_place""}"	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
+交通票务	查询或办理交通票务	{}	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
+交通票务	查询或预订机票	"{""from_src"": ""device_current"", ""to_src"": ""named_place""}"	城市级模糊	城市级模糊	保留在内部测试	一端使用本机位置，另一端有独立来源
+交通票务	查询或预订机票	"{""from_src"": ""device_current"", ""to_src"": ""previous_entity""}"	城市级模糊	城市级模糊	保留在内部测试	一端使用本机位置，另一端有独立来源
+交通票务	查询或预订机票	"{""from_src"": ""device_current"", ""to_src"": ""saved_place""}"	城市级模糊	城市级模糊	保留在验证	一端使用本机位置，另一端有独立来源
+交通票务	查询或预订机票	"{""from_src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
+交通票务	查询或预订机票	"{""from_src"": ""named_place"", ""to_src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	一端使用本机位置，另一端有独立来源
+交通票务	查询或预订机票	"{""from_src"": ""named_place"", ""to_src"": ""named_place""}"	不涉及	不涉及	已有对照	起终点均有独立位置来源
+交通票务	查询或预订机票	"{""from_src"": ""named_place"", ""to_src"": ""previous_entity""}"	不涉及	不涉及	已有对照	起终点均有独立位置来源
+交通票务	查询或预订机票	"{""from_src"": ""named_place"", ""to_src"": ""saved_place""}"	不涉及	不涉及	新增对照	起终点均有独立位置来源
+交通票务	查询或预订机票	"{""from_src"": ""previous_entity"", ""to_src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	一端使用本机位置，另一端有独立来源
+交通票务	查询或预订机票	"{""from_src"": ""previous_entity"", ""to_src"": ""named_place""}"	不涉及	不涉及	新增对照	起终点均有独立位置来源
+交通票务	查询或预订机票	"{""from_src"": ""previous_entity"", ""to_src"": ""previous_entity""}"	不涉及	不涉及	新增对照	起终点均有独立位置来源
+交通票务	查询或预订机票	"{""from_src"": ""previous_entity"", ""to_src"": ""saved_place""}"	不涉及	不涉及	已有对照	起终点均有独立位置来源
+交通票务	查询或预订机票	"{""from_src"": ""saved_place"", ""to_src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	一端使用本机位置，另一端有独立来源
+交通票务	查询或预订机票	"{""from_src"": ""saved_place"", ""to_src"": ""named_place""}"	不涉及	不涉及	已有对照	起终点均有独立位置来源
+交通票务	查询或预订机票	"{""from_src"": ""saved_place"", ""to_src"": ""previous_entity""}"	不涉及	不涉及	新增对照	起终点均有独立位置来源
+交通票务	查询或预订机票	"{""from_src"": ""saved_place"", ""to_src"": ""saved_place""}"	不涉及	不涉及	新增对照	起终点均有独立位置来源
+交通票务	查询或预订机票	"{""to_src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
+交通票务	查询或预订机票	"{""to_src"": ""named_place""}"	城市级模糊	城市级模糊	保留在验证	原数据中的既有组合
+交通票务	查询或预订机票	{}	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
+交通票务	查询或预订火车票	"{""from_src"": ""device_current"", ""to_src"": ""named_place""}"	城市级模糊	城市级模糊	已有训练	一端使用本机位置，另一端有独立来源
+交通票务	查询或预订火车票	"{""from_src"": ""device_current"", ""to_src"": ""previous_entity""}"	城市级模糊	城市级模糊	保留在内部测试	一端使用本机位置，另一端有独立来源
+交通票务	查询或预订火车票	"{""from_src"": ""device_current"", ""to_src"": ""saved_place""}"	城市级模糊	城市级模糊	已有训练	一端使用本机位置，另一端有独立来源
+交通票务	查询或预订火车票	"{""from_src"": ""device_current""}"	城市级模糊	城市级模糊	保留在验证	原数据中的既有组合
+交通票务	查询或预订火车票	"{""from_src"": ""named_place"", ""to_src"": ""device_current""}"	城市级模糊	城市级模糊	保留在验证	一端使用本机位置，另一端有独立来源
+交通票务	查询或预订火车票	"{""from_src"": ""named_place"", ""to_src"": ""named_place""}"	不涉及	不涉及	已有对照	起终点均有独立位置来源
+交通票务	查询或预订火车票	"{""from_src"": ""named_place"", ""to_src"": ""previous_entity""}"	不涉及	不涉及	已有对照	起终点均有独立位置来源
+交通票务	查询或预订火车票	"{""from_src"": ""named_place"", ""to_src"": ""saved_place""}"	不涉及	不涉及	新增对照	起终点均有独立位置来源
+交通票务	查询或预订火车票	"{""from_src"": ""previous_entity"", ""to_src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	一端使用本机位置，另一端有独立来源
+交通票务	查询或预订火车票	"{""from_src"": ""previous_entity"", ""to_src"": ""named_place""}"	不涉及	不涉及	新增对照	起终点均有独立位置来源
+交通票务	查询或预订火车票	"{""from_src"": ""previous_entity"", ""to_src"": ""previous_entity""}"	不涉及	不涉及	新增对照	起终点均有独立位置来源
+交通票务	查询或预订火车票	"{""from_src"": ""previous_entity"", ""to_src"": ""saved_place""}"	不涉及	不涉及	已有对照	起终点均有独立位置来源
+交通票务	查询或预订火车票	"{""from_src"": ""saved_place"", ""to_src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	一端使用本机位置，另一端有独立来源
+交通票务	查询或预订火车票	"{""from_src"": ""saved_place"", ""to_src"": ""named_place""}"	不涉及	不涉及	已有对照	起终点均有独立位置来源
+交通票务	查询或预订火车票	"{""from_src"": ""saved_place"", ""to_src"": ""previous_entity""}"	不涉及	不涉及	保留在外部测试	起终点均有独立位置来源
+交通票务	查询或预订火车票	"{""from_src"": ""saved_place"", ""to_src"": ""saved_place""}"	不涉及	不涉及	新增对照	起终点均有独立位置来源
+交通票务	查询或预订火车票	"{""to_src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
+交通票务	查询或预订火车票	"{""to_src"": ""named_place""}"	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
+交通票务	查询或预订火车票	{}	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
+交通票务	查询机场航班流量	"{""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
+交通票务	查询机场航班流量	"{""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在内部测试	原数据中的既有组合
+交通票务	查询机场航班流量	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+交通票务	查询机场航班流量	"{""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+交通票务	查询机场航班流量	"{""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+交通票务	查询机场航班流量	{}	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
+公交地铁	查看乘车码	"{""src"": ""device_current""}"	城市级模糊	城市级模糊	新增训练	按本机所在城市选择乘车码
+公交地铁	查看乘车码	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+公交地铁	查询公交地铁	"{""from_src"": ""named_place"", ""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在外部测试	从已知枢纽找通往本机城市的线路概览
+公交地铁	查询公交地铁	"{""from_src"": ""named_place"", ""level"": ""district"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	从已知枢纽找通往本机所在区的线路概览
+公交地铁	查询公交地铁	"{""from_src"": ""named_place"", ""scope"": ""nearby"", ""src"": ""device_current"", ""to_src"": ""named_place""}"	区域级模糊	区域级模糊	已有训练	原数据中的既有组合
+公交地铁	查询公交地铁	"{""from_src"": ""previous_entity"", ""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	新增训练	从已知枢纽找通往本机城市的线路概览
+公交地铁	查询公交地铁	"{""from_src"": ""previous_entity"", ""level"": ""district"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	从已知枢纽找通往本机所在区的线路概览
+公交地铁	查询公交地铁	"{""from_src"": ""saved_place"", ""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	新增训练	从已知枢纽找通往本机城市的线路概览
+公交地铁	查询公交地铁	"{""from_src"": ""saved_place"", ""level"": ""district"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	从已知枢纽找通往本机所在区的线路概览
+公交地铁	查询公交地铁	"{""level"": ""city"", ""scope"": ""nearby"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	周边检索明确以全市为限
+公交地铁	查询公交地铁	"{""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在内部测试	城市范围内查找
+公交地铁	查询公交地铁	"{""level"": ""district"", ""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
+公交地铁	查询公交地铁	"{""level"": ""district"", ""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
+公交地铁	查询公交地铁	"{""level"": ""district"", ""scope"": ""nearby"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在外部测试	先限所在区，再查大致周边
+公交地铁	查询公交地铁	"{""level"": ""district"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	行政区范围内查找
+公交地铁	查询公交地铁	"{""radius_band"": ""above_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内输出实测距离
+公交地铁	查询公交地铁	"{""radius_band"": ""above_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内只取最近候选
+公交地铁	查询公交地铁	"{""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	给定大致范围且允许放宽半径
+公交地铁	查询公交地铁	"{""radius_band"": ""above_policy_limit"", ""scope"": ""strict_radius"", ""src"": ""device_current""}"	精确	精确	新增训练	即使半径大于阈值，也必须按实际距离筛除范围外的候选
+公交地铁	查询公交地铁	"{""radius_band"": ""above_policy_limit"", ""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内按步行耗时筛选
+公交地铁	查询公交地铁	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内输出实测距离
+公交地铁	查询公交地铁	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	保留在外部测试	硬性小半径内只取最近候选
+公交地铁	查询公交地铁	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在内部测试	给定大致范围且允许放宽半径
+公交地铁	查询公交地铁	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内按步行耗时筛选
+公交地铁	查询公交地铁	"{""radius_band"": ""up_to_policy_limit"", ""src"": ""device_current""}"	精确	精确	已有训练	小半径是硬性筛选条件
+公交地铁	查询公交地铁	"{""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	已有训练	输出实测距离
+公交地铁	查询公交地铁	"{""scope"": ""nearby"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	附近粗筛
+公交地铁	查询公交地铁	"{""scope"": ""nearby"", ""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+公交地铁	查询公交地铁	"{""scope"": ""nearby"", ""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+公交地铁	查询公交地铁	"{""scope"": ""nearby"", ""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+公交地铁	查询公交地铁	"{""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	已有训练	只取最近候选
+公交地铁	查询公交地铁	"{""scope"": ""nearest"", ""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+公交地铁	查询公交地铁	"{""scope"": ""nearest"", ""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+公交地铁	查询公交地铁	"{""scope"": ""nearest"", ""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+公交地铁	查询公交地铁	"{""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	已有训练	按步行耗时筛选
+公交地铁	查询公交地铁	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+公交地铁	查询公共交通	"{""from_src"": ""device_current"", ""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在验证	原数据中的既有组合
+公交地铁	查询公共交通	"{""from_src"": ""device_current"", ""to_src"": ""named_place""}"	区域级模糊	区域级模糊	已有训练	原数据中的既有组合
+公交地铁	查询公共交通	"{""from_src"": ""device_current""}"	区域级模糊	区域级模糊	保留在验证	原数据中的既有组合
+公交地铁	查询公共交通	"{""from_src"": ""named_place"", ""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在外部测试	从已知枢纽找通往本机城市的线路概览
+公交地铁	查询公共交通	"{""from_src"": ""named_place"", ""level"": ""district"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	从已知枢纽找通往本机所在区的线路概览
+公交地铁	查询公共交通	"{""from_src"": ""named_place"", ""level"": ""district"", ""to_src"": ""device_current""}"	区域级模糊	区域级模糊	保留在外部测试	原数据中的既有组合
+公交地铁	查询公共交通	"{""from_src"": ""previous_entity"", ""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	新增训练	从已知枢纽找通往本机城市的线路概览
+公交地铁	查询公共交通	"{""from_src"": ""previous_entity"", ""level"": ""district"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	从已知枢纽找通往本机所在区的线路概览
+公交地铁	查询公共交通	"{""from_src"": ""saved_place"", ""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	新增训练	从已知枢纽找通往本机城市的线路概览
+公交地铁	查询公共交通	"{""from_src"": ""saved_place"", ""level"": ""district"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	从已知枢纽找通往本机所在区的线路概览
+公交地铁	查询公共交通	"{""level"": ""city"", ""scope"": ""nearby"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	新增训练	周边检索明确以全市为限
+公交地铁	查询公共交通	"{""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	城市范围内查找
+公交地铁	查询公共交通	"{""level"": ""district"", ""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
+公交地铁	查询公共交通	"{""level"": ""district"", ""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
+公交地铁	查询公共交通	"{""level"": ""district"", ""scope"": ""nearby"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在内部测试	先限所在区，再查大致周边
+公交地铁	查询公共交通	"{""level"": ""district"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	行政区范围内查找
+公交地铁	查询公共交通	"{""radius_band"": ""above_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内输出实测距离
+公交地铁	查询公共交通	"{""radius_band"": ""above_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内只取最近候选
+公交地铁	查询公共交通	"{""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	给定大致范围且允许放宽半径
+公交地铁	查询公共交通	"{""radius_band"": ""above_policy_limit"", ""scope"": ""strict_radius"", ""src"": ""device_current""}"	精确	精确	新增训练	即使半径大于阈值，也必须按实际距离筛除范围外的候选
+公交地铁	查询公共交通	"{""radius_band"": ""above_policy_limit"", ""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内按步行耗时筛选
+公交地铁	查询公共交通	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内输出实测距离
+公交地铁	查询公共交通	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内只取最近候选
+公交地铁	查询公共交通	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	给定大致范围且允许放宽半径
+公交地铁	查询公共交通	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内按步行耗时筛选
+公交地铁	查询公共交通	"{""radius_band"": ""up_to_policy_limit"", ""src"": ""device_current""}"	精确	精确	已有训练	小半径是硬性筛选条件
+公交地铁	查询公共交通	"{""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	已有训练	输出实测距离
+公交地铁	查询公共交通	"{""scope"": ""nearby"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	附近粗筛
+公交地铁	查询公共交通	"{""scope"": ""nearby"", ""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+公交地铁	查询公共交通	"{""scope"": ""nearby"", ""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+公交地铁	查询公共交通	"{""scope"": ""nearby"", ""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+公交地铁	查询公共交通	"{""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	已有训练	只取最近候选
+公交地铁	查询公共交通	"{""scope"": ""nearest"", ""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+公交地铁	查询公共交通	"{""scope"": ""nearest"", ""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+公交地铁	查询公共交通	"{""scope"": ""nearest"", ""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+公交地铁	查询公共交通	"{""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	已有训练	按步行耗时筛选
+公交地铁	查询公共交通	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+地图	查找或推荐地点	"{""level"": ""city"", ""scope"": ""nearby"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	周边检索明确以全市为限
+地图	查找或推荐地点	"{""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在验证	城市范围内查找
+地图	查找或推荐地点	"{""level"": ""district"", ""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
+地图	查找或推荐地点	"{""level"": ""district"", ""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在外部测试	限制在所在区内，按可放宽半径粗筛
+地图	查找或推荐地点	"{""level"": ""district"", ""scope"": ""nearby"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	先限所在区，再查大致周边
+地图	查找或推荐地点	"{""level"": ""district"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在验证	行政区范围内查找
+地图	查找或推荐地点	"{""radius_band"": ""above_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内输出实测距离
+地图	查找或推荐地点	"{""radius_band"": ""above_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内只取最近候选
+地图	查找或推荐地点	"{""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	给定大致范围且允许放宽半径
+地图	查找或推荐地点	"{""radius_band"": ""above_policy_limit"", ""scope"": ""strict_radius"", ""src"": ""device_current""}"	精确	精确	新增训练	即使半径大于阈值，也必须按实际距离筛除范围外的候选
+地图	查找或推荐地点	"{""radius_band"": ""above_policy_limit"", ""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内按步行耗时筛选
+地图	查找或推荐地点	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内输出实测距离
+地图	查找或推荐地点	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	保留在外部测试	硬性小半径内只取最近候选
+地图	查找或推荐地点	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	给定大致范围且允许放宽半径
+地图	查找或推荐地点	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内按步行耗时筛选
+地图	查找或推荐地点	"{""radius_band"": ""up_to_policy_limit"", ""src"": ""device_current""}"	精确	精确	已有训练	小半径是硬性筛选条件
+地图	查找或推荐地点	"{""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	已有训练	输出实测距离
+地图	查找或推荐地点	"{""scope"": ""nearby"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在验证	附近粗筛
+地图	查找或推荐地点	"{""scope"": ""nearby"", ""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+地图	查找或推荐地点	"{""scope"": ""nearby"", ""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+地图	查找或推荐地点	"{""scope"": ""nearby"", ""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+地图	查找或推荐地点	"{""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	已有训练	只取最近候选
+地图	查找或推荐地点	"{""scope"": ""nearest"", ""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+地图	查找或推荐地点	"{""scope"": ""nearest"", ""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+地图	查找或推荐地点	"{""scope"": ""nearest"", ""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+地图	查找或推荐地点	"{""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	保留在验证	按步行耗时筛选
+地图	查找或推荐地点	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+地图	查询地点地址	"{""src"": ""device_current""}"	精确	精确	已有训练	原数据中的既有组合
+地图	查询地点地址	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+地图	查询地点地址	"{""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+地图	查询地点详情	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+备忘	创建备忘	"{""level"": ""city"", ""op"": ""share_current_location"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在验证	原数据中的既有组合
+备忘	创建备忘	"{""op"": ""share_current_location"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
+备忘	创建备忘	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+备忘	创建备忘	"{""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+备忘	创建备忘	"{""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+备忘	创建备忘	{}	不涉及	不涉及	已有对照	原数据中的既有组合
+外卖	下单外卖	"{""src"": ""device_current""}"	精确	精确	已有训练	原数据中的既有组合
+外卖	下单外卖	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	接送或交接点已明确
+外卖	下单外卖	"{""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	接送或交接点已明确
+外卖	下单外卖	"{""src"": ""saved_place""}"	不涉及	不涉及	保留在外部测试	接送或交接点已明确
+外卖	下单外卖	{}	精确	精确	已有训练	原数据中的既有组合
+外卖	查找外卖	"{""level"": ""city"", ""scope"": ""nearby"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在外部测试	周边检索明确以全市为限
+外卖	查找外卖	"{""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在验证	城市范围内查找
+外卖	查找外卖	"{""level"": ""district"", ""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
+外卖	查找外卖	"{""level"": ""district"", ""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
+外卖	查找外卖	"{""level"": ""district"", ""scope"": ""nearby"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在外部测试	先限所在区，再查大致周边
+外卖	查找外卖	"{""level"": ""district"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	行政区范围内查找
+外卖	查找外卖	"{""radius_band"": ""above_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内输出实测距离
+外卖	查找外卖	"{""radius_band"": ""above_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内只取最近候选
+外卖	查找外卖	"{""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在验证	给定大致范围且允许放宽半径
+外卖	查找外卖	"{""radius_band"": ""above_policy_limit"", ""scope"": ""strict_radius"", ""src"": ""device_current""}"	精确	精确	新增训练	即使半径大于阈值，也必须按实际距离筛除范围外的候选
+外卖	查找外卖	"{""radius_band"": ""above_policy_limit"", ""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内按步行耗时筛选
+外卖	查找外卖	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	保留在外部测试	硬性小半径内输出实测距离
+外卖	查找外卖	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内只取最近候选
+外卖	查找外卖	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	给定大致范围且允许放宽半径
+外卖	查找外卖	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内按步行耗时筛选
+外卖	查找外卖	"{""radius_band"": ""up_to_policy_limit"", ""src"": ""device_current""}"	精确	精确	已有训练	小半径是硬性筛选条件
+外卖	查找外卖	"{""radius_band"": ""up_to_policy_limit"", ""src"": ""named_place""}"	不涉及	不涉及	保留在外部测试	原数据中的既有组合
+外卖	查找外卖	"{""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	已有训练	输出实测距离
+外卖	查找外卖	"{""scope"": ""nearby"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在验证	附近粗筛
+外卖	查找外卖	"{""scope"": ""nearby"", ""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+外卖	查找外卖	"{""scope"": ""nearby"", ""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+外卖	查找外卖	"{""scope"": ""nearby"", ""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+外卖	查找外卖	"{""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	保留在验证	只取最近候选
+外卖	查找外卖	"{""scope"": ""nearest"", ""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+外卖	查找外卖	"{""scope"": ""nearest"", ""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+外卖	查找外卖	"{""scope"": ""nearest"", ""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+外卖	查找外卖	"{""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	已有训练	按步行耗时筛选
+外卖	查找外卖	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+外卖	查询外卖订单状态	{}	不涉及	不涉及	已有对照	原数据中的既有组合
+天气	查询天气	"{""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在内部测试	原数据中的既有组合
+天气	查询天气	"{""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
+天气	查询天气	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+天气	查询天气	"{""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+天气	查询天气	"{""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+天气	查询天气	{}	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
+天气	查询天气预警	"{""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
+天气	查询天气预警	"{""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在内部测试	原数据中的既有组合
+天气	查询天气预警	"{""src"": ""named_place""}"	不涉及	不涉及	保留在外部测试	原数据中的既有组合
+天气	查询天气预警	"{""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+天气	查询天气预警	"{""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+天气	查询天气预警	{}	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
+天气	查询环境或生活指数	"{""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在验证	原数据中的既有组合
+天气	查询环境或生活指数	"{""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
+天气	查询环境或生活指数	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+天气	查询环境或生活指数	"{""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+天气	查询环境或生活指数	"{""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+天气	查询环境或生活指数	{}	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
+天气	查询降雨	"{""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在验证	原数据中的既有组合
+天气	查询降雨	"{""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在内部测试	原数据中的既有组合
+天气	查询降雨	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+天气	查询降雨	"{""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+天气	查询降雨	"{""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+天气	查询降雨	{}	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
+安全	打开查找设备界面	{}	不涉及	不涉及	已有对照	原数据中的既有组合
+安全	查找设备	"{""from_src"": ""device_current"", ""op"": ""navigate_to_target"", ""to_src"": ""target_device""}"	精确	精确	已有训练	原数据中的既有组合
+安全	查找设备	"{""op"": ""navigate_to_target""}"	精确	精确	保留在内部测试	原数据中的既有组合
+安全	查找设备	"{""op"": ""query_target_location"", ""to_src"": ""target_device""}"	不涉及	不涉及	保留在外部测试	原数据中的既有组合
+安全	查找设备	"{""op"": ""query_target_location""}"	不涉及	不涉及	已有对照	只查目标设备上报的位置
+安全	查找设备	"{""op"": ""ring""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+导航	开始导航	"{""from_src"": ""device_current"", ""to_src"": ""named_place"", ""track"": ""no_route""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+导航	开始导航	"{""from_src"": ""device_current"", ""to_src"": ""named_place"", ""track"": ""route""}"	精确	精确	已有训练	原数据中的既有组合
+导航	开始导航	"{""from_src"": ""device_current"", ""to_src"": ""named_place""}"	精确	精确	保留在内部测试	原数据中的既有组合
+导航	开始导航	"{""from_src"": ""device_current"", ""to_src"": ""previous_entity"", ""track"": ""no_route""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+导航	开始导航	"{""from_src"": ""device_current"", ""to_src"": ""previous_entity"", ""track"": ""route""}"	精确	精确	已有训练	原数据中的既有组合
+导航	开始导航	"{""from_src"": ""device_current"", ""to_src"": ""previous_entity""}"	精确	精确	已有训练	原数据中的既有组合
+导航	开始导航	"{""from_src"": ""device_current"", ""to_src"": ""saved_place"", ""track"": ""no_route""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+导航	开始导航	"{""from_src"": ""device_current"", ""to_src"": ""saved_place"", ""track"": ""route""}"	精确	精确	保留在内部测试	原数据中的既有组合
+导航	开始导航	"{""from_src"": ""device_current"", ""to_src"": ""saved_place""}"	精确	精确	保留在验证	原数据中的既有组合
+导航	开始导航	"{""from_src"": ""device_current"", ""to_src"": ""target_device"", ""track"": ""no_route""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+导航	开始导航	"{""from_src"": ""device_current"", ""to_src"": ""target_device"", ""track"": ""route""}"	精确	精确	保留在验证	原数据中的既有组合
+导航	开始导航	"{""from_src"": ""device_current"", ""to_src"": ""target_device""}"	精确	精确	已有训练	原数据中的既有组合
+导航	开始导航	"{""from_src"": ""device_current"", ""track"": ""no_route""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+导航	开始导航	"{""from_src"": ""device_current"", ""track"": ""route""}"	精确	精确	保留在验证	原数据中的既有组合
+导航	开始导航	"{""from_src"": ""device_current""}"	精确	精确	已有训练	原数据中的既有组合
+导航	开始导航	"{""from_src"": ""named_place"", ""to_src"": ""named_place"", ""track"": ""no_route""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+导航	开始导航	"{""from_src"": ""named_place"", ""to_src"": ""named_place""}"	精确	精确	已有训练	原数据中的既有组合
+导航	开始导航	"{""from_src"": ""named_place"", ""to_src"": ""saved_place"", ""track"": ""no_route""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+导航	开始导航	"{""from_src"": ""previous_entity"", ""to_src"": ""named_place"", ""track"": ""no_route""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+导航	开始导航	"{""from_src"": ""previous_entity"", ""to_src"": ""saved_place"", ""track"": ""no_route""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+导航	开始导航	"{""from_src"": ""saved_place"", ""to_src"": ""named_place"", ""track"": ""no_route""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+导航	开始导航	"{""from_src"": ""saved_place"", ""to_src"": ""named_place""}"	精确	精确	已有训练	原数据中的既有组合
+导航	开始导航	"{""from_src"": ""saved_place"", ""to_src"": ""saved_place"", ""track"": ""no_route""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+导航	查询路线	"{""from_src"": ""device_current"", ""to_src"": ""named_place""}"	精确	精确	保留在内部测试	一端使用本机位置，另一端有独立来源
+导航	查询路线	"{""from_src"": ""device_current"", ""to_src"": ""previous_entity""}"	精确	精确	已有训练	一端使用本机位置，另一端有独立来源
+导航	查询路线	"{""from_src"": ""device_current"", ""to_src"": ""saved_place""}"	精确	精确	保留在内部测试	一端使用本机位置，另一端有独立来源
+导航	查询路线	"{""from_src"": ""device_current"", ""to_src"": ""target_device""}"	精确	精确	新增训练	从本机到已查得位置的目标设备
+导航	查询路线	"{""from_src"": ""device_current""}"	精确	精确	保留在验证	原数据中的既有组合
+导航	查询路线	"{""from_src"": ""named_place"", ""to_src"": ""device_current""}"	精确	精确	已有训练	一端使用本机位置，另一端有独立来源
+导航	查询路线	"{""from_src"": ""named_place"", ""to_src"": ""named_place""}"	不涉及	不涉及	已有对照	起终点均有独立位置来源
+导航	查询路线	"{""from_src"": ""named_place"", ""to_src"": ""previous_entity""}"	不涉及	不涉及	已有对照	起终点均有独立位置来源
+导航	查询路线	"{""from_src"": ""named_place"", ""to_src"": ""saved_place""}"	不涉及	不涉及	保留在外部测试	起终点均有独立位置来源
+导航	查询路线	"{""from_src"": ""previous_entity"", ""to_src"": ""device_current""}"	精确	精确	保留在验证	一端使用本机位置，另一端有独立来源
+导航	查询路线	"{""from_src"": ""previous_entity"", ""to_src"": ""named_place""}"	不涉及	不涉及	新增对照	起终点均有独立位置来源
+导航	查询路线	"{""from_src"": ""previous_entity"", ""to_src"": ""previous_entity""}"	不涉及	不涉及	新增对照	起终点均有独立位置来源
+导航	查询路线	"{""from_src"": ""previous_entity"", ""to_src"": ""saved_place""}"	不涉及	不涉及	已有对照	起终点均有独立位置来源
+导航	查询路线	"{""from_src"": ""saved_place"", ""to_src"": ""device_current""}"	精确	精确	已有训练	一端使用本机位置，另一端有独立来源
+导航	查询路线	"{""from_src"": ""saved_place"", ""to_src"": ""named_place""}"	不涉及	不涉及	已有对照	起终点均有独立位置来源
+导航	查询路线	"{""from_src"": ""saved_place"", ""to_src"": ""previous_entity""}"	不涉及	不涉及	新增对照	起终点均有独立位置来源
+导航	查询路线	"{""from_src"": ""saved_place"", ""to_src"": ""saved_place""}"	不涉及	不涉及	新增对照	起终点均有独立位置来源
+导航	查询路线	"{""to_src"": ""device_current""}"	精确	精确	保留在验证	原数据中的既有组合
+导航	查询路线距离或耗时	"{""from_src"": ""device_current"", ""to_src"": ""named_place""}"	精确	精确	保留在验证	一端使用本机位置，另一端有独立来源
+导航	查询路线距离或耗时	"{""from_src"": ""device_current"", ""to_src"": ""previous_entity""}"	精确	精确	保留在验证	一端使用本机位置，另一端有独立来源
+导航	查询路线距离或耗时	"{""from_src"": ""device_current"", ""to_src"": ""saved_place""}"	精确	精确	已有训练	一端使用本机位置，另一端有独立来源
+导航	查询路线距离或耗时	"{""from_src"": ""device_current"", ""to_src"": ""target_device""}"	精确	精确	新增训练	从本机到已查得位置的目标设备
+导航	查询路线距离或耗时	"{""from_src"": ""device_current""}"	精确	精确	已有训练	原数据中的既有组合
+导航	查询路线距离或耗时	"{""from_src"": ""named_place"", ""to_src"": ""device_current""}"	精确	精确	已有训练	一端使用本机位置，另一端有独立来源
+导航	查询路线距离或耗时	"{""from_src"": ""named_place"", ""to_src"": ""named_place""}"	不涉及	不涉及	已有对照	起终点均有独立位置来源
+导航	查询路线距离或耗时	"{""from_src"": ""named_place"", ""to_src"": ""previous_entity""}"	不涉及	不涉及	已有对照	起终点均有独立位置来源
+导航	查询路线距离或耗时	"{""from_src"": ""named_place"", ""to_src"": ""saved_place""}"	不涉及	不涉及	新增对照	起终点均有独立位置来源
+导航	查询路线距离或耗时	"{""from_src"": ""previous_entity"", ""to_src"": ""device_current""}"	精确	精确	保留在内部测试	一端使用本机位置，另一端有独立来源
+导航	查询路线距离或耗时	"{""from_src"": ""previous_entity"", ""to_src"": ""named_place""}"	不涉及	不涉及	新增对照	起终点均有独立位置来源
+导航	查询路线距离或耗时	"{""from_src"": ""previous_entity"", ""to_src"": ""previous_entity""}"	不涉及	不涉及	新增对照	起终点均有独立位置来源
+导航	查询路线距离或耗时	"{""from_src"": ""previous_entity"", ""to_src"": ""saved_place""}"	不涉及	不涉及	已有对照	起终点均有独立位置来源
+导航	查询路线距离或耗时	"{""from_src"": ""saved_place"", ""to_src"": ""device_current""}"	精确	精确	保留在内部测试	一端使用本机位置，另一端有独立来源
+导航	查询路线距离或耗时	"{""from_src"": ""saved_place"", ""to_src"": ""named_place""}"	不涉及	不涉及	已有对照	起终点均有独立位置来源
+导航	查询路线距离或耗时	"{""from_src"": ""saved_place"", ""to_src"": ""previous_entity""}"	不涉及	不涉及	新增对照	起终点均有独立位置来源
+导航	查询路线距离或耗时	"{""from_src"": ""saved_place"", ""to_src"": ""saved_place""}"	不涉及	不涉及	新增对照	起终点均有独立位置来源
+导航	查询路线距离或耗时	"{""to_src"": ""device_current""}"	精确	精确	保留在内部测试	原数据中的既有组合
+导航	结束导航	{}	不涉及	不涉及	已有对照	原数据中的既有组合
+快递	寄快递	"{""src"": ""device_current""}"	精确	精确	已有训练	原数据中的既有组合
+快递	寄快递	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	接送或交接点已明确
+快递	寄快递	"{""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	接送或交接点已明确
+快递	寄快递	"{""src"": ""saved_place""}"	不涉及	不涉及	已有对照	接送或交接点已明确
+快递	收快递	"{""src"": ""device_current""}"	精确	精确	已有训练	原数据中的既有组合
+快递	收快递	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	接送或交接点已明确
+快递	收快递	"{""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	接送或交接点已明确
+快递	收快递	"{""src"": ""saved_place""}"	不涉及	不涉及	已有对照	接送或交接点已明确
+快递	查询快递状态	{}	不涉及	不涉及	已有对照	根据运单查待签收或已签收状态
+招聘	查找招聘信息	"{""level"": ""city"", ""scope"": ""nearby"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	周边检索明确以全市为限
+招聘	查找招聘信息	"{""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在验证	城市范围内查找
+招聘	查找招聘信息	"{""level"": ""district"", ""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在外部测试	限制在所在区内，按可放宽半径粗筛
+招聘	查找招聘信息	"{""level"": ""district"", ""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
+招聘	查找招聘信息	"{""level"": ""district"", ""scope"": ""nearby"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	先限所在区，再查大致周边
+招聘	查找招聘信息	"{""level"": ""district"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在验证	行政区范围内查找
+招聘	查找招聘信息	"{""radius_band"": ""above_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内输出实测距离
+招聘	查找招聘信息	"{""radius_band"": ""above_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内只取最近候选
+招聘	查找招聘信息	"{""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在内部测试	给定大致范围且允许放宽半径
+招聘	查找招聘信息	"{""radius_band"": ""above_policy_limit"", ""scope"": ""strict_radius"", ""src"": ""device_current""}"	精确	精确	新增训练	即使半径大于阈值，也必须按实际距离筛除范围外的候选
+招聘	查找招聘信息	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内输出实测距离
+招聘	查找招聘信息	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内只取最近候选
+招聘	查找招聘信息	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	给定大致范围且允许放宽半径
+招聘	查找招聘信息	"{""radius_band"": ""up_to_policy_limit"", ""src"": ""device_current""}"	精确	精确	保留在内部测试	小半径是硬性筛选条件
+招聘	查找招聘信息	"{""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	已有训练	输出实测距离
+招聘	查找招聘信息	"{""scope"": ""distance"", ""src"": ""named_place""}"	不涉及	不涉及	保留在外部测试	原数据中的既有组合
+招聘	查找招聘信息	"{""scope"": ""nearby"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	附近粗筛
+招聘	查找招聘信息	"{""scope"": ""nearby"", ""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+招聘	查找招聘信息	"{""scope"": ""nearby"", ""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+招聘	查找招聘信息	"{""scope"": ""nearby"", ""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+招聘	查找招聘信息	"{""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	保留在验证	只取最近候选
+招聘	查找招聘信息	"{""scope"": ""nearest"", ""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+招聘	查找招聘信息	"{""scope"": ""nearest"", ""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+招聘	查找招聘信息	"{""scope"": ""nearest"", ""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+招聘	查找招聘信息	"{""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
+招聘	查找招聘信息	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+新闻	播报新闻	"{""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在外部测试	原数据中的既有组合
+新闻	播报新闻	"{""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
+新闻	播报新闻	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+新闻	查询新闻	"{""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在外部测试	原数据中的既有组合
+新闻	查询新闻	"{""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
+新闻	查询新闻	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+新闻	查询新闻	{}	不涉及	不涉及	已有对照	原数据中的既有组合
+旅游	查询旅游指数	"{""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在内部测试	原数据中的既有组合
+旅游	查询旅游指数	"{""level"": ""coarse_unspecified"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在外部测试	原数据中的既有组合
+旅游	查询旅游指数	"{""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在内部测试	原数据中的既有组合
+旅游	查询旅游指数	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+旅游	查询旅游指数	"{""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+旅游	查询旅游指数	"{""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+旅游	查询旅游指数	{}	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
+日历与提醒	修改日程	"{""level"": ""city"", ""op"": ""share_current_location"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
+日历与提醒	修改日程	"{""op"": ""share_current_location"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
+日历与提醒	修改日程	"{""src"": ""named_place"", ""trigger"": ""enter_location""}"	精确	精确	保留在内部测试	原数据中的既有组合
+日历与提醒	修改日程	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+日历与提醒	修改日程	"{""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+日历与提醒	修改日程	"{""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+日历与提醒	修改日程	"{""trigger"": ""enter_location""}"	精确	精确	保留在验证	原数据中的既有组合
+日历与提醒	修改日程	"{""trigger"": ""leave_location""}"	精确	精确	保留在验证	原数据中的既有组合
+日历与提醒	修改日程	"{""trigger"": ""time""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+日历与提醒	修改日程	{}	不涉及	不涉及	已有对照	原数据中的既有组合
+日历与提醒	创建提醒	"{""level"": ""city"", ""op"": ""share_current_location"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
+日历与提醒	创建提醒	"{""op"": ""share_current_location"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在验证	原数据中的既有组合
+日历与提醒	创建提醒	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+日历与提醒	创建提醒	"{""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+日历与提醒	创建提醒	"{""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+日历与提醒	创建提醒	"{""trigger"": ""enter_location""}"	精确	精确	新增训练	进入地理围栏时触发提醒
+日历与提醒	创建提醒	"{""trigger"": ""leave_location""}"	精确	精确	新增训练	离开地理围栏时触发提醒
+日历与提醒	创建提醒	"{""trigger"": ""time""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+日历与提醒	创建提醒	{}	不涉及	不涉及	已有对照	原数据中的既有组合
+日历与提醒	创建日程	"{""level"": ""city"", ""op"": ""share_current_location"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
+日历与提醒	创建日程	"{""op"": ""share_current_location"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
+日历与提醒	创建日程	"{""src"": ""named_place"", ""trigger"": ""leave_location""}"	精确	精确	已有训练	原数据中的既有组合
+日历与提醒	创建日程	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+日历与提醒	创建日程	"{""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+日历与提醒	创建日程	"{""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+日历与提醒	创建日程	"{""trigger"": ""enter_location""}"	精确	精确	保留在内部测试	原数据中的既有组合
+日历与提醒	创建日程	"{""trigger"": ""leave_location""}"	精确	精确	已有训练	原数据中的既有组合
+日历与提醒	创建日程	"{""trigger"": ""time""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+日历与提醒	创建日程	{}	不涉及	不涉及	已有对照	原数据中的既有组合
+日历与提醒	删除日程	"{""op"": ""filter_by_city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	新增训练	按本机所在城市筛选待删除日程
+日历与提醒	删除日程	"{""op"": ""filter_by_city"", ""src"": ""named_place""}"	不涉及	不涉及	新增对照	按已指定城市筛选待删除日程
+日历与提醒	删除日程	{}	不涉及	不涉及	已有对照	删除已经选中的日程
+日历与提醒	查询日程	{}	不涉及	不涉及	已有对照	原数据中的既有组合
+智能情景	启动智能情景	"{""to_src"": ""named_place"", ""trigger"": ""enter_location""}"	精确	精确	已有训练	原数据中的既有组合
+智能情景	启动智能情景	"{""to_src"": ""named_place"", ""trigger"": ""leave_location""}"	精确	精确	已有训练	原数据中的既有组合
+智能情景	启动智能情景	"{""to_src"": ""previous_entity"", ""trigger"": ""enter_location""}"	精确	精确	新增训练	进入或离开已确认地点触发，需检测本机位置
+智能情景	启动智能情景	"{""to_src"": ""previous_entity"", ""trigger"": ""leave_location""}"	精确	精确	新增训练	进入或离开已确认地点触发，需检测本机位置
+智能情景	启动智能情景	"{""to_src"": ""saved_place"", ""trigger"": ""enter_location""}"	精确	精确	新增训练	进入或离开已确认地点触发，需检测本机位置
+智能情景	启动智能情景	"{""to_src"": ""saved_place"", ""trigger"": ""leave_location""}"	精确	精确	保留在外部测试	进入或离开已确认地点触发，需检测本机位置
+智能情景	启动智能情景	"{""trigger"": ""activity""}"	不涉及	不涉及	保留在外部测试	原数据中的既有组合
+智能情景	启动智能情景	"{""trigger"": ""bluetooth""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+智能情景	启动智能情景	"{""trigger"": ""driving""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+智能情景	启动智能情景	"{""trigger"": ""enter_location""}"	精确	精确	已有训练	原数据中的既有组合
+智能情景	启动智能情景	"{""trigger"": ""leave_location""}"	精确	精确	已有训练	原数据中的既有组合
+智能情景	启动智能情景	"{""trigger"": ""manual""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+智能情景	启动智能情景	"{""trigger"": ""schedule""}"	不涉及	不涉及	保留在外部测试	原数据中的既有组合
+智能情景	启动智能情景	"{""trigger"": ""time""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+智能情景	启动智能情景	"{""trigger"": ""wifi""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+本地生活	查找本地服务	"{""level"": ""city"", ""scope"": ""nearby"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在内部测试	周边检索明确以全市为限
+本地生活	查找本地服务	"{""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	城市范围内查找
+本地生活	查找本地服务	"{""level"": ""district"", ""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
+本地生活	查找本地服务	"{""level"": ""district"", ""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
+本地生活	查找本地服务	"{""level"": ""district"", ""scope"": ""nearby"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	先限所在区，再查大致周边
+本地生活	查找本地服务	"{""level"": ""district"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	行政区范围内查找
+本地生活	查找本地服务	"{""radius_band"": ""above_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内输出实测距离
+本地生活	查找本地服务	"{""radius_band"": ""above_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内只取最近候选
+本地生活	查找本地服务	"{""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	给定大致范围且允许放宽半径
+本地生活	查找本地服务	"{""radius_band"": ""above_policy_limit"", ""scope"": ""strict_radius"", ""src"": ""device_current""}"	精确	精确	新增训练	即使半径大于阈值，也必须按实际距离筛除范围外的候选
+本地生活	查找本地服务	"{""radius_band"": ""above_policy_limit"", ""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内按步行耗时筛选
+本地生活	查找本地服务	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内输出实测距离
+本地生活	查找本地服务	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	保留在外部测试	硬性小半径内只取最近候选
+本地生活	查找本地服务	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在内部测试	给定大致范围且允许放宽半径
+本地生活	查找本地服务	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内按步行耗时筛选
+本地生活	查找本地服务	"{""radius_band"": ""up_to_policy_limit"", ""src"": ""device_current""}"	精确	精确	保留在内部测试	小半径是硬性筛选条件
+本地生活	查找本地服务	"{""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	已有训练	输出实测距离
+本地生活	查找本地服务	"{""scope"": ""nearby"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	附近粗筛
+本地生活	查找本地服务	"{""scope"": ""nearby"", ""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+本地生活	查找本地服务	"{""scope"": ""nearby"", ""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+本地生活	查找本地服务	"{""scope"": ""nearby"", ""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+本地生活	查找本地服务	"{""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	已有训练	只取最近候选
+本地生活	查找本地服务	"{""scope"": ""nearest"", ""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+本地生活	查找本地服务	"{""scope"": ""nearest"", ""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+本地生活	查找本地服务	"{""scope"": ""nearest"", ""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+本地生活	查找本地服务	"{""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	保留在内部测试	按步行耗时筛选
+本地生活	查找本地服务	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+活动与影院	查找或推荐活动	"{""level"": ""city"", ""scope"": ""nearby"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在外部测试	周边检索明确以全市为限
+活动与影院	查找或推荐活动	"{""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在内部测试	城市范围内查找
+活动与影院	查找或推荐活动	"{""level"": ""district"", ""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
+活动与影院	查找或推荐活动	"{""level"": ""district"", ""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
+活动与影院	查找或推荐活动	"{""level"": ""district"", ""scope"": ""nearby"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在外部测试	先限所在区，再查大致周边
+活动与影院	查找或推荐活动	"{""level"": ""district"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	行政区范围内查找
+活动与影院	查找或推荐活动	"{""radius_band"": ""above_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内输出实测距离
+活动与影院	查找或推荐活动	"{""radius_band"": ""above_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内只取最近候选
+活动与影院	查找或推荐活动	"{""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	给定大致范围且允许放宽半径
+活动与影院	查找或推荐活动	"{""radius_band"": ""above_policy_limit"", ""scope"": ""strict_radius"", ""src"": ""device_current""}"	精确	精确	新增训练	即使半径大于阈值，也必须按实际距离筛除范围外的候选
+活动与影院	查找或推荐活动	"{""radius_band"": ""above_policy_limit"", ""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内按步行耗时筛选
+活动与影院	查找或推荐活动	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内输出实测距离
+活动与影院	查找或推荐活动	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	保留在外部测试	硬性小半径内只取最近候选
+活动与影院	查找或推荐活动	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在内部测试	给定大致范围且允许放宽半径
+活动与影院	查找或推荐活动	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内按步行耗时筛选
+活动与影院	查找或推荐活动	"{""radius_band"": ""up_to_policy_limit"", ""src"": ""device_current""}"	精确	精确	已有训练	小半径是硬性筛选条件
+活动与影院	查找或推荐活动	"{""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	已有训练	输出实测距离
+活动与影院	查找或推荐活动	"{""scope"": ""nearby"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在验证	附近粗筛
+活动与影院	查找或推荐活动	"{""scope"": ""nearby"", ""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+活动与影院	查找或推荐活动	"{""scope"": ""nearby"", ""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+活动与影院	查找或推荐活动	"{""scope"": ""nearby"", ""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+活动与影院	查找或推荐活动	"{""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	保留在验证	只取最近候选
+活动与影院	查找或推荐活动	"{""scope"": ""nearest"", ""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+活动与影院	查找或推荐活动	"{""scope"": ""nearest"", ""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+活动与影院	查找或推荐活动	"{""scope"": ""nearest"", ""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+活动与影院	查找或推荐活动	"{""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	已有训练	按步行耗时筛选
+活动与影院	查找或推荐活动	"{""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	原数据中的既有组合
+活动与影院	查找或推荐活动	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+活动与影院	查询影片上映日期	{}	不涉及	不涉及	已有对照	原数据中的既有组合
+活动与影院	查询影院或影片	"{""level"": ""city"", ""scope"": ""nearby"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在外部测试	周边检索明确以全市为限
+活动与影院	查询影院或影片	"{""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在验证	城市范围内查找
+活动与影院	查询影院或影片	"{""level"": ""district"", ""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
+活动与影院	查询影院或影片	"{""level"": ""district"", ""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
+活动与影院	查询影院或影片	"{""level"": ""district"", ""scope"": ""nearby"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在外部测试	先限所在区，再查大致周边
+活动与影院	查询影院或影片	"{""level"": ""district"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	行政区范围内查找
+活动与影院	查询影院或影片	"{""radius_band"": ""above_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内输出实测距离
+活动与影院	查询影院或影片	"{""radius_band"": ""above_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内只取最近候选
+活动与影院	查询影院或影片	"{""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	给定大致范围且允许放宽半径
+活动与影院	查询影院或影片	"{""radius_band"": ""above_policy_limit"", ""scope"": ""strict_radius"", ""src"": ""device_current""}"	精确	精确	新增训练	即使半径大于阈值，也必须按实际距离筛除范围外的候选
+活动与影院	查询影院或影片	"{""radius_band"": ""above_policy_limit"", ""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内按步行耗时筛选
+活动与影院	查询影院或影片	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内输出实测距离
+活动与影院	查询影院或影片	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内只取最近候选
+活动与影院	查询影院或影片	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在验证	给定大致范围且允许放宽半径
+活动与影院	查询影院或影片	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	保留在外部测试	硬性小半径内按步行耗时筛选
+活动与影院	查询影院或影片	"{""radius_band"": ""up_to_policy_limit"", ""src"": ""device_current""}"	精确	精确	保留在内部测试	小半径是硬性筛选条件
+活动与影院	查询影院或影片	"{""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	已有训练	输出实测距离
+活动与影院	查询影院或影片	"{""scope"": ""nearby"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	附近粗筛
+活动与影院	查询影院或影片	"{""scope"": ""nearby"", ""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+活动与影院	查询影院或影片	"{""scope"": ""nearby"", ""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+活动与影院	查询影院或影片	"{""scope"": ""nearby"", ""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+活动与影院	查询影院或影片	"{""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	保留在验证	只取最近候选
+活动与影院	查询影院或影片	"{""scope"": ""nearest"", ""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+活动与影院	查询影院或影片	"{""scope"": ""nearest"", ""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+活动与影院	查询影院或影片	"{""scope"": ""nearest"", ""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+活动与影院	查询影院或影片	"{""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	已有训练	按步行耗时筛选
+活动与影院	查询影院或影片	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+用车	叫车	"{""pickup_src"": ""device_current"", ""to_src"": ""named_place""}"	精确	精确	保留在内部测试	本机定位用于乘车起点，终点有独立来源
+用车	叫车	"{""pickup_src"": ""device_current"", ""to_src"": ""previous_entity""}"	精确	精确	保留在外部测试	本机定位用于乘车起点，终点有独立来源
+用车	叫车	"{""pickup_src"": ""device_current"", ""to_src"": ""saved_place""}"	精确	精确	已有训练	本机定位用于乘车起点，终点有独立来源
+用车	叫车	"{""pickup_src"": ""device_current""}"	精确	精确	已有训练	原数据中的既有组合
+用车	叫车	"{""pickup_src"": ""named_place""}"	不涉及	不涉及	已有对照	接送或交接点已明确
+用车	叫车	"{""pickup_src"": ""previous_entity""}"	不涉及	不涉及	已有对照	接送或交接点已明确
+用车	叫车	"{""pickup_src"": ""saved_place""}"	不涉及	不涉及	已有对照	接送或交接点已明确
+社交	发布社交内容	"{""level"": ""city"", ""op"": ""share_current_location"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在内部测试	原数据中的既有组合
+社交	发布社交内容	"{""op"": ""share_current_location"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
+社交	发布社交内容	"{""op"": ""share_current_location""}"	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
+社交	发布社交内容	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+社交	发布社交内容	"{""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+社交	发布社交内容	"{""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+社交	发布社交内容	{}	不涉及	不涉及	已有对照	原数据中的既有组合
+路况	查询路况	"{""from_src"": ""device_current"", ""to_src"": ""named_place""}"	精确	精确	已有训练	原数据中的既有组合
+路况	查询路况	"{""from_src"": ""device_current"", ""to_src"": ""previous_entity""}"	精确	精确	保留在外部测试	按本机起点查询到已确认地点的沿途路况
+路况	查询路况	"{""from_src"": ""device_current"", ""to_src"": ""saved_place""}"	精确	精确	已有训练	原数据中的既有组合
+路况	查询路况	"{""level"": ""city"", ""scope"": ""nearby"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在外部测试	周边检索明确以全市为限
+路况	查询路况	"{""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	城市范围内查找
+路况	查询路况	"{""level"": ""district"", ""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
+路况	查询路况	"{""level"": ""district"", ""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
+路况	查询路况	"{""level"": ""district"", ""scope"": ""nearby"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在外部测试	先限所在区，再查大致周边
+路况	查询路况	"{""level"": ""district"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	行政区范围内查找
+路况	查询路况	"{""radius_band"": ""above_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内输出实测距离
+路况	查询路况	"{""radius_band"": ""above_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内只取最近候选
+路况	查询路况	"{""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在内部测试	给定大致范围且允许放宽半径
+路况	查询路况	"{""radius_band"": ""above_policy_limit"", ""scope"": ""strict_radius"", ""src"": ""device_current""}"	精确	精确	新增训练	即使半径大于阈值，也必须按实际距离筛除范围外的候选
+路况	查询路况	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内输出实测距离
+路况	查询路况	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内只取最近候选
+路况	查询路况	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在内部测试	给定大致范围且允许放宽半径
+路况	查询路况	"{""radius_band"": ""up_to_policy_limit"", ""src"": ""device_current""}"	精确	精确	已有训练	小半径是硬性筛选条件
+路况	查询路况	"{""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	已有训练	输出实测距离
+路况	查询路况	"{""scope"": ""nearby"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	附近粗筛
+路况	查询路况	"{""scope"": ""nearby"", ""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+路况	查询路况	"{""scope"": ""nearby"", ""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+路况	查询路况	"{""scope"": ""nearby"", ""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+路况	查询路况	"{""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	保留在内部测试	只取最近候选
+路况	查询路况	"{""scope"": ""nearest"", ""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+路况	查询路况	"{""scope"": ""nearest"", ""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+路况	查询路况	"{""scope"": ""nearest"", ""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+路况	查询路况	"{""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在验证	原数据中的既有组合
+路况	查询路况	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+运动	开始运动	"{""src"": ""device_current"", ""track"": ""route""}"	精确	精确	已有训练	原数据中的既有组合
+运动	开始运动	"{""src"": ""device_current""}"	精确	精确	已有训练	原数据中的既有组合
+运动	开始运动	"{""track"": ""no_route""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+运动	开始运动	"{""track"": ""route""}"	精确	精确	已有训练	原数据中的既有组合
+运动	查看运动类型	{}	不涉及	不涉及	已有对照	查询可用运动类型
+运动	查询运动轨迹	"{""op"": ""filter_by_city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	新增训练	按本机所在城市筛历史运动轨迹
+运动	查询运动轨迹	"{""op"": ""filter_by_city"", ""src"": ""named_place""}"	不涉及	不涉及	新增对照	按已指定城市筛历史运动轨迹
+运动	查询运动轨迹	"{""src"": ""stored_history""}"	不涉及	不涉及	已有对照	读取已存运动记录
+通用	查询当前位置	"{""level"": ""city""}"	城市级模糊	城市级模糊	保留在内部测试	原数据中的既有组合
+通用	查询当前位置	"{""level"": ""coarse_unspecified""}"	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
+通用	查询当前位置	"{""level"": ""district""}"	区域级模糊	区域级模糊	保留在内部测试	原数据中的既有组合
+通用	查询当前位置	"{""level"": ""precise""}"	精确	精确	已有训练	原数据中的既有组合
+通用	查询当前位置	{}	精确	精确	已有训练	原数据中的既有组合
+通用	记录信息	"{""level"": ""city"", ""op"": ""share_current_location"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在内部测试	原数据中的既有组合
+通用	记录信息	"{""op"": ""share_current_location"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
+通用	记录信息	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+通用	记录信息	"{""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+通用	记录信息	"{""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+通用	记录信息	{}	不涉及	不涉及	已有对照	原数据中的既有组合
+酒店	查找或推荐酒店	"{""level"": ""city"", ""scope"": ""nearby"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	周边检索明确以全市为限
+酒店	查找或推荐酒店	"{""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	城市范围内查找
+酒店	查找或推荐酒店	"{""level"": ""district"", ""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在外部测试	限制在所在区内，按可放宽半径粗筛
+酒店	查找或推荐酒店	"{""level"": ""district"", ""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
+酒店	查找或推荐酒店	"{""level"": ""district"", ""scope"": ""nearby"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	先限所在区，再查大致周边
+酒店	查找或推荐酒店	"{""level"": ""district"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	行政区范围内查找
+酒店	查找或推荐酒店	"{""radius_band"": ""above_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内输出实测距离
+酒店	查找或推荐酒店	"{""radius_band"": ""above_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内只取最近候选
+酒店	查找或推荐酒店	"{""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	给定大致范围且允许放宽半径
+酒店	查找或推荐酒店	"{""radius_band"": ""above_policy_limit"", ""scope"": ""strict_radius"", ""src"": ""device_current""}"	精确	精确	新增训练	即使半径大于阈值，也必须按实际距离筛除范围外的候选
+酒店	查找或推荐酒店	"{""radius_band"": ""above_policy_limit"", ""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内按步行耗时筛选
+酒店	查找或推荐酒店	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内输出实测距离
+酒店	查找或推荐酒店	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内只取最近候选
+酒店	查找或推荐酒店	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	给定大致范围且允许放宽半径
+酒店	查找或推荐酒店	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内按步行耗时筛选
+酒店	查找或推荐酒店	"{""radius_band"": ""up_to_policy_limit"", ""src"": ""device_current""}"	精确	精确	已有训练	小半径是硬性筛选条件
+酒店	查找或推荐酒店	"{""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	已有训练	输出实测距离
+酒店	查找或推荐酒店	"{""scope"": ""nearby"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	附近粗筛
+酒店	查找或推荐酒店	"{""scope"": ""nearby"", ""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+酒店	查找或推荐酒店	"{""scope"": ""nearby"", ""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+酒店	查找或推荐酒店	"{""scope"": ""nearby"", ""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+酒店	查找或推荐酒店	"{""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	已有训练	只取最近候选
+酒店	查找或推荐酒店	"{""scope"": ""nearest"", ""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+酒店	查找或推荐酒店	"{""scope"": ""nearest"", ""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+酒店	查找或推荐酒店	"{""scope"": ""nearest"", ""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+酒店	查找或推荐酒店	"{""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	保留在内部测试	按步行耗时筛选
+酒店	查找或推荐酒店	"{""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	原数据中的既有组合
+酒店	查找或推荐酒店	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+酒店	查询酒店详情	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+酒店	预订酒店	"{""level"": ""city"", ""scope"": ""nearby"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在外部测试	周边检索明确以全市为限
+酒店	预订酒店	"{""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	城市范围内查找
+酒店	预订酒店	"{""level"": ""district"", ""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
+酒店	预订酒店	"{""level"": ""district"", ""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
+酒店	预订酒店	"{""level"": ""district"", ""scope"": ""nearby"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在外部测试	先限所在区，再查大致周边
+酒店	预订酒店	"{""level"": ""district"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在内部测试	行政区范围内查找
+酒店	预订酒店	"{""radius_band"": ""above_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内输出实测距离
+酒店	预订酒店	"{""radius_band"": ""above_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内只取最近候选
+酒店	预订酒店	"{""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	给定大致范围且允许放宽半径
+酒店	预订酒店	"{""radius_band"": ""above_policy_limit"", ""scope"": ""strict_radius"", ""src"": ""device_current""}"	精确	精确	新增训练	即使半径大于阈值，也必须按实际距离筛除范围外的候选
+酒店	预订酒店	"{""radius_band"": ""above_policy_limit"", ""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内按步行耗时筛选
+酒店	预订酒店	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内输出实测距离
+酒店	预订酒店	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内只取最近候选
+酒店	预订酒店	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	给定大致范围且允许放宽半径
+酒店	预订酒店	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	保留在外部测试	硬性小半径内按步行耗时筛选
+酒店	预订酒店	"{""radius_band"": ""up_to_policy_limit"", ""src"": ""device_current""}"	精确	精确	已有训练	小半径是硬性筛选条件
+酒店	预订酒店	"{""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	保留在内部测试	输出实测距离
+酒店	预订酒店	"{""scope"": ""nearby"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	附近粗筛
+酒店	预订酒店	"{""scope"": ""nearby"", ""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+酒店	预订酒店	"{""scope"": ""nearby"", ""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+酒店	预订酒店	"{""scope"": ""nearby"", ""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+酒店	预订酒店	"{""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	已有训练	只取最近候选
+酒店	预订酒店	"{""scope"": ""nearest"", ""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+酒店	预订酒店	"{""scope"": ""nearest"", ""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+酒店	预订酒店	"{""scope"": ""nearest"", ""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+酒店	预订酒店	"{""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	保留在内部测试	按步行耗时筛选
+酒店	预订酒店	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+餐饮	查找或推荐餐馆	"{""level"": ""city"", ""scope"": ""nearby"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在内部测试	周边检索明确以全市为限
+餐饮	查找或推荐餐馆	"{""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	城市范围内查找
+餐饮	查找或推荐餐馆	"{""level"": ""district"", ""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
+餐饮	查找或推荐餐馆	"{""level"": ""district"", ""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	新增训练	限制在所在区内，按可放宽半径粗筛
+餐饮	查找或推荐餐馆	"{""level"": ""district"", ""scope"": ""nearby"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	先限所在区，再查大致周边
+餐饮	查找或推荐餐馆	"{""level"": ""district"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在内部测试	行政区范围内查找
+餐饮	查找或推荐餐馆	"{""radius_band"": ""above_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内输出实测距离
+餐饮	查找或推荐餐馆	"{""radius_band"": ""above_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内只取最近候选
+餐饮	查找或推荐餐馆	"{""radius_band"": ""above_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	已有训练	给定大致范围且允许放宽半径
+餐饮	查找或推荐餐馆	"{""radius_band"": ""above_policy_limit"", ""scope"": ""strict_radius"", ""src"": ""device_current""}"	精确	精确	新增训练	即使半径大于阈值，也必须按实际距离筛除范围外的候选
+餐饮	查找或推荐餐馆	"{""radius_band"": ""above_policy_limit"", ""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性较大半径内按步行耗时筛选
+餐饮	查找或推荐餐馆	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内输出实测距离
+餐饮	查找或推荐餐馆	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内只取最近候选
+餐饮	查找或推荐餐馆	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""rough_radius"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在内部测试	给定大致范围且允许放宽半径
+餐饮	查找或推荐餐馆	"{""radius_band"": ""up_to_policy_limit"", ""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	新增训练	硬性小半径内按步行耗时筛选
+餐饮	查找或推荐餐馆	"{""radius_band"": ""up_to_policy_limit"", ""src"": ""device_current""}"	精确	精确	已有训练	小半径是硬性筛选条件
+餐饮	查找或推荐餐馆	"{""scope"": ""distance"", ""src"": ""device_current""}"	精确	精确	保留在内部测试	输出实测距离
+餐饮	查找或推荐餐馆	"{""scope"": ""nearby"", ""src"": ""device_current""}"	区域级模糊	区域级模糊	保留在内部测试	附近粗筛
+餐饮	查找或推荐餐馆	"{""scope"": ""nearby"", ""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+餐饮	查找或推荐餐馆	"{""scope"": ""nearby"", ""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+餐饮	查找或推荐餐馆	"{""scope"": ""nearby"", ""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+餐饮	查找或推荐餐馆	"{""scope"": ""nearest"", ""src"": ""device_current""}"	精确	精确	已有训练	只取最近候选
+餐饮	查找或推荐餐馆	"{""scope"": ""nearest"", ""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+餐饮	查找或推荐餐馆	"{""scope"": ""nearest"", ""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+餐饮	查找或推荐餐馆	"{""scope"": ""nearest"", ""src"": ""saved_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+餐饮	查找或推荐餐馆	"{""scope"": ""walking_time"", ""src"": ""device_current""}"	精确	精确	已有训练	按步行耗时筛选
+餐饮	查找或推荐餐馆	"{""scope"": ""walking_time"", ""src"": ""named_place""}"	不涉及	不涉及	保留在外部测试	原数据中的既有组合
+餐饮	查找或推荐餐馆	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+餐饮	查询餐馆详情	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+餐饮	预订餐馆	"{""level"": ""city"", ""src"": ""device_current""}"	城市级模糊	城市级模糊	保留在内部测试	原数据中的既有组合
+餐饮	预订餐馆	"{""src"": ""device_current""}"	城市级模糊	城市级模糊	已有训练	原数据中的既有组合
+餐饮	预订餐馆	"{""src"": ""named_place""}"	不涉及	不涉及	已有对照	原数据中的既有组合
+餐饮	预订餐馆	"{""src"": ""previous_entity""}"	不涉及	不涉及	已有对照	原数据中的既有组合
