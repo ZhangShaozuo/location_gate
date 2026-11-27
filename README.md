@@ -2,6 +2,8 @@
 
 `prepare.py` 将公开语料转成统一意图、位置槽位和精度标签。精度为精确、区域级模糊和城市级模糊。单条输入按任务提取，多轮对话先按整段合并任务，再给每项任务单独定档。当前核验的组合是 MASSIVE zh-CN、CMPA-SLU、CrossWOZ 和 SMP2019-ECDT。RiSAWOZ 和 Google Schema-Guided Dialogue（SGD）也可通过 `--datasets` 选择。
 
+[定位精度实验台](location-precision-lab/README.md) 可在浏览器运行意图与槽位判定，比较 Android 传统网格和 S2 网格的模糊化结果。
+
 ## Linux 运行
 
 在仓库目录运行。需要 Python 3.10 或更高版本，使用自带 SQLite。首次运行会下载缺少的原始文件。已有全部缓存时可加 `--offline`，输出目录使用新路径。可选安装 `ijson` 以流式解析大型 JSON。

@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="用意图、位置槽位和模拟坐标验证精度标签，对比 Android 传统网格与 S2 模糊定位。">
+  <title>定位精度实验台</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.mjs"></script>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <h1>定位精度实验台</h1>
+      <p>输入智能体的意图和槽位，查看模型判定，以及坐标交给智能体前如何处理。</p>
+    </header>
+    <section aria-label="意图与槽位示例" class="example-picker">
+      <div class="picker-fields">
+        <div><label for="domain">示例领域</label><select id="domain" aria-describedby="picker-help"><option value="">全部领域</option></select></div>
+        <div><label for="example">意图与槽位样例 <span id="example-count"></span></label><select id="example" aria-describedby="picker-help"></select></div>
+        <button type="button" id="load-example" class="secondary" aria-describedby="picker-help">载入样例</button>
+      </div>
+      <p id="picker-help" data-help hidden>按领域筛选样例。载入后自动填入意图、槽位、地点和模拟授权，并运行一次判定。</p>
+    </section>
+    <div class="workspace">
+      <section class="card">
+        <h2>定位调用输入</h2>
+        <form id="experiment">
+          <label for="intent">意图</label>
+          <input type="text" id="intent" list="intent-options" required autocomplete="off" maxlength="120" aria-describedby="intent-help">
+          <datalist id="intent-options"></datalist>
+          <p id="intent-help" data-help hidden>填写智能体已识别的任务，例如「查询天气」。输入时可从已登记的意图中选择。</p>
+          <label for="slots">槽位 <span>JSON 对象</span></label>
+          <textarea id="slots" rows="5" required spellcheck="false" maxlength="4096" aria-describedby="slots-help"></textarea>
+          <p id="slots-help" data-help hidden>补充位置来源、搜索范围等条件。例如「附近」和「最近」可能得到不同标签。没有位置参数时输入 <code>{}</code>。</p>
+          <details open>
+            <summary aria-describedby="service-help">模拟定位服务</summary>
+            <p id="service-help" data-help hidden>在浏览器里模拟手机定位服务提供的坐标和授权状态。实验台使用填写的坐标计算，全程只在当前页面运行。</p>
+            <label for="point">地点预设</label>
+            <select id="point" aria-describedby="point-help"><option value="">手动输入坐标</option></select>
+            <p id="point-help" data-help hidden>切换地点会同时填写经纬度、模拟城市和 S2 密度档位。选择「手动输入坐标」可自行设置。</p>
+            <div class="two">
+              <div><label for="lat">纬度</label><input id="lat" type="number" min="-90" max="90" step="any" required aria-describedby="coordinate-help"></div>
+              <div><label for="lon">经度</label><input id="lon" type="number" min="-180" max="180" step="any" required aria-describedby="coordinate-help"></div>
+            </div>
+            <p id="coordinate-help" data-help hidden>用 WGS‑84 十进制度数。改动坐标后，请重新选择对应城市，并确认密度档位。</p>
+            <div class="two settings">
+              <div><label for="access">模拟系统授权</label>
+                <select id="access" aria-describedby="access-help"><option value="granted">允许精确定位</option><option value="approximate">仅允许模糊定位</option><option value="denied">未授权定位</option></select>
+                <p id="access-help" data-help hidden>系统允许提供原始坐标，实验台仍按任务要求决定返回精确、区域级或城市级。</p>
+              </div>
+              <div><label for="city">模拟逆地理编码</label>
+                <select id="city" aria-describedby="city-help"><option value="">未解析城市</option></select>
+                <p id="city-help" data-help hidden>模拟系统把坐标查成城市名。选择「未解析城市」可演示城市级结果暂缓返回。</p>
+              </div>
+            </div>
+            <label class="check"><input type="checkbox" id="legacy" aria-describedby="legacy-help"> 城市级结果兼容经纬度接口</label>
+            <p id="legacy-help" data-help hidden>城市级默认只返回城市名。开启后会附上该城市的固定代表坐标，供必须接收经纬度的接口使用。</p>
+          </details>
+          <div class="two settings">
+            <div><label for="method">区域级坐标处理</label><select id="method" aria-describedby="method-help"></select>
+              <p id="method-help" data-help hidden>区域级结果采用约 2 公里的 Android 传统网格。</p>
+            </div>
+            <div><label for="density">S2 密度模拟档位</label><select id="density" aria-describedby="density-help"></select>
+              <p id="density-help" data-help hidden>高密度使用较小的网格，低密度使用较大的网格。</p>
+            </div>
+          </div>
+          <button class="primary" type="submit" aria-describedby="run-help">运行判定</button>
+          <p id="run-help" data-help hidden>使用当前意图和槽位计算模型标签，再根据模拟系统授权和区域级算法生成返回结果。</p>
+          <p class="quiet" id="input-status" aria-live="polite"></p>
+        </form>
+      </section>
+      <section class="card output" aria-labelledby="out-heading">
+        <h2 id="out-heading">智能体会收到什么</h2>
+        <div id="result-content">
+          <div class="result" role="status" aria-live="polite">
+            <div class="result-head" aria-describedby="result-help" data-help-label="模型标签与实际处理">
+              <div><span class="quiet">模型标签</span><strong id="label">等待判定</strong></div>
+              <div><span class="quiet">实际处理</span><strong id="action">等待判定</strong></div>
+            </div>
+            <p id="result-help" data-help hidden>模型标签由意图和槽位决定。实际处理还会比较规则参考并检查系统授权。</p>
+            <p class="quiet" id="reference"></p>
+            <p id="reason"></p>
+          </div>
+          <div class="code-title"><h3 aria-describedby="payload-help">返回给智能体的 JSON</h3><button id="copy" type="button" aria-describedby="payload-help" disabled>复制 JSON</button></div>
+          <p id="payload-help" data-help hidden>这里显示工具实际会返回的字段。请求被拦截时，只显示状态码。</p>
+          <pre id="payload" tabindex="0"></pre>
+          <details class="inspect">
+            <summary aria-describedby="normalized-help">查看归一化后的模型输入</summary>
+            <p id="normalized-help" data-help hidden>展开后可核对意图别名和槽位值如何转换成模型使用的标准写法。</p>
+            <pre id="normalized" tabindex="0"></pre>
+          </details>
+        </div>
+      </section>
+    </div>
+    <section class="card comparison" aria-labelledby="comparison-heading">
+      <div class="comparison-head">
+        <div>
+          <h2 id="comparison-heading">Android 模糊化对照</h2>
+          <p class="quiet">两条路径用同一个偏移点。「距原始点」是本次输出到原始模拟坐标的直线距离。实际返回请查看上方 JSON。</p>
+        </div>
+        <div class="comparison-action">
+          <button type="button" id="advance-offset" class="secondary" aria-describedby="offset-help">更新随机偏移（模拟 +1 小时）</button>
+          <p id="offset-help" data-help hidden>每次点击模拟一小时后的小幅偏移更新。两条 Android 路径将更新后的偏移点重新归格。原始坐标固定，偏移点留在同一格时，返回坐标也保持原样。</p>
+        </div>
+      </div>
+      <div class="table-scroll" tabindex="0" aria-label="坐标对照表">
+        <table>
+          <thead><tr><th scope="col">处理步骤</th><th scope="col">纬度</th><th scope="col">经度</th><th scope="col">距原始点</th><th scope="col">处理细节</th></tr></thead>
+          <tbody id="comparison-data"></tbody>
+        </table>
+      </div>
+      <p class="quiet" id="offset-status" aria-live="polite"></p>
+    </section>
+    <footer>
+      <p>演示使用 356 组语义组合拟合的现有模型。地点、城市匹配和密度层级均为模拟输入。坐标留在本页面。</p>
+      <p><a href="https://android.googlesource.com/platform/frameworks/base/+/7c66dfecc9f0a0ccec2ee9f2d649b45360d960fc/services/core/java/com/android/server/location/fudger/LocationFudger.java" target="_blank" rel="noopener noreferrer">AOSP LocationFudger</a> · <a href="https://developer.android.com/blog/posts/redefining-location-privacy-new-tools-and-improvements-for-android-17" target="_blank" rel="noopener noreferrer">Android 17 官方说明</a></p>
+    </footer>
+  </main>
+</body>
+</html>
